@@ -63,18 +63,7 @@ export function applyEditorMedia(code: string, sectionType: string): string {
     code = code.slice(0, piece.start) + piece.text + code.slice(piece.end);
   }
 
-  if (overlay && !code.includes(`backgroundColor: "var(${overlay})"`)) {
-    const cover =
-      overlay === "--color-achievements-overlay"
-        ? /<(img|Image)\b[\s\S]*?(?:object-cover|inset-0)[\s\S]*?>/.exec(code)
-        : /<(img|Image)\b/.exec(code);
-    if (cover && cover.index !== undefined) {
-      const end = endOfTag(code, cover.index);
-      if (end > 0) {
-        const veil = `\n<div className="absolute inset-0" style={{ backgroundColor: "var(${overlay})" }} />`;
-        code = code.slice(0, end) + veil + code.slice(end);
-      }
-    }
-  }
+  // Do not paint a new full-bleed veil. A logo or a photo that already has its
+  // own gradient would sit under `absolute inset-0` and the whole section washes out.
   return code;
 }

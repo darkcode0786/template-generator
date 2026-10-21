@@ -180,7 +180,7 @@ describe("runGeneration (synthetic Next.js repo)", () => {
     const banner = await fs.readFile(path.join(result.outputDir, "components", "ComputerRepairingBanner1", "ComputerRepairingBanner1.tsx"), "utf8");
     expect(banner).toContain('className="bg-[var(--color-primary)] text-[var(--color-primary)]"');
     expect(banner).toContain('data-editor-media-overlay="show"');
-    expect(banner).toContain('var(--color-navy-overlay)');
+    expect(banner).not.toContain('style={{ backgroundColor: "var(--color-navy-overlay)" }}');
     expect(banner).toContain('import { mediaSrc } from "../../../lib/lexoraPreview";');
     expect(banner).toContain('src={mediaSrc("/banner/banner.webp")}');
     expect(banner).toContain('url(" + mediaSrc("/service/laptop/01.webp") + ")');

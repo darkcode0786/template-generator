@@ -38,7 +38,7 @@ describe("normalizeThemePages", () => {
 });
 
 describe("applyEditorMedia", () => {
-  it("marks photos for the editor overlay and veils a banner image with the theme variable", () => {
+  it("points an existing scrim at the theme overlay and does not add a second veil", () => {
     const code = applyEditorMedia(
       `<section className="bg-black/60"><img src={data.image} alt="" className="object-cover" /><img src={data.logo} alt="logo" /></section>`,
       "Banner",
@@ -47,7 +47,16 @@ describe("applyEditorMedia", () => {
     expect(code).toContain("data-editor-media-src={data.image}");
     expect(code).toContain('data-editor-media-role="logo"');
     expect(code).toContain("bg-[var(--color-navy-overlay)]");
-    expect(code).toContain('style={{ backgroundColor: "var(--color-navy-overlay)" }}');
+    expect(code).not.toContain('style={{ backgroundColor: "var(--color-navy-overlay)" }}');
     expect(code).not.toContain("var(--color-overlay)");
+  });
+
+  it("leaves a footer logo without a covering overlay", () => {
+    const code = applyEditorMedia(
+      `<footer className="relative"><img src={data.logoImage} alt="logo" className="h-14" /><p>{data.description}</p></footer>`,
+      "Footer",
+    );
+    expect(code).toContain('data-editor-media-role="logo"');
+    expect(code).not.toContain("--color-footer-overlay");
   });
 });
