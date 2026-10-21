@@ -1,0 +1,296 @@
+{
+  "key": "LexoraTeam1",
+  "sectionType": "Team",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraTeam1",
+  "folder": "team",
+  "editorFields": [
+    "badge",
+    "title",
+    "subtitle",
+    "members",
+    "highlightText"
+  ],
+  "defaultContent": {
+    "badge": "OUR TEAM",
+    "title": "Meet Our Expert Attorneys",
+    "subtitle": "Our team of experienced legal professionals is dedicated to providing the highest quality representation.",
+    "members": [
+      {
+        "id": "t1",
+        "slug": "william-james",
+        "image": "/team/team1.jpg",
+        "name": "William James",
+        "role": "Founder & CEO",
+        "description": "20+ years of experience in corporate law and business litigation.",
+        "detailDescription": "A result-oriented lawyer with expertise in multiple areas of law. Proven ability to handle complex legal matters with strategic thinking and attention to detail.",
+        "experience": "20+ Years of Experience",
+        "phone": "+91 0123456789",
+        "email": "info@xyzlawfirm.com",
+        "location": "Florida, New York",
+        "skills": [
+          {
+            "name": "Legislation",
+            "percent": 90
+          },
+          {
+            "name": "Judges Experience",
+            "percent": 85
+          },
+          {
+            "name": "Corporate Law",
+            "percent": 88
+          },
+          {
+            "name": "Cases Success",
+            "percent": 96
+          }
+        ],
+        "experienceTimeline": [
+          {
+            "id": "e1",
+            "period": "2018 – Present",
+            "role": "Senior Lawyer",
+            "company": "Justice Law Firm, New York",
+            "description": "Lead legal counsel for corporate and civil litigation cases. Provide legal advice, represent clients in court and contribute to successful case outcomes."
+          },
+          {
+            "id": "e2",
+            "period": "2013 – 2018",
+            "role": "Associate Lawyer",
+            "company": "Lex & Partners, New York",
+            "description": "Handled multiple legal matters, conducted research, drafted documents, and assisted senior attorneys in achieving favorable results."
+          },
+          {
+            "id": "e3",
+            "period": "2010 – 2013",
+            "role": "Junior Associate",
+            "company": "Legal House, New York",
+            "description": "Assisted in legal research, document preparation, and client communication while gaining strong foundational legal experience."
+          }
+        ],
+        "education": [
+          {
+            "id": "ed1",
+            "university": "University of Oxford",
+            "certificate": "Certificate of Achievement in Corporate Law",
+            "year": "June 2012",
+            "logo": "/educational/Uni_Oxford_logo.webp"
+          },
+          {
+            "id": "ed2",
+            "university": "Harvard University",
+            "certificate": "Certificate in Legal Practice & Procedure",
+            "year": "June 2017",
+            "logo": "/educational/harvard-logo.png"
+          }
+        ],
+        "socials": [
+          {
+            "platform": "LinkedIn",
+            "icon": "FaLinkedinIn",
+            "url": "#"
+          },
+          {
+            "platform": "Twitter",
+            "icon": "FaTwitter",
+            "url": "#"
+          },
+          {
+            "platform": "Email",
+            "icon": "FaEnvelope",
+            "url": "#"
+          }
+        ]
+      },
+      {
+        "id": "t2",
+        "slug": "david-anderson",
+        "image": "/team/team2.jpg",
+        "name": "David Anderson",
+        "role": "Senior Partner",
+        "description": "Specializes in criminal defense and litigation.",
+        "detailDescription": "A result-oriented lawyer with expertise in multiple areas of law. Proven ability to handle complex legal matters with strategic thinking and attention to detail.",
+        "experience": "15+ Years of Experience",
+        "phone": "+91 0123456789",
+        "email": "info@xyzlawfirm.com",
+        "location": "Texas, USA",
+        "skills": [
+          {
+            "name": "Criminal Defense",
+            "percent": 95
+          },
+          {
+            "name": "Litigation",
+            "percent": 90
+          },
+          {
+            "name": "Cases Success",
+            "percent": 92
+          }
+        ],
+        "experienceTimeline": [
+          {
+            "id": "e1",
+            "period": "2015 – Present",
+            "role": "Senior Partner",
+            "company": "Justice Law Firm",
+            "description": "Lead criminal defense counsel for high-profile cases."
+          }
+        ],
+        "education": [
+          {
+            "id": "ed1",
+            "university": "University of Oxford",
+            "certificate": "Doctor of Law",
+            "year": "June 2010",
+            "logo": "/educational/Uni_Oxford_logo.webp"
+          }
+        ],
+        "socials": [
+          {
+            "platform": "LinkedIn",
+            "icon": "FaLinkedinIn",
+            "url": "#"
+          },
+          {
+            "platform": "Twitter",
+            "icon": "FaTwitter",
+            "url": "#"
+          },
+          {
+            "platform": "Email",
+            "icon": "FaEnvelope",
+            "url": "#"
+          }
+        ]
+      },
+      {
+        "id": "t3",
+        "slug": "aisha-rahman",
+        "image": "/team/team3.jpg",
+        "name": "Aisha Rahman",
+        "role": "Legal Consultant",
+        "description": "Expert in family law and legal advisory.",
+        "detailDescription": "A result-oriented lawyer with expertise in multiple areas of law. Proven ability to handle complex legal matters with strategic thinking and attention to detail.",
+        "experience": "8+ Years of Experience",
+        "phone": "+91 0123456789",
+        "email": "info@xyzlawfirm.com",
+        "location": "California, USA",
+        "skills": [
+          {
+            "name": "Family Law",
+            "percent": 95
+          },
+          {
+            "name": "Mediation",
+            "percent": 88
+          },
+          {
+            "name": "Cases Success",
+            "percent": 90
+          }
+        ],
+        "experienceTimeline": [
+          {
+            "id": "e1",
+            "period": "2018 – Present",
+            "role": "Legal Consultant",
+            "company": "Justice Law Firm",
+            "description": "Advising clients on complex family law matters and mediations."
+          }
+        ],
+        "education": [
+          {
+            "id": "ed1",
+            "university": "University of Oxford",
+            "certificate": "Master of Laws",
+            "year": "June 2016",
+            "logo": "/educational/Uni_Oxford_logo.webp"
+          }
+        ],
+        "socials": [
+          {
+            "platform": "LinkedIn",
+            "icon": "FaLinkedinIn",
+            "url": "#"
+          },
+          {
+            "platform": "Twitter",
+            "icon": "FaTwitter",
+            "url": "#"
+          },
+          {
+            "platform": "Email",
+            "icon": "FaEnvelope",
+            "url": "#"
+          }
+        ]
+      },
+      {
+        "id": "t4",
+        "slug": "michael-carter",
+        "image": "/team/team4.jpg",
+        "name": "Michael Carter",
+        "role": "Associate Attorney",
+        "description": "Focuses on real estate law and contract negotiations.",
+        "detailDescription": "A result-oriented lawyer with expertise in multiple areas of law. Proven ability to handle complex legal matters with strategic thinking and attention to detail.",
+        "experience": "5+ Years of Experience",
+        "phone": "+91 0123456789",
+        "email": "info@xyzlawfirm.com",
+        "location": "New York, USA",
+        "skills": [
+          {
+            "name": "Real Estate Law",
+            "percent": 90
+          },
+          {
+            "name": "Contract Negotiation",
+            "percent": 85
+          },
+          {
+            "name": "Cases Success",
+            "percent": 94
+          }
+        ],
+        "experienceTimeline": [
+          {
+            "id": "e1",
+            "period": "2020 – Present",
+            "role": "Associate Attorney",
+            "company": "Justice Law Firm",
+            "description": "Handling real estate transactions and complex contract negotiations."
+          }
+        ],
+        "education": [
+          {
+            "id": "ed1",
+            "university": "University of Oxford",
+            "certificate": "Juris Doctor",
+            "year": "June 2019",
+            "logo": "/educational/Uni_Oxford_logo.webp"
+          }
+        ],
+        "socials": [
+          {
+            "platform": "LinkedIn",
+            "icon": "FaLinkedinIn",
+            "url": "#"
+          },
+          {
+            "platform": "Twitter",
+            "icon": "FaTwitter",
+            "url": "#"
+          },
+          {
+            "platform": "Email",
+            "icon": "FaEnvelope",
+            "url": "#"
+          }
+        ]
+      }
+    ],
+    "highlightText": "Attorneys"
+  }
+}

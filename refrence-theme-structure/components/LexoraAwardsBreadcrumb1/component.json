@@ -1,0 +1,26 @@
+{
+  "key": "LexoraAwardsBreadcrumb1",
+  "sectionType": "AwardsBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraAwardsBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Awards",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Awards"
+      }
+    ],
+    "bgImage": "banner/ban1.jpg"
+  }
+}

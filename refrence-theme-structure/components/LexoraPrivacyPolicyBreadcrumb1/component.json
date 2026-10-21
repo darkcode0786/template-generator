@@ -1,0 +1,26 @@
+{
+  "key": "LexoraPrivacyPolicyBreadcrumb1",
+  "sectionType": "PrivacyPolicyBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraPrivacyPolicyBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Privacy Policy",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Privacy Policy"
+      }
+    ],
+    "bgImage": "/banner/ban1.jpg"
+  }
+}

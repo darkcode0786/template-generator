@@ -1,0 +1,26 @@
+{
+  "key": "LexoraLegalDisclaimerBreadcrumb1",
+  "sectionType": "LegalDisclaimerBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraLegalDisclaimerBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Legal Disclaimer",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Legal Disclaimer"
+      }
+    ],
+    "bgImage": "/banner/ban1.jpg"
+  }
+}

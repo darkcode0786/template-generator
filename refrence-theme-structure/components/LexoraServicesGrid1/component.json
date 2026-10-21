@@ -1,0 +1,394 @@
+{
+  "key": "LexoraServicesGrid1",
+  "sectionType": "ServicesGrid",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraServicesGrid1",
+  "folder": "services",
+  "editorFields": [
+    "badge",
+    "title",
+    "description",
+    "bgImage",
+    "items",
+    "highlightText",
+    "globalUI"
+  ],
+  "defaultContent": {
+    "badge": "OUR BEST OF SERVICE",
+    "title": "What People Say About\nOur Best Of Legal Practice Areas.",
+    "description": "At our firm, we believe in justice, integrity, and unwavering advocacy. Whether you're facing a complex litigation issue, seeking legal advice on corporate matters, or defending your rights, our experienced legal team is here to guide you every step of the way.",
+    "bgImage": "/services-v2-bg.jpg",
+    "items": [
+      {
+        "id": "s1",
+        "icon": "FaBriefcase",
+        "title": "Business Law",
+        "description": "Strategic legal solutions to help businesses start, grow, and succeed with confidence.",
+        "linkText": "Learn More",
+        "linkUrl": "/services/business-law",
+        "slug": "business-law",
+        "overviewTitle": "Strategic Legal Support for Every Stage of Your Business",
+        "overviewText": "At Verdicta, we are committed to delivering exceptional legal services with integrity, dedication, and a commitment to achieving the best possible outcomes for our clients with a client-first approach — ensuring personalized strategies, clear communication, and strong advocacy from start to finish.\n\nWhether you are facing a complex legal dispute, seeking business counsel, or protecting your personal rights, we stand ready to guide you through every step of the process. With a proven track record and a passion for justice, we are here to protect what matters most to you.",
+        "image": "/about/habout2.png",
+        "areasCovered": [
+          {
+            "id": "ac1",
+            "title": "Business Formation",
+            "text": "Choose the right structure and set a solid legal foundation.",
+            "icon": "FaBriefcase"
+          },
+          {
+            "id": "ac2",
+            "title": "Contracts & Agreements",
+            "text": "Clear, enforceable contracts that protect your interests.",
+            "icon": "FaFileContract"
+          },
+          {
+            "id": "ac3",
+            "title": "Compliance & Regulations",
+            "text": "Stay compliant with evolving laws and industry regulations.",
+            "icon": "FaShieldAlt"
+          },
+          {
+            "id": "ac4",
+            "title": "Dispute Resolution",
+            "text": "Resolve disputes efficiently and protect your business.",
+            "icon": "FaGavel"
+          },
+          {
+            "id": "ac5",
+            "title": "Mergers & Acquisitions",
+            "text": "Guidance through complex transactions and negotiations.",
+            "icon": "FaHandshake"
+          },
+          {
+            "id": "ac6",
+            "title": "Ongoing Legal Counsel",
+            "text": "Reliable legal support for day-to-day business needs.",
+            "icon": "FaHeadset"
+          }
+        ],
+        "resources": [
+          {
+            "id": "r1",
+            "title": "Download Brochure",
+            "url": "/dummy.pdf",
+            "icon": "FaFilePdf"
+          },
+          {
+            "id": "r2",
+            "title": "Client Intake Form",
+            "url": "/dummy.pdf",
+            "icon": "FaFileAlt"
+          }
+        ],
+        "contactBanner": {
+          "title": "Need Legal Assistance for Your Business?",
+          "description": "Let our experienced attorneys help you navigate legal challenges and achieve your business goals.",
+          "phone": "+91 0123456789",
+          "buttonText": "SCHEDULE A CONSULTATION",
+          "buttonUrl": "/book-consultation"
+        }
+      },
+      {
+        "id": "s2",
+        "icon": "FaUsers",
+        "title": "Family Law",
+        "description": "Compassionate representation for divorce, custody, support, and other family matters.",
+        "linkText": "Learn More",
+        "linkUrl": "/services/family-law",
+        "slug": "family-law",
+        "overviewTitle": "Compassionate Legal Support for Your Family",
+        "overviewText": "Family law matters require both legal expertise and sensitivity. We provide compassionate representation and guidance to help you navigate challenging times, prioritizing the well-being of you and your loved ones.\n\nFrom complex divorces to child custody disputes, we offer strategic solutions tailored to your unique family dynamics.",
+        "image": "/about/habout4.png",
+        "areasCovered": [
+          {
+            "id": "ac1",
+            "title": "Divorce Proceedings",
+            "text": "Navigate divorce with experienced legal guidance.",
+            "icon": "FaUsers"
+          },
+          {
+            "id": "ac2",
+            "title": "Child Custody",
+            "text": "Protect your parental rights and child's best interests.",
+            "icon": "FaUsers"
+          }
+        ],
+        "resources": [
+          {
+            "id": "r1",
+            "title": "Family Law Guide",
+            "url": "/dummy.pdf",
+            "icon": "FaFilePdf"
+          }
+        ],
+        "contactBanner": {
+          "title": "Facing a Family Legal Issue?",
+          "description": "Our compassionate attorneys are here to support and guide you.",
+          "phone": "+91 0123456789",
+          "buttonText": "SCHEDULE A CONSULTATION",
+          "buttonUrl": "/book-consultation"
+        }
+      },
+      {
+        "id": "s3",
+        "icon": "FaShieldAlt",
+        "title": "Insurance Defense",
+        "description": "Strong defense for insurance claims and litigation to protect your interests.",
+        "linkText": "Learn More",
+        "linkUrl": "/services/insurance-defense",
+        "slug": "insurance-defense",
+        "overviewTitle": "Robust Insurance Defense Strategies",
+        "overviewText": "We provide robust defense strategies for insurance claims and litigation, safeguarding your interests and minimizing exposure.\n\nOur team has a proven track record of successfully resolving complex claims through negotiation and trial.",
+        "image": "/about/habout5.png",
+        "areasCovered": [
+          {
+            "id": "ac1",
+            "title": "Claims Investigation",
+            "text": "Thorough investigation of insurance claims.",
+            "icon": "FaSearch"
+          },
+          {
+            "id": "ac2",
+            "title": "Litigation Defense",
+            "text": "Strong defense in court against complex claims.",
+            "icon": "FaGavel"
+          }
+        ],
+        "resources": [
+          {
+            "id": "r1",
+            "title": "Defense Strategies",
+            "url": "/dummy.pdf",
+            "icon": "FaFilePdf"
+          }
+        ],
+        "contactBanner": {
+          "title": "Need Insurance Defense?",
+          "description": "Protect your interests with our experienced litigators.",
+          "phone": "+91 0123456789",
+          "buttonText": "SCHEDULE A CONSULTATION",
+          "buttonUrl": "/book-consultation"
+        }
+      },
+      {
+        "id": "s4",
+        "icon": "FaGavel",
+        "title": "Criminal Law",
+        "description": "Aggressive defense and experienced advocacy to protect your rights and freedom.",
+        "linkText": "Learn More",
+        "linkUrl": "/services/criminal-law",
+        "slug": "criminal-law",
+        "overviewTitle": "Aggressive Defense of Your Rights",
+        "overviewText": "If you are facing criminal charges, you need a relentless advocate in your corner. We offer aggressive defense and experienced advocacy to protect your rights, freedom, and future.\n\nWe handle all types of cases, from misdemeanors to complex felonies.",
+        "image": "/about/habout1.jpg",
+        "areasCovered": [
+          {
+            "id": "ac1",
+            "title": "DUI Defense",
+            "text": "Experienced representation for DUI charges.",
+            "icon": "FaCar"
+          },
+          {
+            "id": "ac2",
+            "title": "White Collar Crimes",
+            "text": "Defense against fraud and financial charges.",
+            "icon": "FaBriefcase"
+          }
+        ],
+        "resources": [
+          {
+            "id": "r1",
+            "title": "Know Your Rights",
+            "url": "/dummy.pdf",
+            "icon": "FaFilePdf"
+          }
+        ],
+        "contactBanner": {
+          "title": "Facing Criminal Charges?",
+          "description": "Don't face them alone. Get experienced defense today.",
+          "phone": "+91 0123456789",
+          "buttonText": "SCHEDULE A CONSULTATION",
+          "buttonUrl": "/book-consultation"
+        }
+      },
+      {
+        "id": "s5",
+        "icon": "FaBuilding",
+        "title": "Real Estate Law",
+        "description": "Guidance for property transactions, leases, disputes, and all real estate legal matters.",
+        "linkText": "Learn More",
+        "linkUrl": "/services/real-estate-law",
+        "slug": "real-estate-law",
+        "overviewTitle": "Comprehensive Real Estate Legal Solutions",
+        "overviewText": "Whether you are buying, selling, or leasing property, we offer comprehensive guidance to ensure smooth transactions and protect your investments.\n\nWe also handle complex real estate disputes and litigation.",
+        "image": "/about/habout2.png",
+        "areasCovered": [
+          {
+            "id": "ac1",
+            "title": "Commercial Real Estate",
+            "text": "Legal support for commercial property transactions.",
+            "icon": "FaBuilding"
+          },
+          {
+            "id": "ac2",
+            "title": "Property Disputes",
+            "text": "Resolution of property and boundary disputes.",
+            "icon": "FaGavel"
+          }
+        ],
+        "resources": [
+          {
+            "id": "r1",
+            "title": "Real Estate Guide",
+            "url": "/dummy.pdf",
+            "icon": "FaFilePdf"
+          }
+        ],
+        "contactBanner": {
+          "title": "Real Estate Legal Needs?",
+          "description": "Secure your investments with our expert counsel.",
+          "phone": "+91 0123456789",
+          "buttonText": "SCHEDULE A CONSULTATION",
+          "buttonUrl": "/book-consultation"
+        }
+      },
+      {
+        "id": "s6",
+        "icon": "FaFileSignature",
+        "title": "Estate Planning",
+        "description": "Plan for the future and protect your assets with wills, trusts, and estate planning.",
+        "linkText": "Learn More",
+        "linkUrl": "/services/estate-planning",
+        "slug": "estate-planning",
+        "overviewTitle": "Secure Your Legacy and Protect Your Assets",
+        "overviewText": "Proper estate planning ensures your wishes are honored and your loved ones are provided for. We help you create wills, trusts, and comprehensive plans to protect your legacy.\n\nDon't leave your future to chance. Let us help you plan with confidence.",
+        "image": "/about/habout4.png",
+        "areasCovered": [
+          {
+            "id": "ac1",
+            "title": "Wills & Trusts",
+            "text": "Create robust wills and trusts for your family.",
+            "icon": "FaFileSignature"
+          },
+          {
+            "id": "ac2",
+            "title": "Probate",
+            "text": "Guidance through the probate process.",
+            "icon": "FaGavel"
+          }
+        ],
+        "resources": [
+          {
+            "id": "r1",
+            "title": "Estate Planning Checklist",
+            "url": "/dummy.pdf",
+            "icon": "FaFilePdf"
+          }
+        ],
+        "contactBanner": {
+          "title": "Ready to Plan Your Estate?",
+          "description": "Protect your family's future today.",
+          "phone": "+91 0123456789",
+          "buttonText": "SCHEDULE A CONSULTATION",
+          "buttonUrl": "/book-consultation"
+        }
+      }
+    ],
+    "highlightText": "Legal Practice Areas.",
+    "globalUI": {
+      "loadingText": "Loading...",
+      "industryNotFoundText": "Industry not found",
+      "defaultIndustriesBreadcrumb": {
+        "title": "Industries We Serve",
+        "paths": [
+          {
+            "label": "Home",
+            "url": "/"
+          },
+          {
+            "label": "Industries"
+          }
+        ],
+        "bgImage": "/banner/ban1.jpg"
+      },
+      "servicesBadge": "OUR SERVICES",
+      "defaultServiceFeatures": [
+        {
+          "icon": "FaShieldAlt",
+          "title": "Protect Your<br/>Business"
+        },
+        {
+          "icon": "FaHandshake",
+          "title": "Reduce Legal<br/>Risks"
+        },
+        {
+          "icon": "FaChartLine",
+          "title": "Drive Sustainable<br/>Growth"
+        }
+      ],
+      "defaultOverviewFallback": "We provide strategic legal solutions to help businesses start, grow, and succeed with confidence.",
+      "callUsAnytimeText": "Call Us Anytime",
+      "sidebarSearchTitle": "Search",
+      "sidebarSearchPlaceholder": "Search services...",
+      "sidebarServicesTitle": "Our Services",
+      "sidebarResourcesTitle": "Resources",
+      "sidebarContactTitle": "Have Questions?",
+      "sidebarContactDesc": "We're here to help you.",
+      "sidebarContactNamePlaceholder": "Your Name",
+      "sidebarContactEmailPlaceholder": "Your Email",
+      "sidebarContactMessagePlaceholder": "Your Message",
+      "sidebarContactSubmitText": "SEND MESSAGE",
+      "sidebarContactSubmittingText": "SENDING...",
+      "sidebarContactSuccessMessage": "Thank you! Your message has been sent successfully. We will contact you shortly.",
+      "sidebarSearchDemoMessage": "Search results for: \"{query}\"\n(This is a template demo. In production, this would navigate to a search page.)",
+      "servicesGridTitle": "How We Can Help",
+      "servicesGridSubtitle": "Trusted legal guidance tailored to your unique needs.",
+      "servicesGridLearnMore": "Learn More",
+      "servicesGridBannerTitle": "Don't See Your Legal Need?",
+      "servicesGridBannerDesc": "We handle a wide range of legal matters. Contact us to discuss how we can help.",
+      "servicesGridBannerBtnText": "CONTACT US",
+      "servicesGridBannerBtnUrl": "#",
+      "sitemapBadge": "SITEMAP",
+      "sitemapTitle": "Explore All Pages",
+      "sitemapHome": "Home",
+      "sitemapAbout": "About Us",
+      "sitemapWhyChooseUs": "Why Choose Us",
+      "sitemapOurApproach": "Our Approach",
+      "sitemapServices": "Services",
+      "sitemapIndustries": "Industries We Serve",
+      "sitemapTeam": "Our Team",
+      "sitemapDetailSuffix": "Detail",
+      "defaultSitemapBreadcrumb": {
+        "title": "Sitemap",
+        "paths": [
+          {
+            "label": "Home",
+            "url": "/"
+          },
+          {
+            "label": "Sitemap"
+          }
+        ],
+        "bgImage": "/banner/ban1.jpg"
+      },
+      "teamDetailBadge": "EXPERT LAWYER",
+      "teamDetailExpLabel": "EXPERIENCE",
+      "teamDetailPhoneLabel": "PHONE",
+      "teamDetailEmailLabel": "EMAIL",
+      "teamDetailLocationLabel": "LOCATION",
+      "teamDetailDefaultExp": "10+ Years of Experience",
+      "teamDetailDefaultPhone": "+91 0123456789",
+      "teamDetailDefaultEmail": "info@xyzlawfirm.com",
+      "teamDetailDefaultLocation": "New York, USA",
+      "teamDetailSkillsTitle": "Professional Skills",
+      "teamDetailExpTitle": "Professional Experience",
+      "teamDetailEduTitle": "Educational Background",
+      "teamDetailPassingYearLabel": "🗓 Passing Year:",
+      "caseStudyReadBtnText": "READ CASE STUDY",
+      "notFoundText": "Not found"
+    }
+  }
+}

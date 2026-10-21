@@ -1,0 +1,26 @@
+{
+  "key": "LexoraTermsConditionsBreadcrumb1",
+  "sectionType": "TermsConditionsBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraTermsConditionsBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Terms & Conditions",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Terms & Conditions"
+      }
+    ],
+    "bgImage": "/banner/ban1.jpg"
+  }
+}

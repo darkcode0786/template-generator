@@ -1,0 +1,26 @@
+{
+  "key": "LexoraBlogsBreadcrumb1",
+  "sectionType": "BlogsBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraBlogsBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Our Blogs",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Blogs"
+      }
+    ],
+    "bgImage": "/banner/ban1.jpg"
+  }
+}

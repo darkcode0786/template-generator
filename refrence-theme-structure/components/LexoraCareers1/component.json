@@ -1,0 +1,267 @@
+{
+  "key": "LexoraCareers1",
+  "sectionType": "Careers",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraCareers1",
+  "folder": "team",
+  "editorFields": [
+    "culture",
+    "whyJoin",
+    "positions",
+    "jobDetailData"
+  ],
+  "defaultContent": {
+    "culture": {
+      "title": "Our Culture",
+      "description": "We foster a supportive and inclusive environment where everyone is encouraged to learn, grow, and achieve their full potential.",
+      "features": [
+        {
+          "icon": "users",
+          "title": "Collaborative",
+          "description": "We work together to achieve the best outcomes for our clients and our people."
+        },
+        {
+          "icon": "lightbulb",
+          "title": "Growth-Oriented",
+          "description": "We invest in your professional development and help you reach your full potential."
+        },
+        {
+          "icon": "scales",
+          "title": "Integrity",
+          "description": "We uphold the highest standards of ethics, honesty, and professionalism."
+        },
+        {
+          "icon": "trophy",
+          "title": "Excellence",
+          "description": "We strive for excellence in everything we do, every day."
+        },
+        {
+          "icon": "heart",
+          "title": "Work-Life Balance",
+          "description": "We value balance and well-being, because you matter to us."
+        }
+      ]
+    },
+    "whyJoin": {
+      "title": "Why Join Lexora?",
+      "points": [
+        "Work with experienced legal professionals and industry leaders",
+        "Exposure to complex and challenging legal matters",
+        "Mentorship and continuous learning opportunities",
+        "Competitive compensation and benefits",
+        "Inclusive and supportive work environment"
+      ],
+      "banner": {
+        "title": "Be Part of Something Greater",
+        "description": "Your career is more than just a job. It's an opportunity to grow, lead, and create lasting impact. Let's build the future of justice together.",
+        "buttonText": "View Open Positions",
+        "buttonUrl": "#open-positions"
+      }
+    },
+    "positions": {
+      "title": "Open Positions",
+      "tableHeaders": {
+        "title": "Job Title",
+        "department": "Department",
+        "experience": "Experience",
+        "location": "Location",
+        "action": "Action"
+      },
+      "items": [
+        {
+          "id": "job-1",
+          "title": "Associate Attorney",
+          "department": "Legal",
+          "experience": "2 - 5 Years",
+          "location": "New York, NY",
+          "employmentType": "Full-Time",
+          "aboutRole": "We are seeking a motivated and detail-oriented Associate Attorney to join our dynamic legal team. The successful candidate will work on a variety of matters including corporate transactions, contracts, due diligence, and legal research. You'll collaborate with senior attorneys and clients to deliver practical, strategic, and high-quality legal solutions.",
+          "responsibilities": [
+            "Draft, review, and negotiate contracts and legal documents.",
+            "Conduct legal research and analysis on a wide range of issues.",
+            "Assist in corporate transactions, due diligence, and regulatory compliance.",
+            "Prepare legal opinions, memoranda, and other written materials.",
+            "Work closely with clients and internal teams to understand legal needs and provide solution-oriented advice.",
+            "Manage multiple tasks and meet deadlines in a fast-paced environment."
+          ],
+          "requirements": [
+            "Juris Doctor (JD) degree from an accredited law school.",
+            "2 - 5 years of experience in corporate or transactional law.",
+            "Strong analytical, research, and drafting skills.",
+            "Excellent communication and interpersonal abilities.",
+            "Admission to the New York State Bar (required).",
+            "Proficiency in MS Office and legal research tools."
+          ],
+          "preferredQualifications": [
+            "Experience in mergers & acquisitions or corporate law is a plus.",
+            "Prior experience in a law firm environment.",
+            "Knowledge of industry-specific regulations."
+          ]
+        },
+        {
+          "id": "job-2",
+          "title": "Legal Researcher",
+          "department": "Legal",
+          "experience": "1 - 3 Years",
+          "location": "Syracuse, CT",
+          "aboutRole": "We are seeking a motivated and detail-oriented Associate Attorney to join our dynamic legal team. The successful candidate will work on a variety of matters including corporate transactions, contracts, due diligence, and legal research. You'll collaborate with senior attorneys and clients to deliver practical, strategic, and high-quality legal solutions.",
+          "responsibilities": [
+            "Draft, review, and negotiate contracts and legal documents.",
+            "Conduct legal research and analysis on a wide range of issues.",
+            "Assist in corporate transactions, due diligence, and regulatory compliance.",
+            "Prepare legal opinions, memoranda, and other written materials.",
+            "Work closely with clients and internal teams to understand legal needs and provide solution-oriented advice.",
+            "Manage multiple tasks and meet deadlines in a fast-paced environment."
+          ],
+          "requirements": [
+            "Juris Doctor (JD) degree from an accredited law school.",
+            "2 - 5 years of experience in corporate or transactional law.",
+            "Strong analytical, research, and drafting skills.",
+            "Excellent communication and interpersonal abilities.",
+            "Admission to the New York State Bar (required).",
+            "Proficiency in MS Office and legal research tools."
+          ],
+          "preferredQualifications": [
+            "Experience in mergers & acquisitions or corporate law is a plus.",
+            "Prior experience in a law firm environment.",
+            "Knowledge of industry-specific regulations."
+          ]
+        },
+        {
+          "id": "job-3",
+          "title": "Paralegal",
+          "department": "Legal Support",
+          "experience": "1 - 3 Years",
+          "location": "New York, NY",
+          "aboutRole": "We are seeking a motivated and detail-oriented Associate Attorney to join our dynamic legal team. The successful candidate will work on a variety of matters including corporate transactions, contracts, due diligence, and legal research. You'll collaborate with senior attorneys and clients to deliver practical, strategic, and high-quality legal solutions.",
+          "responsibilities": [
+            "Draft, review, and negotiate contracts and legal documents.",
+            "Conduct legal research and analysis on a wide range of issues.",
+            "Assist in corporate transactions, due diligence, and regulatory compliance.",
+            "Prepare legal opinions, memoranda, and other written materials.",
+            "Work closely with clients and internal teams to understand legal needs and provide solution-oriented advice.",
+            "Manage multiple tasks and meet deadlines in a fast-paced environment."
+          ],
+          "requirements": [
+            "Juris Doctor (JD) degree from an accredited law school.",
+            "2 - 5 years of experience in corporate or transactional law.",
+            "Strong analytical, research, and drafting skills.",
+            "Excellent communication and interpersonal abilities.",
+            "Admission to the New York State Bar (required).",
+            "Proficiency in MS Office and legal research tools."
+          ],
+          "preferredQualifications": [
+            "Experience in mergers & acquisitions or corporate law is a plus.",
+            "Prior experience in a law firm environment.",
+            "Knowledge of industry-specific regulations."
+          ]
+        },
+        {
+          "id": "job-4",
+          "title": "Business Development Executive",
+          "department": "Business Development",
+          "experience": "2 - 4 Years",
+          "location": "New York, NY",
+          "aboutRole": "We are seeking a motivated and detail-oriented Associate Attorney to join our dynamic legal team. The successful candidate will work on a variety of matters including corporate transactions, contracts, due diligence, and legal research. You'll collaborate with senior attorneys and clients to deliver practical, strategic, and high-quality legal solutions.",
+          "responsibilities": [
+            "Draft, review, and negotiate contracts and legal documents.",
+            "Conduct legal research and analysis on a wide range of issues.",
+            "Assist in corporate transactions, due diligence, and regulatory compliance.",
+            "Prepare legal opinions, memoranda, and other written materials.",
+            "Work closely with clients and internal teams to understand legal needs and provide solution-oriented advice.",
+            "Manage multiple tasks and meet deadlines in a fast-paced environment."
+          ],
+          "requirements": [
+            "Juris Doctor (JD) degree from an accredited law school.",
+            "2 - 5 years of experience in corporate or transactional law.",
+            "Strong analytical, research, and drafting skills.",
+            "Excellent communication and interpersonal abilities.",
+            "Admission to the New York State Bar (required).",
+            "Proficiency in MS Office and legal research tools."
+          ],
+          "preferredQualifications": [
+            "Experience in mergers & acquisitions or corporate law is a plus.",
+            "Prior experience in a law firm environment.",
+            "Knowledge of industry-specific regulations."
+          ]
+        }
+      ],
+      "bottomText": "Don't see the right role?",
+      "bottomLinkText": "Send us your resume.",
+      "bottomLinkUrl": "/contact",
+      "viewDetailsText": "View Details"
+    },
+    "jobDetailData": {
+      "aboutRoleTitle": "About the Role",
+      "responsibilitiesTitle": "Key Responsibilities",
+      "requirementsTitle": "Requirements",
+      "preferredTitle": "Preferred Qualifications",
+      "whatWeOfferTitle": "What We Offer",
+      "whatWeOfferItems": [
+        "Competitive compensation",
+        "Health & wellness benefits",
+        "Professional development",
+        "Flexible work environment",
+        "Collaborative culture"
+      ],
+      "whyJoinUsTitle": "Why Join Us?",
+      "whyJoinUsItems": [
+        {
+          "icon": "impact",
+          "title": "Impactful Work",
+          "description": "Work on challenging matters that make a real difference for our clients and communities."
+        },
+        {
+          "icon": "growth",
+          "title": "Growth & Learning",
+          "description": "Continuous learning and mentorship to help you grow in your legal career."
+        },
+        {
+          "icon": "culture",
+          "title": "Supportive Culture",
+          "description": "Be part of a diverse, inclusive, and supportive team that values your contributions."
+        },
+        {
+          "icon": "career",
+          "title": "Career Advancement",
+          "description": "Clear growth path and opportunities to take your career to the next level."
+        }
+      ],
+      "form": {
+        "title": "Apply Now",
+        "description": "Fill in your details and submit your application.",
+        "submitBtnText": "Apply Now",
+        "termsHtml": "I agree to the <a href=\"/terms-conditions\" class=\"text-[var(--color-accent)] hover:underline\">Terms & Conditions</a> and <a href=\"/privacy-policy\" class=\"text-[var(--color-accent)] hover:underline\">Privacy Policy</a>.",
+        "fields": {
+          "fullName": "Full Name *",
+          "email": "Email Address *",
+          "phone": "Phone Number *",
+          "location": "Current Location *",
+          "experience": "Experience (Years) *",
+          "experienceOptions": [
+            "Select your experience",
+            "0-1 Years",
+            "1-3 Years",
+            "3-5 Years",
+            "5+ Years"
+          ],
+          "currentPosition": "Current Position *",
+          "noticePeriod": "Notice Period *",
+          "noticePeriodOptions": [
+            "Select notice period",
+            "Immediate",
+            "15 Days",
+            "1 Month",
+            "2 Months",
+            "3 Months"
+          ],
+          "resume": "Resume/CV *",
+          "resumeHelp": "Upload your resume. PDF, DOC, DOCX (Max. 5MB)",
+          "coverLetter": "Cover Letter (Optional)",
+          "coverLetterHelp": "Upload your cover letter. PDF, DOC, DOCX (Max. 5MB)"
+        }
+      }
+    }
+  }
+}

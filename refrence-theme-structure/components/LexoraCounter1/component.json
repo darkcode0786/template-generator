@@ -1,0 +1,39 @@
+{
+  "key": "LexoraCounter1",
+  "sectionType": "Stats",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraCounter1",
+  "folder": "stats",
+  "editorFields": [
+    "stats"
+  ],
+  "defaultContent": {
+    "stats": [
+      {
+        "id": "c1",
+        "icon": "IoTrophyOutline",
+        "number": "110k+",
+        "label": "Award Winning"
+      },
+      {
+        "id": "c2",
+        "icon": "IoScaleOutline",
+        "number": "215k",
+        "label": "Successful Case"
+      },
+      {
+        "id": "c3",
+        "icon": "IoPeopleOutline",
+        "number": "350k+",
+        "label": "Satisfied Clients"
+      },
+      {
+        "id": "c4",
+        "icon": "IoRibbonOutline",
+        "number": "125k+",
+        "label": "Expert Attorneys"
+      }
+    ]
+  }
+}

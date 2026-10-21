@@ -1,0 +1,26 @@
+{
+  "key": "LexoraNewsMediaBreadcrumb1",
+  "sectionType": "NewsMediaBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraNewsMediaBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "News & Media",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "News & Media"
+      }
+    ],
+    "bgImage": "/banner/ban1.jpg"
+  }
+}

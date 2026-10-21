@@ -1,0 +1,173 @@
+{
+  "key": "LexoraFooter1",
+  "sectionType": "Footer",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraFooter1",
+  "folder": "footer",
+  "editorFields": [
+    "image",
+    "logoText",
+    "logoSubText",
+    "aboutText",
+    "aboutBullets",
+    "contactInfo",
+    "linkGroups",
+    "newsletterTitle",
+    "newsletterText",
+    "consultation",
+    "awards",
+    "copyright",
+    "bottomLinks"
+  ],
+  "defaultContent": {
+    "image": "logo/footer_logo.png",
+    "logoText": "VERDICTA",
+    "logoSubText": "LAW & ATTORNEY FIRM",
+    "aboutText": "Providing exceptional legal services with integrity, dedication, and a commitment to achieving the best possible outcomes for our clients.",
+    "aboutBullets": [
+      {
+        "icon": "FaShieldAlt",
+        "text": "Trusted Legal Representation"
+      },
+      {
+        "icon": "FaUserTie",
+        "text": "Client-Focused Approach"
+      },
+      {
+        "icon": "FaUniversity",
+        "text": "Results That Matter"
+      }
+    ],
+    "contactInfo": {
+      "address": "123 Justice Avenue, Suite 500\\nNew York, NY 10001, USA",
+      "phone": "+91 0123456789",
+      "email": "info@xyzlawfirm.com"
+    },
+    "linkGroups": [
+      {
+        "id": "g1",
+        "title": "PRACTICE AREAS",
+        "links": [
+          {
+            "label": "Business Law",
+            "url": "/services/business-law"
+          },
+          {
+            "label": "Family Law",
+            "url": "/services/family-law"
+          },
+          {
+            "label": "Insurance Defense",
+            "url": "/services/insurance-defense"
+          },
+          {
+            "label": "Criminal Law",
+            "url": "/services/criminal-law"
+          },
+          {
+            "label": "Real Estate Law",
+            "url": "/services/real-estate-law"
+          },
+          {
+            "label": "Estate Planning",
+            "url": "/services/estate-planning"
+          }
+        ]
+      },
+      {
+        "id": "g2",
+        "title": "QUICK LINKS",
+        "links": [
+          {
+            "label": "Home",
+            "url": "/"
+          },
+          {
+            "label": "About Us",
+            "url": "/about"
+          },
+          {
+            "label": "Our Team",
+            "url": "/team"
+          },
+          {
+            "label": "Industries We Serve",
+            "url": "/industries"
+          },
+          {
+            "label": "Careers",
+            "url": "/careers"
+          },
+          {
+            "label": "Office Locations",
+            "url": "/locations"
+          },
+          {
+            "label": "Contact Us",
+            "url": "/contact"
+          }
+        ]
+      },
+      {
+        "id": "g3",
+        "title": "RESOURCES",
+        "links": [
+          {
+            "label": "Why Choose Us",
+            "url": "/why-choose-us"
+          },
+          {
+            "label": "Our Approach",
+            "url": "/our-approach"
+          },
+          {
+            "label": "Awards & Recognitions",
+            "url": "/awards"
+          },
+          {
+            "label": "Client Testimonials",
+            "url": "/testimonials"
+          },
+          {
+            "label": "News & Media",
+            "url": "/news-media"
+          },
+          {
+            "label": "FAQ",
+            "url": "/faq"
+          }
+        ]
+      }
+    ],
+    "newsletterTitle": "NEWSLETTER",
+    "newsletterText": "Stay informed with the latest legal insights and firm updates.",
+    "consultation": {
+      "title": "Need Legal Help?",
+      "buttonText": "Schedule a Consultation"
+    },
+    "awards": {
+      "text1": "Recognized for Excellence",
+      "text2": "Award-Winning Legal Team"
+    },
+    "copyright": "© 2026 Lexora Law Firm. All Rights Reserved | Designed by Lestow",
+    "bottomLinks": [
+      {
+        "label": "Privacy Policy",
+        "url": "/privacy-policy"
+      },
+      {
+        "label": "Terms & Conditions",
+        "url": "/terms-conditions"
+      },
+      {
+        "label": "Legal Disclaimer",
+        "url": "/legal-disclaimer"
+      },
+      {
+        "label": "Sitemap",
+        "url": "/sitemap"
+      }
+    ]
+  }
+}

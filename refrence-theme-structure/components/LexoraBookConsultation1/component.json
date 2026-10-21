@@ -1,0 +1,65 @@
+{
+  "key": "LexoraBookConsultation1",
+  "sectionType": "BookConsultation",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraBookConsultation1",
+  "folder": "contact",
+  "editorFields": [
+    "leftColumn",
+    "rightColumn"
+  ],
+  "defaultContent": {
+    "leftColumn": {
+      "title": "Why Consult With Us?",
+      "description": "We provide clear legal guidance tailored to your situation. Our team is committed to achieving the best possible outcome for you.",
+      "features": [
+        {
+          "title": "Personalized Attention",
+          "description": "We listen to your concerns and provide solutions that fit your unique needs.",
+          "icon": "FaRegUser"
+        },
+        {
+          "title": "Experienced Professionals",
+          "description": "Our legal experts bring years of experience across diverse practice areas.",
+          "icon": "FaShieldAlt"
+        },
+        {
+          "title": "Transparent Process",
+          "description": "We believe in clear communication and complete transparency at every step.",
+          "icon": "FaRegFileAlt"
+        },
+        {
+          "title": "Results Driven",
+          "description": "We are dedicated to protecting your rights and delivering the best results.",
+          "icon": "FaBalanceScale"
+        }
+      ],
+      "contactBox": {
+        "title": "Prefer to talk?",
+        "description": "Call us directly to speak with our legal expert.",
+        "phone": "+91 0123456789"
+      }
+    },
+    "rightColumn": {
+      "title": "Schedule Your Consultation",
+      "description": "Fill out the form below and our team will get back to you shortly to confirm your appointment.",
+      "form": {
+        "fullNameLabel": "Full Name *",
+        "fullNamePlaceholder": "Enter your full name",
+        "emailLabel": "Email Address *",
+        "emailPlaceholder": "Enter your email",
+        "phoneLabel": "Phone Number *",
+        "phonePlaceholder": "Enter your phone number",
+        "practiceAreaLabel": "Practice Area *",
+        "practiceAreaPlaceholder": "Select practice area",
+        "subjectLabel": "Subject *",
+        "subjectPlaceholder": "Enter subject",
+        "detailsLabel": "Brief Details *",
+        "detailsPlaceholder": "Please describe your legal concern in detail...",
+        "submitBtnText": "Book My Consultation",
+        "secureText": "Your information is secure and confidential."
+      }
+    }
+  }
+}

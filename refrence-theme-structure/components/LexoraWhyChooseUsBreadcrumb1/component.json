@@ -1,0 +1,26 @@
+{
+  "key": "LexoraWhyChooseUsBreadcrumb1",
+  "sectionType": "WhyChooseUsBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraWhyChooseUsBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Why Choose Us",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Why Choose Us"
+      }
+    ],
+    "bgImage": "/banner/ban1.jpg"
+  }
+}

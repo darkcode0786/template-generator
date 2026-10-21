@@ -1,0 +1,41 @@
+{
+  "key": "LexoraWhyChooseUsPage1",
+  "sectionType": "WhyChooseUs",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraWhyChooseUsPage1",
+  "folder": "whychooseus",
+  "editorFields": [
+    "badge",
+    "title",
+    "subtitle",
+    "description",
+    "points",
+    "buttonText",
+    "buttonUrl",
+    "image"
+  ],
+  "defaultContent": {
+    "badge": "WHY CHOOSE US",
+    "title": "You Should Choose\nOur ProCounsel",
+    "subtitle": "Experienced Attorneys",
+    "description": "At our firm, we believe in providing strategic and effective legal solutions with integrity, compassion, and a commitment to achieving the best possible outcomes for our clients.",
+    "points": [
+      {
+        "id": "p1",
+        "icon": "FaAward",
+        "title": "Experienced Attorneys",
+        "text": "Our team of skilled attorneys has decades of experience handling complex legal matters and achieving favorable results for our clients."
+      },
+      {
+        "id": "p2",
+        "icon": "FaUserShield",
+        "title": "Client-Focused Approach",
+        "text": "We prioritize our clients' needs, providing personalized attention, clear communication, and dedicated representation every step of the way."
+      }
+    ],
+    "buttonText": "Discover More",
+    "buttonUrl": "about",
+    "image": "/about/habout1.jpg"
+  }
+}

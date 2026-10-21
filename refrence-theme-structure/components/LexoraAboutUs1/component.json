@@ -1,0 +1,71 @@
+{
+  "key": "LexoraAboutUs1",
+  "sectionType": "About",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraAboutUs1",
+  "folder": "about",
+  "editorFields": [
+    "badge",
+    "title",
+    "description",
+    "image1",
+    "image2",
+    "image3",
+    "badgeText",
+    "tabs",
+    "features",
+    "buttonText",
+    "buttonUrl"
+  ],
+  "defaultContent": {
+    "badge": "GET TO KNOW US",
+    "title": "Let You Know Who We Are\nLearn About Our Firm.",
+    "description": "At our firm, we believe in justice, integrity, and unwavering advocacy. Whether you're facing a complex litigation issue, seeking legal advice on corporate matters, or defending your rights, our experienced legal team is here to guide you every step of the way.",
+    "image1": "/about/habout2.png",
+    "image2": "/about/habout4.png",
+    "image3": "/about/habout5.png",
+    "badgeText": "LEXORA LAW FIRM • JUSTICE • INTEGRITY • RESULTS •",
+    "tabs": [
+      {
+        "id": "mission",
+        "title": "Our Mission",
+        "content": "We bring together deep legal expertise, strong ethical values, and a client-first approach to deliver results that matter. Our mission is simple: to stand by your side, represent your interests, and help you move forward with peace of mind."
+      },
+      {
+        "id": "vision",
+        "title": "Our Vision",
+        "content": "To be recognized as a leading law firm globally, providing innovative legal solutions while maintaining the highest standards of professional excellence and integrity in every case we handle."
+      },
+      {
+        "id": "history",
+        "title": "Our History",
+        "content": "Founded on the principles of justice and dedication, our firm has grown over the decades to become a trusted name in legal defense, helping thousands of clients achieve favorable outcomes."
+      }
+    ],
+    "features": [
+      {
+        "id": "f1",
+        "icon": "FaRegFileAlt",
+        "text": "Pre-file Investigation"
+      },
+      {
+        "id": "f2",
+        "icon": "FaSearch",
+        "text": "Illegal Search & Seizure"
+      },
+      {
+        "id": "f3",
+        "icon": "FaShieldAlt",
+        "text": "Probation Violations"
+      },
+      {
+        "id": "f4",
+        "icon": "FaUserTie",
+        "text": "Professional Liability"
+      }
+    ],
+    "buttonText": "MORE ABOUT US",
+    "buttonUrl": "/about"
+  }
+}

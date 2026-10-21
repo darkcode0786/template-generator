@@ -1,0 +1,26 @@
+{
+  "key": "LexoraTestimonialsBreadcrumb1",
+  "sectionType": "TestimonialsBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraTestimonialsBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Testimonials",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Testimonials"
+      }
+    ],
+    "bgImage": "banner/ban1.jpg"
+  }
+}

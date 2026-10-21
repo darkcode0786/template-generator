@@ -1,0 +1,105 @@
+{
+  "key": "LexoraNewsMedia1",
+  "sectionType": "NewsMedia",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraNewsMedia1",
+  "folder": "blog",
+  "editorFields": [
+    "items"
+  ],
+  "defaultContent": {
+    "items": [
+      {
+        "id": "media-1",
+        "image": "/media/01_Aaj_Tak.png",
+        "title": "Aaj Tak",
+        "url": "https://aajtak.in"
+      },
+      {
+        "id": "media-2",
+        "image": "/media/02_ABP_News.png",
+        "title": "ABP News",
+        "url": "https://abplive.com"
+      },
+      {
+        "id": "media-3",
+        "image": "/media/03_NDTV_India.png",
+        "title": "NDTV India",
+        "url": "https://ndtv.in"
+      },
+      {
+        "id": "media-4",
+        "image": "/media/04_News18_India.png",
+        "title": "News18 India",
+        "url": "https://news18.com"
+      },
+      {
+        "id": "media-5",
+        "image": "/media/05_Zee_News.png",
+        "title": "Zee News",
+        "url": "https://zeenews.india.com"
+      },
+      {
+        "id": "media-6",
+        "image": "/media/01_Aaj_Tak.png",
+        "title": "Aaj Tak",
+        "url": "https://aajtak.in"
+      },
+      {
+        "id": "media-7",
+        "image": "/media/02_ABP_News.png",
+        "title": "ABP News",
+        "url": "https://abplive.com"
+      },
+      {
+        "id": "media-8",
+        "image": "/media/03_NDTV_India.png",
+        "title": "NDTV India",
+        "url": "https://ndtv.in"
+      },
+      {
+        "id": "media-9",
+        "image": "/media/04_News18_India.png",
+        "title": "News18 India",
+        "url": "https://news18.com"
+      },
+      {
+        "id": "media-10",
+        "image": "/media/05_Zee_News.png",
+        "title": "Zee News",
+        "url": "https://zeenews.india.com"
+      },
+      {
+        "id": "media-11",
+        "image": "/media/01_Aaj_Tak.png",
+        "title": "Aaj Tak",
+        "url": "https://aajtak.in"
+      },
+      {
+        "id": "media-12",
+        "image": "/media/02_ABP_News.png",
+        "title": "ABP News",
+        "url": "https://abplive.com"
+      },
+      {
+        "id": "media-13",
+        "image": "/media/03_NDTV_India.png",
+        "title": "NDTV India",
+        "url": "https://ndtv.in"
+      },
+      {
+        "id": "media-14",
+        "image": "/media/04_News18_India.png",
+        "title": "News18 India",
+        "url": "https://news18.com"
+      },
+      {
+        "id": "media-15",
+        "image": "/media/05_Zee_News.png",
+        "title": "Zee News",
+        "url": "https://zeenews.india.com"
+      }
+    ]
+  }
+}

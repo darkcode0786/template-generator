@@ -1,0 +1,312 @@
+{
+  "key": "LexoraCaseStudies1",
+  "sectionType": "CaseStudies",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraCaseStudies1",
+  "folder": "gallery",
+  "editorFields": [
+    "badge",
+    "title",
+    "description",
+    "items",
+    "globalUI"
+  ],
+  "defaultContent": {
+    "badge": "OUR CASE STUDIES",
+    "title": "Case Studies",
+    "description": "Explore how we've helped our clients overcome challenges and achieve successful outcomes.",
+    "items": [
+      {
+        "id": "cs-1",
+        "slug": "marriage-agreement",
+        "image": "/about/habout1.jpg",
+        "category": "FAMILY / COUPLE",
+        "title": "Marriage Agreement",
+        "description": "We drafted a comprehensive marriage agreement ensuring clarity, protection, and mutual understanding.",
+        "content": "Detailed case study content regarding the marriage agreement. We assisted the clients in understanding the legal nuances and provided a mutually beneficial framework.",
+        "bannerImage": "/banner/ban1.jpg",
+        "caseInfo": {
+          "client": "Robert Michale",
+          "category": "FAMILY / COUPLE",
+          "budget": "$500 USD",
+          "startDate": "06-07-2026",
+          "endDate": "08-10-2026",
+          "website": "www.verdicta.com",
+          "rating": 5
+        },
+        "overview": {
+          "title": "Case Overview",
+          "text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.",
+          "image": "/about/habout1.jpg"
+        },
+        "challenge": {
+          "title": "The Challenge",
+          "text": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words.",
+          "points": [
+            "Ensuring the safety of the client and her children.",
+            "Obtaining a protection order against the respondent.",
+            "Addressing emotional trauma and legal uncertainties.",
+            "Handling documentation and court procedures.",
+            "Ensuring the client's rights were protected.",
+            "Providing long-term legal guidance and support."
+          ]
+        },
+        "result": {
+          "title": "The Result",
+          "text": "We successfully secured a protection order for the client, ensuring her and her children's safety. The court ruled in her favor, and the respondent was legally restrained from any harassment. Our support helped the client rebuild her confidence and start a new, secure life.",
+          "cards": [
+            {
+              "id": "r1",
+              "icon": "FaShieldAlt",
+              "title": "Protection Granted",
+              "text": "Court granted the protection order successfully."
+            },
+            {
+              "id": "r2",
+              "icon": "FaGavel",
+              "title": "Legal Victory",
+              "text": "Respondent was restrained from harassment."
+            },
+            {
+              "id": "r3",
+              "icon": "FaUserTie",
+              "title": "Client Safety",
+              "text": "Ensured safety and security for the client and her children."
+            },
+            {
+              "id": "r4",
+              "icon": "FaHeartbeat",
+              "title": "Emotional Support",
+              "text": "Provided guidance and emotional support throughout the case."
+            }
+          ]
+        }
+      },
+      {
+        "id": "cs-2",
+        "slug": "family-violence-law",
+        "image": "/banner/ban1.jpg",
+        "category": "FAMILY / COUPLE",
+        "title": "Family Violence Law",
+        "description": "Our legal support helped the client secure a protection order and ensured her and her children's safety.",
+        "content": "Detailed case study content regarding family violence law. We took swift action to secure protection orders and provided ongoing support throughout the legal process.",
+        "bannerImage": "/banner/ban1.jpg",
+        "caseInfo": {
+          "client": "Robert Michale",
+          "category": "FAMILY / COUPLE",
+          "budget": "$500 USD",
+          "startDate": "06-07-2026",
+          "endDate": "08-10-2026",
+          "website": "www.verdicta.com",
+          "rating": 5
+        },
+        "overview": {
+          "title": "Case Overview",
+          "text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.",
+          "image": "/banner/ban1.jpg"
+        },
+        "challenge": {
+          "title": "The Challenge",
+          "text": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words.",
+          "points": [
+            "Ensuring the safety of the client and her children.",
+            "Obtaining a protection order against the respondent.",
+            "Addressing emotional trauma and legal uncertainties.",
+            "Handling documentation and court procedures.",
+            "Ensuring the client's rights were protected.",
+            "Providing long-term legal guidance and support."
+          ]
+        },
+        "result": {
+          "title": "The Result",
+          "text": "We successfully secured a protection order for the client, ensuring her and her children's safety. The court ruled in her favor, and the respondent was legally restrained from any harassment. Our support helped the client rebuild her confidence and start a new, secure life.",
+          "cards": [
+            {
+              "id": "r1",
+              "icon": "FaShieldAlt",
+              "title": "Protection Granted",
+              "text": "Court granted the protection order successfully."
+            },
+            {
+              "id": "r2",
+              "icon": "FaGavel",
+              "title": "Legal Victory",
+              "text": "Respondent was restrained from harassment."
+            },
+            {
+              "id": "r3",
+              "icon": "FaUserTie",
+              "title": "Client Safety",
+              "text": "Ensured safety and security for the client and her children."
+            },
+            {
+              "id": "r4",
+              "icon": "FaHeartbeat",
+              "title": "Emotional Support",
+              "text": "Provided guidance and emotional support throughout the case."
+            }
+          ]
+        }
+      },
+      {
+        "id": "cs-3",
+        "slug": "business-consultancy",
+        "image": "/services-v2-bg.jpg",
+        "category": "CORPORATE / TAX",
+        "title": "Business Consultancy",
+        "description": "We provided strategic legal and tax advice that optimized operations and minimized liabilities for the business.",
+        "content": "Detailed case study content regarding business consultancy. We analyzed the client's corporate structure and implemented tax-efficient strategies to foster growth.",
+        "bannerImage": "/banner/ban1.jpg",
+        "caseInfo": {
+          "client": "Robert Michale",
+          "category": "CORPORATE / TAX",
+          "budget": "$500 USD",
+          "startDate": "06-07-2026",
+          "endDate": "08-10-2026",
+          "website": "www.verdicta.com",
+          "rating": 5
+        },
+        "overview": {
+          "title": "Case Overview",
+          "text": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text.",
+          "image": "/services-v2-bg.jpg"
+        },
+        "challenge": {
+          "title": "The Challenge",
+          "text": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words.",
+          "points": [
+            "Ensuring the safety of the client and her children.",
+            "Obtaining a protection order against the respondent.",
+            "Addressing emotional trauma and legal uncertainties.",
+            "Handling documentation and court procedures.",
+            "Ensuring the client's rights were protected.",
+            "Providing long-term legal guidance and support."
+          ]
+        },
+        "result": {
+          "title": "The Result",
+          "text": "We successfully secured a protection order for the client, ensuring her and her children's safety. The court ruled in her favor, and the respondent was legally restrained from any harassment. Our support helped the client rebuild her confidence and start a new, secure life.",
+          "cards": [
+            {
+              "id": "r1",
+              "icon": "FaShieldAlt",
+              "title": "Protection Granted",
+              "text": "Court granted the protection order successfully."
+            },
+            {
+              "id": "r2",
+              "icon": "FaGavel",
+              "title": "Legal Victory",
+              "text": "Respondent was restrained from harassment."
+            },
+            {
+              "id": "r3",
+              "icon": "FaUserTie",
+              "title": "Client Safety",
+              "text": "Ensured safety and security for the client and her children."
+            },
+            {
+              "id": "r4",
+              "icon": "FaHeartbeat",
+              "title": "Emotional Support",
+              "text": "Provided guidance and emotional support throughout the case."
+            }
+          ]
+        }
+      }
+    ],
+    "globalUI": {
+      "loadingText": "Loading...",
+      "industryNotFoundText": "Industry not found",
+      "defaultIndustriesBreadcrumb": {
+        "title": "Industries We Serve",
+        "paths": [
+          {
+            "label": "Home",
+            "url": "/"
+          },
+          {
+            "label": "Industries"
+          }
+        ],
+        "bgImage": "/banner/ban1.jpg"
+      },
+      "servicesBadge": "OUR SERVICES",
+      "defaultServiceFeatures": [
+        {
+          "icon": "FaShieldAlt",
+          "title": "Protect Your<br/>Business"
+        },
+        {
+          "icon": "FaHandshake",
+          "title": "Reduce Legal<br/>Risks"
+        },
+        {
+          "icon": "FaChartLine",
+          "title": "Drive Sustainable<br/>Growth"
+        }
+      ],
+      "defaultOverviewFallback": "We provide strategic legal solutions to help businesses start, grow, and succeed with confidence.",
+      "callUsAnytimeText": "Call Us Anytime",
+      "sidebarSearchTitle": "Search",
+      "sidebarSearchPlaceholder": "Search services...",
+      "sidebarServicesTitle": "Our Services",
+      "sidebarResourcesTitle": "Resources",
+      "sidebarContactTitle": "Have Questions?",
+      "sidebarContactDesc": "We're here to help you.",
+      "sidebarContactNamePlaceholder": "Your Name",
+      "sidebarContactEmailPlaceholder": "Your Email",
+      "sidebarContactMessagePlaceholder": "Your Message",
+      "sidebarContactSubmitText": "SEND MESSAGE",
+      "sidebarContactSubmittingText": "SENDING...",
+      "sidebarContactSuccessMessage": "Thank you! Your message has been sent successfully. We will contact you shortly.",
+      "sidebarSearchDemoMessage": "Search results for: \"{query}\"\n(This is a template demo. In production, this would navigate to a search page.)",
+      "servicesGridTitle": "How We Can Help",
+      "servicesGridSubtitle": "Trusted legal guidance tailored to your unique needs.",
+      "servicesGridLearnMore": "Learn More",
+      "servicesGridBannerTitle": "Don't See Your Legal Need?",
+      "servicesGridBannerDesc": "We handle a wide range of legal matters. Contact us to discuss how we can help.",
+      "servicesGridBannerBtnText": "CONTACT US",
+      "servicesGridBannerBtnUrl": "#",
+      "sitemapBadge": "SITEMAP",
+      "sitemapTitle": "Explore All Pages",
+      "sitemapHome": "Home",
+      "sitemapAbout": "About Us",
+      "sitemapWhyChooseUs": "Why Choose Us",
+      "sitemapOurApproach": "Our Approach",
+      "sitemapServices": "Services",
+      "sitemapIndustries": "Industries We Serve",
+      "sitemapTeam": "Our Team",
+      "sitemapDetailSuffix": "Detail",
+      "defaultSitemapBreadcrumb": {
+        "title": "Sitemap",
+        "paths": [
+          {
+            "label": "Home",
+            "url": "/"
+          },
+          {
+            "label": "Sitemap"
+          }
+        ],
+        "bgImage": "/banner/ban1.jpg"
+      },
+      "teamDetailBadge": "EXPERT LAWYER",
+      "teamDetailExpLabel": "EXPERIENCE",
+      "teamDetailPhoneLabel": "PHONE",
+      "teamDetailEmailLabel": "EMAIL",
+      "teamDetailLocationLabel": "LOCATION",
+      "teamDetailDefaultExp": "10+ Years of Experience",
+      "teamDetailDefaultPhone": "+91 0123456789",
+      "teamDetailDefaultEmail": "info@xyzlawfirm.com",
+      "teamDetailDefaultLocation": "New York, USA",
+      "teamDetailSkillsTitle": "Professional Skills",
+      "teamDetailExpTitle": "Professional Experience",
+      "teamDetailEduTitle": "Educational Background",
+      "teamDetailPassingYearLabel": "🗓 Passing Year:",
+      "caseStudyReadBtnText": "READ CASE STUDY",
+      "notFoundText": "Not found"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "key": "LexoraAboutMission1",
+  "sectionType": "AboutMission",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraAboutMission1",
+  "folder": "about",
+  "editorFields": [
+    "badge",
+    "title",
+    "description",
+    "items"
+  ],
+  "defaultContent": {
+    "badge": "ABOUT US",
+    "title": "Our Mission, Vision & History",
+    "description": "Guided by our principles of integrity, respect, and relentless dedication, we are committed to serving our community and fighting for what is right.",
+    "items": [
+      {
+        "id": "m1",
+        "icon": "FaBullseye",
+        "title": "Our Mission",
+        "text": "To deliver exceptional legal services with integrity, professionalism, and a client-focused approach. We strive to achieve the best possible outcomes for our clients while upholding the highest ethical standards.",
+        "bgImage": "/about/habout2.png"
+      },
+      {
+        "id": "m2",
+        "icon": "FaEye",
+        "title": "Our Vision",
+        "text": "To be recognized as a leading law firm globally, providing innovative legal solutions while maintaining a steadfast commitment to justice, fairness, and excellence in every case we handle.",
+        "bgImage": "/banner/ban2.jpg"
+      },
+      {
+        "id": "m3",
+        "icon": "FaLandmark",
+        "title": "Our History",
+        "text": "Founded on the principles of justice and dedication, our firm has grown over the decades to become a trusted name in legal defense, helping thousands of clients navigate complex legal challenges.",
+        "bgImage": "/banner/ban3.jpg"
+      }
+    ]
+  }
+}

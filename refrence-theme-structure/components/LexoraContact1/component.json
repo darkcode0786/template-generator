@@ -1,0 +1,68 @@
+{
+  "key": "LexoraContact1",
+  "sectionType": "Contact",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraContact1",
+  "folder": "contact",
+  "editorFields": [
+    "badge",
+    "title",
+    "description",
+    "infoCards",
+    "officeCard",
+    "form"
+  ],
+  "defaultContent": {
+    "badge": "CONTACT US",
+    "title": "We're Here To Help",
+    "description": "Have a question or need legal assistance? Reach out to us\nand our team will get back to you as soon as possible.",
+    "infoCards": {
+      "emails": [
+        "info@xyzlawfirm.com",
+        "info@xyzlawfirm.com"
+      ],
+      "phones": [
+        "+81 0 895 74555",
+        "+81 0 895 74555"
+      ],
+      "address": "354 Oakridge, Camden\nNJ 08102 - USA"
+    },
+    "officeCard": {
+      "title": "Our Office",
+      "description": "Visit our office and meet our experienced\nlegal professionals.",
+      "workingHours": [
+        {
+          "days": "Mon - Fri",
+          "hours": "9:00 AM - 6:00 PM"
+        },
+        {
+          "days": "Saturday",
+          "hours": "10:00 AM - 2:00 PM"
+        }
+      ],
+      "mapLocationQuery": "Dupont Circle, Washington, DC",
+      "getDirectionsText": "GET DIRECTIONS",
+      "getDirectionsUrl": "#"
+    },
+    "form": {
+      "title": "Send Us A Message",
+      "description": "Fill out the form below and we'll get back to you shortly.",
+      "submitBtnText": "SUBMIT MESSAGE",
+      "fields": {
+        "fullName": "Full Name",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "subject": "Subject",
+        "subjectOptions": [
+          "Select Subject",
+          "General Inquiry",
+          "Legal Consultation",
+          "Career",
+          "Other"
+        ],
+        "message": "Message"
+      }
+    }
+  }
+}

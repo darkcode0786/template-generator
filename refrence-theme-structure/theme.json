@@ -1,0 +1,366 @@
+{
+  "key": "law-firm-20261016113731",
+  "title": "Lexora Law Firm",
+  "type": "Multiple Pages Website",
+  "categorySlug": "law-firm",
+  "previewImage": "assets/banner/ban1.jpg",
+  "previewDescription": "Packed from lexora-law-firm GitHub download",
+  "homeSectionOrder": [
+    "Topbar",
+    "Header",
+    "Banner",
+    "About",
+    "Services",
+    "Process",
+    "Team",
+    "Stats",
+    "Testimonial",
+    "Blog",
+    "Footer"
+  ],
+  "sectionVariants": {
+    "Topbar": "LexoraTopBar1",
+    "Header": "LexoraHeader1",
+    "Banner": "LexoraHero1",
+    "About": "LexoraAboutUs1",
+    "Services": "LexoraServices1",
+    "Process": "LexoraProcess1",
+    "Team": "LexoraTeam1",
+    "Stats": "LexoraCounter1",
+    "Testimonial": "LexoraTestimonials1",
+    "Blog": "LexoraBlogs1",
+    "Footer": "LexoraFooter1",
+    "AboutBreadcrumb": "LexoraAboutBreadcrumb1",
+    "AboutFirm": "LexoraAboutFirm1",
+    "AboutWhyChooseUs": "LexoraAboutWhyChooseUs1",
+    "AboutMission": "LexoraAboutMission1",
+    "AboutApproach": "LexoraAboutApproach1",
+    "ServicesBreadcrumb": "LexoraServicesBreadcrumb1",
+    "ServicesGrid": "LexoraServicesGrid1",
+    "TeamBreadcrumb": "LexoraTeamBreadcrumb1",
+    "WhyChooseUsBreadcrumb": "LexoraWhyChooseUsBreadcrumb1",
+    "WhyChooseUs": "LexoraWhyChooseUsPage1",
+    "ContactBreadcrumb": "LexoraContactBreadcrumb1",
+    "Contact": "LexoraContact1",
+    "FaqBreadcrumb": "LexoraFaqBreadcrumb1",
+    "FAQ": "LexoraFaq1",
+    "AwardsBreadcrumb": "LexoraAwardsBreadcrumb1",
+    "Awards": "LexoraAwards1",
+    "BlogsBreadcrumb": "LexoraBlogsBreadcrumb1",
+    "BlogsGrid": "LexoraBlogsGrid1",
+    "BookConsultationBreadcrumb": "LexoraBookConsultationBreadcrumb1",
+    "BookConsultation": "LexoraBookConsultation1",
+    "CareersBreadcrumb": "LexoraCareersBreadcrumb1",
+    "Careers": "LexoraCareers1",
+    "CaseStudiesBreadcrumb": "LexoraCaseStudiesBreadcrumb1",
+    "CaseStudies": "LexoraCaseStudies1",
+    "EventsBreadcrumb": "LexoraEventsBreadcrumb1",
+    "Events": "LexoraEvents1",
+    "IndustriesBreadcrumb": "LexoraIndustriesBreadcrumb1",
+    "Industries": "LexoraIndustries1",
+    "LegalUpdatesBreadcrumb": "LexoraLegalUpdatesBreadcrumb1",
+    "LegalUpdates": "LexoraLegalUpdates1",
+    "NewsMediaBreadcrumb": "LexoraNewsMediaBreadcrumb1",
+    "NewsMedia": "LexoraNewsMedia1",
+    "OfficeLocationsBreadcrumb": "LexoraOfficeLocationsBreadcrumb1",
+    "OfficeLocations": "LexoraOfficeLocations1",
+    "PublicationsBreadcrumb": "LexoraPublicationsBreadcrumb1",
+    "Publications": "LexoraPublications1",
+    "TestimonialsBreadcrumb": "LexoraTestimonialsBreadcrumb1",
+    "TestimonialsGrid": "LexoraTestimonialsGrid1",
+    "OurApproachBreadcrumb": "LexoraOurApproachBreadcrumb1",
+    "PrivacyPolicyBreadcrumb": "LexoraPrivacyPolicyBreadcrumb1",
+    "PrivacyPolicy": "LexoraPrivacyPolicy1",
+    "TermsConditionsBreadcrumb": "LexoraTermsConditionsBreadcrumb1",
+    "TermsConditions": "LexoraTermsConditions1",
+    "LegalDisclaimerBreadcrumb": "LexoraLegalDisclaimerBreadcrumb1",
+    "LegalDisclaimer": "LexoraLegalDisclaimer1"
+  },
+  "pages": [
+    {
+      "id": "home",
+      "label": "Home",
+      "sectionType": "Home",
+      "sections": [
+        "Topbar",
+        "Header",
+        "Banner",
+        "About",
+        "Services",
+        "Process",
+        "Team",
+        "Stats",
+        "Testimonial",
+        "Blog",
+        "Footer"
+      ]
+    },
+    {
+      "id": "about",
+      "label": "About Us",
+      "sectionType": "About",
+      "sections": [
+        "Topbar",
+        "Header",
+        "AboutBreadcrumb",
+        "AboutFirm",
+        "AboutWhyChooseUs",
+        "AboutMission",
+        "AboutApproach",
+        "Footer"
+      ]
+    },
+    {
+      "id": "services",
+      "label": "Services",
+      "sectionType": "Services",
+      "sections": [
+        "Topbar",
+        "Header",
+        "ServicesBreadcrumb",
+        "ServicesGrid",
+        "Footer"
+      ]
+    },
+    {
+      "id": "team",
+      "label": "Our Team",
+      "sectionType": "Team",
+      "sections": [
+        "Topbar",
+        "Header",
+        "TeamBreadcrumb",
+        "Team",
+        "Footer"
+      ]
+    },
+    {
+      "id": "why-choose-us",
+      "label": "Why Choose Us",
+      "sectionType": "WhyChooseUs",
+      "sections": [
+        "Topbar",
+        "Header",
+        "WhyChooseUsBreadcrumb",
+        "WhyChooseUs",
+        "Footer"
+      ]
+    },
+    {
+      "id": "contact",
+      "label": "Contact Us",
+      "sectionType": "Contact",
+      "sections": [
+        "Topbar",
+        "Header",
+        "ContactBreadcrumb",
+        "Contact",
+        "Footer"
+      ]
+    },
+    {
+      "id": "faq",
+      "label": "FAQ",
+      "sectionType": "FAQ",
+      "sections": [
+        "Topbar",
+        "Header",
+        "FaqBreadcrumb",
+        "FAQ",
+        "Footer"
+      ]
+    },
+    {
+      "id": "awards",
+      "label": "Awards",
+      "sectionType": "Awards",
+      "sections": [
+        "Topbar",
+        "Header",
+        "AwardsBreadcrumb",
+        "Awards",
+        "Footer"
+      ]
+    },
+    {
+      "id": "blogs",
+      "label": "Blogs",
+      "sectionType": "Blog",
+      "sections": [
+        "Topbar",
+        "Header",
+        "BlogsBreadcrumb",
+        "BlogsGrid",
+        "Footer"
+      ]
+    },
+    {
+      "id": "book-consultation",
+      "label": "Book Consultation",
+      "sectionType": "BookConsultation",
+      "sections": [
+        "Topbar",
+        "Header",
+        "BookConsultationBreadcrumb",
+        "BookConsultation",
+        "Footer"
+      ]
+    },
+    {
+      "id": "careers",
+      "label": "Careers",
+      "sectionType": "Careers",
+      "sections": [
+        "Topbar",
+        "Header",
+        "CareersBreadcrumb",
+        "Careers",
+        "Footer"
+      ]
+    },
+    {
+      "id": "case-studies",
+      "label": "Case Studies",
+      "sectionType": "CaseStudies",
+      "sections": [
+        "Topbar",
+        "Header",
+        "CaseStudiesBreadcrumb",
+        "CaseStudies",
+        "Footer"
+      ]
+    },
+    {
+      "id": "events",
+      "label": "Events",
+      "sectionType": "Events",
+      "sections": [
+        "Topbar",
+        "Header",
+        "EventsBreadcrumb",
+        "Events",
+        "Footer"
+      ]
+    },
+    {
+      "id": "industries",
+      "label": "Industries",
+      "sectionType": "Industries",
+      "sections": [
+        "Topbar",
+        "Header",
+        "IndustriesBreadcrumb",
+        "Industries",
+        "Footer"
+      ]
+    },
+    {
+      "id": "legal-updates",
+      "label": "Legal Updates",
+      "sectionType": "LegalUpdates",
+      "sections": [
+        "Topbar",
+        "Header",
+        "LegalUpdatesBreadcrumb",
+        "LegalUpdates",
+        "Footer"
+      ]
+    },
+    {
+      "id": "news-media",
+      "label": "News & Media",
+      "sectionType": "NewsMedia",
+      "sections": [
+        "Topbar",
+        "Header",
+        "NewsMediaBreadcrumb",
+        "NewsMedia",
+        "Footer"
+      ]
+    },
+    {
+      "id": "locations",
+      "label": "Office Locations",
+      "sectionType": "OfficeLocations",
+      "sections": [
+        "Topbar",
+        "Header",
+        "OfficeLocationsBreadcrumb",
+        "OfficeLocations",
+        "Footer"
+      ]
+    },
+    {
+      "id": "publications",
+      "label": "Publications",
+      "sectionType": "Publications",
+      "sections": [
+        "Topbar",
+        "Header",
+        "PublicationsBreadcrumb",
+        "Publications",
+        "Footer"
+      ]
+    },
+    {
+      "id": "testimonials",
+      "label": "Testimonials",
+      "sectionType": "TestimonialsGrid",
+      "sections": [
+        "Topbar",
+        "Header",
+        "TestimonialsBreadcrumb",
+        "TestimonialsGrid",
+        "Footer"
+      ]
+    },
+    {
+      "id": "our-approach",
+      "label": "Our Approach",
+      "sectionType": "AboutApproach",
+      "sections": [
+        "Topbar",
+        "Header",
+        "OurApproachBreadcrumb",
+        "AboutApproach",
+        "Footer"
+      ]
+    },
+    {
+      "id": "privacy-policy",
+      "label": "Privacy Policy",
+      "sectionType": "PrivacyPolicy",
+      "sections": [
+        "Topbar",
+        "Header",
+        "PrivacyPolicyBreadcrumb",
+        "PrivacyPolicy",
+        "Footer"
+      ]
+    },
+    {
+      "id": "terms-conditions",
+      "label": "Terms & Conditions",
+      "sectionType": "TermsConditions",
+      "sections": [
+        "Topbar",
+        "Header",
+        "TermsConditionsBreadcrumb",
+        "TermsConditions",
+        "Footer"
+      ]
+    },
+    {
+      "id": "legal-disclaimer",
+      "label": "Legal Disclaimer",
+      "sectionType": "LegalDisclaimer",
+      "sections": [
+        "Topbar",
+        "Header",
+        "LegalDisclaimerBreadcrumb",
+        "LegalDisclaimer",
+        "Footer"
+      ]
+    }
+  ]
+}

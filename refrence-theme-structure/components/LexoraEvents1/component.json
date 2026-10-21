@@ -1,0 +1,132 @@
+{
+  "key": "LexoraEvents1",
+  "sectionType": "Events",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraEvents1",
+  "folder": "blog",
+  "editorFields": [
+    "badge",
+    "title",
+    "items"
+  ],
+  "defaultContent": {
+    "badge": "Upcoming Events",
+    "title": "Upcoming Events",
+    "items": [
+      {
+        "id": "ev-1",
+        "slug": "corporate-law-compliance",
+        "badge": "SEMINAR",
+        "dateBox": {
+          "month": "JUN",
+          "day": "15",
+          "year": "2025"
+        },
+        "dateFull": "June 15, 2025",
+        "dayOfWeek": "Sunday",
+        "title": "Corporate Law & Compliance in a Changing World",
+        "excerpt": "An insightful seminar on the latest trends in corporate governance, risk management, and regulatory compliance in today's dynamic business environment.",
+        "time": "10:00 AM - 01:00 PM",
+        "location": "Taj Lands End, Mumbai",
+        "image": "/banner/ban1.jpg",
+        "seats": "100 Attendees",
+        "aboutText": [
+          "The legal and regulatory landscape is constantly evolving, and businesses must stay compliant while focusing on growth and innovation.",
+          "This seminar will bring together industry experts to discuss key developments in corporate law, governance, risk management, and compliance strategies that organizations must adopt to navigate challenges and seize opportunities."
+        ],
+        "keyTopics": [
+          "Emerging trends in corporate governance",
+          "Risk management in an evolving regulatory environment",
+          "Compliance best practices for businesses",
+          "Recent legal updates and their business impact",
+          "Q&A and interactive discussion"
+        ]
+      },
+      {
+        "id": "ev-2",
+        "slug": "intellectual-property-rights",
+        "badge": "WEBINAR",
+        "dateBox": {
+          "month": "JUL",
+          "day": "05",
+          "year": "2025"
+        },
+        "dateFull": "July 05, 2025",
+        "dayOfWeek": "Saturday",
+        "title": "Intellectual Property Rights: Protection & Enforcement",
+        "excerpt": "Join our experts for a webinar on protecting your innovations and brand in today's competitive landscape.",
+        "time": "04:00 PM - 05:30 PM",
+        "location": "Virtual Event",
+        "image": "/banner/ban2.jpg",
+        "seats": "500 Attendees",
+        "aboutText": [
+          "In the digital age, protecting your intellectual property is more critical than ever.",
+          "This webinar will cover the basics of trademarks, copyrights, and patents, and how to enforce your rights globally."
+        ],
+        "keyTopics": [
+          "Understanding different types of IP",
+          "Global IP protection strategies",
+          "Handling IP infringement cases",
+          "Interactive Q&A session"
+        ]
+      },
+      {
+        "id": "ev-3",
+        "slug": "dispute-resolution-india",
+        "badge": "PANEL DISCUSSION",
+        "dateBox": {
+          "month": "AUG",
+          "day": "22",
+          "year": "2025"
+        },
+        "dateFull": "August 22, 2025",
+        "dayOfWeek": "Friday",
+        "title": "Dispute Resolution in India: Emerging Trends",
+        "excerpt": "A panel discussion with industry leaders on arbitration, mediation, and the future of dispute resolution.",
+        "time": "11:00 AM - 01:00 PM",
+        "location": "The Leela Palace, New Delhi",
+        "image": "/banner/ban1.jpg",
+        "seats": "200 Attendees",
+        "aboutText": [
+          "Litigation can be time-consuming and expensive. Alternate Dispute Resolution (ADR) offers a practical way out.",
+          "Join leading arbitrators and mediators as they discuss the future of dispute resolution in India."
+        ],
+        "keyTopics": [
+          "The rise of arbitration in India",
+          "Mediation as a preferred tool for businesses",
+          "Recent Supreme Court rulings on arbitration",
+          "Networking lunch"
+        ]
+      },
+      {
+        "id": "ev-4",
+        "slug": "startups-legal-essentials",
+        "badge": "WORKSHOP",
+        "dateBox": {
+          "month": "SEP",
+          "day": "12",
+          "year": "2025"
+        },
+        "dateFull": "September 12, 2025",
+        "dayOfWeek": "Friday",
+        "title": "Startups & Legal Essentials: Building on a Strong Foundation",
+        "excerpt": "A practical workshop for founders and entrepreneurs on key legal aspects of starting and scaling a business.",
+        "time": "02:00 PM - 05:00 PM",
+        "location": "WeWork, Bengaluru",
+        "image": "/banner/ban2.jpg",
+        "seats": "50 Attendees",
+        "aboutText": [
+          "Founders often focus on building the product, but legal foundations are equally critical for long-term success.",
+          "This workshop covers essential agreements, funding documentation, and compliance basics for startups."
+        ],
+        "keyTopics": [
+          "Co-founders agreements and equity splitting",
+          "Understanding term sheets and funding legalese",
+          "Employment contracts and ESOPs",
+          "Data privacy compliance"
+        ]
+      }
+    ]
+  }
+}

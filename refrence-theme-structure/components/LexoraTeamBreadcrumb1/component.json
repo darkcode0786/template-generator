@@ -1,0 +1,26 @@
+{
+  "key": "LexoraTeamBreadcrumb1",
+  "sectionType": "TeamBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraTeamBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Our Team",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Our Team"
+      }
+    ],
+    "bgImage": "/banner/ban1.jpg"
+  }
+}

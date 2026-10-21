@@ -1,0 +1,26 @@
+{
+  "key": "LexoraLegalUpdatesBreadcrumb1",
+  "sectionType": "LegalUpdatesBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraLegalUpdatesBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Legal Updates",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Legal Updates"
+      }
+    ],
+    "bgImage": "/banner/ban2.jpg"
+  }
+}

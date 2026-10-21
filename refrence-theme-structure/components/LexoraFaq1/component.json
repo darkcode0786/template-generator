@@ -1,0 +1,78 @@
+{
+  "key": "LexoraFaq1",
+  "sectionType": "FAQ",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraFaq1",
+  "folder": "faq",
+  "editorFields": [
+    "badge",
+    "title",
+    "highlightText",
+    "description",
+    "items"
+  ],
+  "defaultContent": {
+    "badge": "FAQ",
+    "title": "Frequently Asked Questions",
+    "highlightText": "Asked",
+    "description": "Find answers to common legal questions about our services, process, and consultations.",
+    "items": [
+      {
+        "id": "faq-1",
+        "question": "What Is The Role Of A Lawyer Legal Case?",
+        "answer": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English."
+      },
+      {
+        "id": "faq-2",
+        "question": "What We Have Similar Cases?",
+        "answer": "We have handled numerous similar cases over our years of practice. Our extensive experience allows us to anticipate challenges and build robust strategies tailored to your specific situation."
+      },
+      {
+        "id": "faq-3",
+        "question": "What Is Your Legal Experience Level?",
+        "answer": "Our firm brings decades of combined legal experience. Each of our partners has specialized knowledge in their respective fields, ensuring you receive expert representation."
+      },
+      {
+        "id": "faq-4",
+        "question": "How Do Initial Consultations Work?",
+        "answer": "During the initial consultation, we will review the facts of your case, discuss potential legal strategies, and explain our fee structure. It is an opportunity for you to ask questions and for us to determine how we can best assist you."
+      },
+      {
+        "id": "faq-5",
+        "question": "What Areas Of Law Does Your Firm Specialize In?",
+        "answer": "Our firm specializes in corporate law, family law, real estate transactions, and intellectual property. We have dedicated teams for each practice area."
+      },
+      {
+        "id": "faq-6",
+        "question": "Do You Offer Free Initial Consultations?",
+        "answer": "Yes, we offer a complimentary 30-minute initial consultation for most types of cases to help you understand your legal options without any upfront commitment."
+      },
+      {
+        "id": "faq-7",
+        "question": "What Information Should I Bring To My First Meeting?",
+        "answer": "Please bring any documents related to your case, including contracts, correspondence, court documents, and a timeline of events. The more information you provide, the better we can evaluate your case."
+      },
+      {
+        "id": "faq-8",
+        "question": "How Are Your Legal Fees Structured?",
+        "answer": "Our fee structure varies depending on the type of case. We offer hourly rates, flat fees, and contingency fee arrangements. We will clearly explain all costs during your initial consultation."
+      },
+      {
+        "id": "faq-9",
+        "question": "How Do Initial Consultations Work?",
+        "answer": "During the initial consultation, we will review the facts of your case, discuss potential legal strategies, and explain our fee structure. It is an opportunity for you to ask questions and for us to determine how we can best assist you."
+      },
+      {
+        "id": "faq-10",
+        "question": "How Long Will My Case Take To Resolve?",
+        "answer": "The duration of a case depends on its complexity, the willingness of parties to cooperate, and court schedules. We will provide a realistic timeline based on our experience with similar matters."
+      },
+      {
+        "id": "faq-11",
+        "question": "How Will I Receive Updates On My Case?",
+        "answer": "We maintain regular communication with our clients through phone calls, emails, and our secure client portal. You will be promptly informed of any significant developments in your case."
+      }
+    ]
+  }
+}

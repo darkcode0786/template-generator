@@ -1,0 +1,47 @@
+{
+  "key": "LexoraOfficeLocations1",
+  "sectionType": "OfficeLocations",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraOfficeLocations1",
+  "folder": "contact",
+  "editorFields": [
+    "badge",
+    "title",
+    "description",
+    "getDirectionsText",
+    "items"
+  ],
+  "defaultContent": {
+    "badge": "OUR OFFICE NETWORK",
+    "title": "Office Locations",
+    "description": "We are wherever you need us.\nFind our offices and connect with our legal experts across different regions.",
+    "getDirectionsText": "Get Directions",
+    "items": [
+      {
+        "id": "mumbai",
+        "badge": "HEAD OFFICE",
+        "city": "Mumbai, India",
+        "image": "/location/mumbai.jfif",
+        "mapImage": "/banner/ban1.jpg",
+        "address": "12th Floor, Verdicta House, Nariman Point, Mumbai – 400021, Maharashtra, India",
+        "phone": "+91 0123456789",
+        "email": "info@xyzlawfirm.com",
+        "workingHours": "Mon - Sat: 9:00 AM - 7:00 PM",
+        "directionsUrl": "#"
+      },
+      {
+        "id": "delhi",
+        "badge": "BRANCH OFFICE",
+        "city": "Delhi, India",
+        "image": "/location/delhi.jfif",
+        "mapImage": "/banner/ban2.jpg",
+        "address": "A-45, Connaught Place, New Delhi – 110001, Delhi, India",
+        "phone": "+91 0123456789",
+        "email": "info@xyzlawfirm.com",
+        "workingHours": "Mon - Sat: 9:00 AM - 7:00 PM",
+        "directionsUrl": "#"
+      }
+    ]
+  }
+}

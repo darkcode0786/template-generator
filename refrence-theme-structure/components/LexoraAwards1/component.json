@@ -1,0 +1,107 @@
+{
+  "key": "LexoraAwards1",
+  "sectionType": "Awards",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraAwards1",
+  "folder": "awards",
+  "editorFields": [
+    "badge",
+    "title",
+    "description",
+    "buttonText",
+    "buttonUrl",
+    "items",
+    "founderQuote",
+    "features",
+    "clientQuote",
+    "featuredIn"
+  ],
+  "defaultContent": {
+    "badge": "Our Award Journey",
+    "title": "Our Award Journey",
+    "description": "A continued pursuit of legal excellence through the years.",
+    "buttonText": "VIEW ALL AWARDS",
+    "buttonUrl": "/awards",
+    "items": [
+      {
+        "year": "2024",
+        "title": "Top Law Firm of the Year",
+        "description": "Honored for outstanding client service and legal excellence by Legal Excellence Awards."
+      },
+      {
+        "year": "2023",
+        "title": "Best Litigation Law Firm",
+        "description": "Recognized for excellence in litigation and dispute resolution."
+      },
+      {
+        "year": "2022",
+        "title": "Excellence in Legal Services",
+        "description": "Awarded by Global Law Forum for exceptional legal support."
+      },
+      {
+        "year": "2021",
+        "title": "Client Choice Award",
+        "description": "Rated among the most trusted law firms by legal industry experts."
+      },
+      {
+        "year": "2020",
+        "title": "Rising Star Law Firm",
+        "description": "Premier Legal Awards - Innovation in Legal Practice."
+      }
+    ],
+    "founderQuote": {
+      "text": "Excellence is not a skill, it's our standard.",
+      "author": "Founder & Managing Partner"
+    },
+    "features": [
+      {
+        "title": "Award Winning Team",
+        "icon": "star"
+      },
+      {
+        "title": "National & International Reach",
+        "icon": "globe"
+      },
+      {
+        "title": "Trusted by Global Clients",
+        "icon": "handshake"
+      },
+      {
+        "title": "Commitment to Justice",
+        "icon": "scales"
+      }
+    ],
+    "clientQuote": {
+      "text": "Their recognition and consistent achievements are a testament to the quality, professionalism, and dedication they bring to every case.",
+      "author": "Happy Client"
+    },
+    "featuredIn": [
+      {
+        "id": "feat-1",
+        "logo": "/award/Chambers-and-Partners_logo.png",
+        "alt": "Chambers and Partners"
+      },
+      {
+        "id": "feat-2",
+        "logo": "/award/Superlawyers_logo.jpg",
+        "alt": "Super Lawyers"
+      },
+      {
+        "id": "feat-3",
+        "logo": "/award/best law logo.jpg",
+        "alt": "Best Lawyers"
+      },
+      {
+        "id": "feat-4",
+        "logo": "/award/forbes-logo.png",
+        "alt": "Forbes"
+      },
+      {
+        "id": "feat-5",
+        "logo": "/award/the-legal-500-logo.png",
+        "alt": "The Legal 500"
+      }
+    ]
+  }
+}

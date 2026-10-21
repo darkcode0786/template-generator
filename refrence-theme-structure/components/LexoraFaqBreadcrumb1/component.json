@@ -1,0 +1,26 @@
+{
+  "key": "LexoraFaqBreadcrumb1",
+  "sectionType": "FaqBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraFaqBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "FAQ",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "FAQ"
+      }
+    ],
+    "bgImage": "banner/ban1.jpg"
+  }
+}

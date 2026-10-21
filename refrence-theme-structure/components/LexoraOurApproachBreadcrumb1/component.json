@@ -1,0 +1,26 @@
+{
+  "key": "LexoraOurApproachBreadcrumb1",
+  "sectionType": "OurApproachBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraOurApproachBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Our Approach",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Our Approach"
+      }
+    ],
+    "bgImage": "/banner/ban1.jpg"
+  }
+}

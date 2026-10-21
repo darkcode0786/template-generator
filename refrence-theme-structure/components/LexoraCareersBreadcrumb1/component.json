@@ -1,0 +1,26 @@
+{
+  "key": "LexoraCareersBreadcrumb1",
+  "sectionType": "CareersBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraCareersBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Careers",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Careers"
+      }
+    ],
+    "bgImage": "banner/ban1.jpg"
+  }
+}

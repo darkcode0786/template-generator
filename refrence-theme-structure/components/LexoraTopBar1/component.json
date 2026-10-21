@@ -1,0 +1,41 @@
+{
+  "key": "LexoraTopBar1",
+  "sectionType": "Topbar",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraTopBar1",
+  "folder": "topbar",
+  "editorFields": [
+    "address",
+    "phone",
+    "workingHours",
+    "socialLinks"
+  ],
+  "defaultContent": {
+    "address": "Syracuse, Connecticut - 17A",
+    "phone": "+91 0123456789",
+    "workingHours": "Mon - Sat: 8:00 AM - 5:00 PM",
+    "socialLinks": [
+      {
+        "platform": "facebook",
+        "url": "#",
+        "icon": "FaFacebookF"
+      },
+      {
+        "platform": "twitter",
+        "url": "#",
+        "icon": "FaTwitter"
+      },
+      {
+        "platform": "linkedin",
+        "url": "#",
+        "icon": "FaLinkedinIn"
+      },
+      {
+        "platform": "instagram",
+        "url": "#",
+        "icon": "FaInstagram"
+      }
+    ]
+  }
+}

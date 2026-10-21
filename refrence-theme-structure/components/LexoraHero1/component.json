@@ -1,0 +1,42 @@
+{
+  "key": "LexoraHero1",
+  "sectionType": "Banner",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraHero1",
+  "folder": "banner",
+  "editorFields": [
+    "slides"
+  ],
+  "defaultContent": {
+    "slides": [
+      {
+        "id": "slide-1",
+        "image": "banner/ban1.jpg",
+        "badge": "LEXORA LAW FIRM",
+        "title": "Defending Rights.\nDelivering Justice.\nAchieving Results.",
+        "subtitle": "Strategic legal solutions tailored to your needs.\nWe stand by you, every step of the way.",
+        "buttonText": "FREE CONSULTATION",
+        "buttonUrl": "/book-consultation"
+      },
+      {
+        "id": "slide-2",
+        "image": "banner/ban2.jpg",
+        "badge": "LEXORA LAW FIRM",
+        "title": "Proven Result Partners\nin legal success\nFor your future.",
+        "subtitle": "Experienced attorneys dedicated to providing strategic\nand effective legal solutions.",
+        "buttonText": "FREE CONSULTATION",
+        "buttonUrl": "/book-consultation"
+      },
+      {
+        "id": "slide-3",
+        "image": "banner/ban3.jpg",
+        "badge": "LEXORA LAW FIRM",
+        "title": "We here to provide\nlegal consultancy\nAt every step.",
+        "subtitle": "Trusted for over 25 years, Lexora delivers award-winning\nlegal services with integrity and proven results.",
+        "buttonText": "FREE CONSULTATION",
+        "buttonUrl": "/book-consultation"
+      }
+    ]
+  }
+}

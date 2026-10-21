@@ -1,0 +1,26 @@
+{
+  "key": "LexoraServicesBreadcrumb1",
+  "sectionType": "ServicesBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraServicesBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Services",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Services"
+      }
+    ],
+    "bgImage": "/banner/ban2.jpg"
+  }
+}

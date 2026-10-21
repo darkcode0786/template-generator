@@ -1,0 +1,67 @@
+{
+  "key": "LexoraTestimonialsGrid1",
+  "sectionType": "TestimonialsGrid",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraTestimonialsGrid1",
+  "folder": "testimonial",
+  "editorFields": [
+    "badge",
+    "title",
+    "items"
+  ],
+  "defaultContent": {
+    "badge": "TESTIMONIALS",
+    "title": "What Our Client's Says About\nOur Best Work.",
+    "items": [
+      {
+        "id": "test1",
+        "name": "Serhii Ivanenko",
+        "role": "Lawyer",
+        "image": "/team/team1.jpg",
+        "rating": 5,
+        "text": "At Verdicta, client satisfaction is at the heart of everything we do. We take pride in building strong relationships and delivering results that truly make a difference. But don't just take our word for it — here's what our clients have to say:"
+      },
+      {
+        "id": "test2",
+        "name": "William James",
+        "role": "Lawyer",
+        "image": "/team/team2.jpg",
+        "rating": 5,
+        "text": "At Verdicta, client satisfaction is at the heart of everything we do. We take pride in building strong relationships and delivering results that truly make a difference. But don't just take our word for it — here's what our clients have to say:"
+      },
+      {
+        "id": "test3",
+        "name": "Aisha Rahman",
+        "role": "Consultant",
+        "image": "/team/team3.jpg",
+        "rating": 4,
+        "text": "At Verdicta, client satisfaction is at the heart of everything we do. We take pride in building strong relationships and delivering results that truly make a difference. But don't just take our word for it — here's what our clients have to say:"
+      },
+      {
+        "id": "test4",
+        "name": "William Adams",
+        "role": "Lawyer",
+        "image": "/team/team4.jpg",
+        "rating": 5,
+        "text": "At Verdicta, client satisfaction is at the heart of everything we do. We take pride in building strong relationships and delivering results that truly make a difference. But don't just take our word for it — here's what our clients have to say:"
+      },
+      {
+        "id": "test5",
+        "name": "Michael Carter",
+        "role": "Lawyer",
+        "image": "/team/team1.jpg",
+        "rating": 5,
+        "text": "At Verdicta, client satisfaction is at the heart of everything we do. We take pride in building strong relationships and delivering results that truly make a difference. But don't just take our word for it — here's what our clients have to say:"
+      },
+      {
+        "id": "test6",
+        "name": "David Anderson",
+        "role": "Lawyer",
+        "image": "/team/team2.jpg",
+        "rating": 5,
+        "text": "At Verdicta, client satisfaction is at the heart of everything we do. We take pride in building strong relationships and delivering results that truly make a difference. But don't just take our word for it — here's what our clients have to say:"
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "key": "LexoraAboutBreadcrumb1",
+  "sectionType": "AboutBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraAboutBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "About Us",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "About Us"
+      }
+    ],
+    "bgImage": "/banner/ban1.jpg"
+  }
+}

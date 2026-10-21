@@ -1,0 +1,53 @@
+{
+  "key": "LexoraAboutApproach1",
+  "sectionType": "AboutApproach",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraAboutApproach1",
+  "folder": "about",
+  "editorFields": [
+    "badge",
+    "title",
+    "description",
+    "points",
+    "buttonText",
+    "buttonUrl",
+    "image1",
+    "image2"
+  ],
+  "defaultContent": {
+    "badge": "OUR APPROACH",
+    "title": "Our Approach,\nFocused on You",
+    "description": "We believe in a personalized and strategic approach to every case. Our team is dedicated to understanding your unique situation, crafting a tailored legal strategy, and fighting tirelessly to protect your rights and interests.",
+    "points": [
+      {
+        "id": "a1",
+        "icon": "FaUserTie",
+        "title": "Client-Centric",
+        "text": "We place our clients at the center of everything we do, ensuring personalized attention, clear communication, and compassionate support."
+      },
+      {
+        "id": "a2",
+        "icon": "FaChessKnight",
+        "title": "Strategic & Thorough",
+        "text": "We take a strategic and thorough approach to every case, carefully analyzing the facts, identifying potential challenges, and developing effective legal solutions."
+      },
+      {
+        "id": "a3",
+        "icon": "FaShieldAlt",
+        "title": "Effective Representation",
+        "text": "Our experienced attorneys provide strong and effective representation, advocating fiercely for our clients' rights and interests in and out of the courtroom."
+      },
+      {
+        "id": "a4",
+        "icon": "FaChartLine",
+        "title": "Results-Driven",
+        "text": "We are driven by results and committed to achieving the best possible outcomes for our clients, whether through negotiation, settlement, or trial."
+      }
+    ],
+    "buttonText": "Discover More",
+    "buttonUrl": "#",
+    "image1": "/about/habout4.png",
+    "image2": "/services-v2-bg.jpg"
+  }
+}

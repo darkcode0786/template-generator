@@ -1,0 +1,216 @@
+'use client';
+import { mapThemeUploadAssetsInData } from "../../../lib/restaurantFoodAssets";
+function mediaSrc(src?: string) {
+  const t = String(src || "").trim();
+  if (!t) return "";
+  if (/^(https?:|data:|blob:)/i.test(t)) return t;
+  return t.startsWith("/") ? t : `/${t}`;
+}
+
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+
+import { FaBars, FaTimes, FaAngleDown, FaArrowRight } from 'react-icons/fa';
+import { GoLaw } from 'react-icons/go';
+
+export default function LexoraHeader1({ data = {} }: { data?: Record<string, any> }) {
+  (() => { if (typeof document === "undefined") return; if (document.getElementById("theme-upload-css-vars")) return; const s = document.createElement("style"); s.id = "theme-upload-css-vars"; s.textContent = ":root{--color-primary:#0a1828;--color-accent:#c49250;--color-bg-light:#f8f9fa;--color-text:#333333;--color-text-light:#666666;--color-bg-main:#ffffff;}"; document.head.appendChild(s); })();
+  data = mapThemeUploadAssetsInData(data);
+  if (!data || typeof data !== "object") data = {};
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  if (!data || typeof data !== 'object') data = {};
+
+  return (
+    <>
+      <header
+        className={`sticky top-0 left-0 w-full z-[1000] bg-white transition-all duration-300 ease-in-out ${isScrolled
+            ? 'shadow-[0_8px_30px_rgba(5,16,36,0.08)] backdrop-blur-sm'
+            : 'shadow-[0_4px_15px_rgba(0,0,0,0.03)]'
+          }`}
+      >
+        <div className={`w-full max-w-[1250px] mx-auto px-6 flex items-center justify-start transition-all duration-300 ${isScrolled ? 'py-2' : 'py-3'}`}>
+
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-3">
+            {data.image ? (
+              <img
+                src={mediaSrc(data.image)}
+                alt={data.logoText || 'Logo'}
+                className="max-h-[44px] sm:max-h-[58px] w-auto object-contain"
+              />
+            ) : (
+              <>
+                <div className="w-[52px] h-[62px] bg-[#051024] rounded-t flex items-center justify-center border-2 border-[#c49250]">
+                  <GoLaw className="text-white text-3xl" />
+                </div>
+                <div>
+                  <h1 className="text-[26px] text-[#051024] leading-none tracking-wide font-bold mb-0.5">
+                    {data.logoText}
+                  </h1>
+                  <p className="text-[10px] text-[#051024] tracking-widest uppercase font-bold m-0">
+                    {data.logoSubText}
+                  </p>
+                </div>
+              </>
+            )}
+          </Link>
+
+          {/* Desktop Nav */}
+          <nav className="hidden xl:flex ml-auto">
+            <ul className="flex items-center gap-5 m-0 p-0">
+              {data.navLinks.map((link, index) => (
+                <li key={link.label} className="relative group">
+                  <a
+                    href={link.url}
+                    className={`text-[13px] font-semibold text-[#051024] transition-colors duration-300 relative flex items-center gap-1 pb-1 hover:text-[#c49250] ${index === 0
+                        ? 'text-[#c49250] after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#c49250]'
+                        : ''
+                      }`}
+                  >
+                    {link.label}
+                    {link.dropdown && <FaAngleDown className="text-[10px] mt-0.5" />}
+                  </a>
+
+                  {link.dropdown && link.dropdownItems && (
+                    <div className="absolute top-full left-0 mt-4 w-[220px] bg-white shadow-lg rounded-md overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:mt-2 transition-all duration-300 z-50">
+                      <ul className="py-2 m-0 p-0">
+                        {link.dropdownItems.map((dropItem) => (
+                          <li key={dropItem.label}>
+                            <Link
+                              href={dropItem.url}
+                              className="block px-5 py-2.5 text-[13px] font-medium text-[#051024] hover:bg-gray-50 hover:text-[#c49250] transition-colors"
+                            >
+                              {dropItem.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-3 ml-auto xl:ml-8">
+
+            {/* Contact Us Button */}
+            <a
+              href="/contact"
+              className="hidden sm:flex items-center gap-3 pl-5 pr-1.5 py-1.5 bg-white text-[#051024] border border-[#c49250] rounded-full font-semibold text-[12px] whitespace-nowrap transition-all duration-300 hover:bg-gray-50"
+            >
+              {data.contactButton}
+              <span className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] bg-[#c49250] text-white">
+                <FaArrowRight />
+              </span>
+            </a>
+
+            {/* Book Consultation Button */}
+            <a
+              href="/book-consultation"
+              className="flex items-center gap-2 sm:gap-3 px-4 sm:pl-5 sm:pr-1.5 py-2 sm:py-1.5 bg-gradient-to-br from-[#c49250] to-[#ddaf6a] text-white rounded-full font-semibold text-[11px] sm:text-[12px] whitespace-nowrap transition-all duration-300 hover:brightness-105"
+            >
+              <span className="hidden sm:inline">{data.consultButton}</span>
+              <span className="sm:hidden">Consult</span>
+              <span className="hidden sm:flex w-7 h-7 rounded-full items-center justify-center text-[11px] bg-[#051024] text-white">
+                <FaArrowRight />
+              </span>
+            </a>
+
+            {/* Mobile Hamburger */}
+            <button
+              className="flex xl:hidden items-center justify-center text-[22px] text-[#051024] cursor-pointer bg-transparent border-0 ml-2"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+            </button>
+
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`fixed top-0 left-0 w-full h-screen bg-white z-[1001] flex flex-col overflow-y-auto transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-y-0 opacity-100 visible' : '-translate-y-full opacity-0 invisible'
+          }`}
+      >
+        {/* Close Button */}
+        <button
+          className="absolute top-5 right-6 text-[28px] text-[#051024] bg-transparent border-0 cursor-pointer z-10"
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
+          <FaTimes />
+        </button>
+
+        <div className="flex-1 w-full pt-10 pb-12 px-6">
+          <nav className="w-full mt-4">
+            <ul className="flex flex-col w-full">
+              {data.navLinks.map((link) => (
+                <li key={link.label} className="w-full border-b border-gray-100 last:border-0">
+                  <a
+                    href={link.url}
+                    className={`text-[18px] font-medium text-[#051024] hover:text-[#c49250] transition-colors duration-300 flex items-center justify-between py-4 ${openDropdown === link.label ? 'text-[#c49250]' : ''
+                      }`}
+                    onClick={(e) => {
+                      if (link.dropdown) {
+                        e.preventDefault();
+                        setOpenDropdown(openDropdown === link.label ? null : link.label);
+                      } else {
+                        setIsMobileMenuOpen(false);
+                      }
+                    }}
+                  >
+                    {link.label}
+                    {link.dropdown && (
+                      <FaAngleDown
+                        className={`text-[16px] transition-transform duration-300 ${openDropdown === link.label ? 'rotate-180' : ''
+                          }`}
+                      />
+                    )}
+                  </a>
+
+                  {/* Mobile Dropdown Menu */}
+                  {link.dropdown && link.dropdownItems && (
+                    <div
+                      className={`grid transition-all duration-300 ease-in-out ${openDropdown === link.label ? 'grid-rows-[1fr] opacity-100 mt-4' : 'grid-rows-[0fr] opacity-0'
+                        }`}
+                    >
+                      <ul className="overflow-hidden flex flex-col bg-gray-50 p-0">
+                        <div className="flex flex-col">
+                          {link.dropdownItems.map((dropItem) => (
+                            <li key={dropItem.label} className="border-b border-gray-200 last:border-0">
+                              <Link
+                                href={dropItem.url}
+                                className="block text-[15px] font-medium text-[#666666] hover:text-[#c49250] transition-colors py-3 px-6"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                              >
+                                {dropItem.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </div>
+                      </ul>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </>
+  );
+};
+
+(LexoraHeader1 as typeof LexoraHeader1 & { editorFields: readonly string[] }).editorFields = ["image","navLinks","contactButton","consultButton"];

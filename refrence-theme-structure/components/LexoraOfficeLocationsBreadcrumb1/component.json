@@ -1,0 +1,26 @@
+{
+  "key": "LexoraOfficeLocationsBreadcrumb1",
+  "sectionType": "OfficeLocationsBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraOfficeLocationsBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Office Locations",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Locations"
+      }
+    ],
+    "bgImage": "banner/ban1.jpg"
+  }
+}

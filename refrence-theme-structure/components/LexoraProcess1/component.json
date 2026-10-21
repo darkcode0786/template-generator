@@ -1,0 +1,47 @@
+{
+  "key": "LexoraProcess1",
+  "sectionType": "Process",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraProcess1",
+  "folder": "process",
+  "editorFields": [
+    "badge",
+    "title",
+    "subtitle",
+    "description",
+    "steps"
+  ],
+  "defaultContent": {
+    "badge": "WORKING PROCESS",
+    "title": "Our Streamlined Legal Process",
+    "subtitle": "For Clients",
+    "description": "We follow a clear and proven process to deliver the best legal solutions with transparency, efficiency, and dedication.",
+    "steps": [
+      {
+        "id": "p1",
+        "icon": "FaUsers",
+        "title": "Discovery Call",
+        "description": "We begin by listening. In a confidential meeting, we assess your legal issue, answer your questions, and understand your goals."
+      },
+      {
+        "id": "p2",
+        "icon": "FaSearch",
+        "title": "Case Research",
+        "description": "We begin by listening. In a confidential meeting, we assess your legal issue, answer your questions, and understand your goals."
+      },
+      {
+        "id": "p3",
+        "icon": "FaCalculator",
+        "title": "Budgeting",
+        "description": "We begin by listening. In a confidential meeting, we assess your legal issue, answer your questions, and understand your goals."
+      },
+      {
+        "id": "p4",
+        "icon": "FaTrophy",
+        "title": "Finished Case",
+        "description": "We begin by listening. In a confidential meeting, we assess your legal issue, answer your questions, and understand your goals."
+      }
+    ]
+  }
+}

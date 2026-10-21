@@ -1,0 +1,44 @@
+{
+  "key": "LexoraTermsConditions1",
+  "sectionType": "TermsConditions",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraTermsConditions1",
+  "folder": "page",
+  "editorFields": [
+    "title",
+    "sections"
+  ],
+  "defaultContent": {
+    "title": "Terms & Conditions",
+    "sections": [
+      {
+        "title": "1. Acceptance Of Terms",
+        "content": [
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+        ]
+      },
+      {
+        "title": "2. Use Of Our Services",
+        "content": [
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+          "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo."
+        ],
+        "listItems": [
+          "It is a long established fact that a reader will be distracted by the readable content.",
+          "It is a long established fact that a reader will be distracted by the readable content.",
+          "There are many variations of passages of Lorem Ipsum available, but the majority.",
+          "There are many variations of passages of Lorem Ipsum available, but the majority.",
+          "If you are going to use a passage of Lorem Ipsum, you need anything embarrassing.",
+          "If you are going to use a passage of Lorem Ipsum, you need anything embarrassing."
+        ]
+      },
+      {
+        "title": "3. Intellectual Property",
+        "content": [
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "key": "LexoraAboutFirm1",
+  "sectionType": "AboutFirm",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraAboutFirm1",
+  "folder": "about",
+  "editorFields": [
+    "badge",
+    "title",
+    "description1",
+    "description2",
+    "description3",
+    "image1",
+    "image2",
+    "image3",
+    "badgeText"
+  ],
+  "defaultContent": {
+    "badge": "GET TO KNOW US",
+    "title": "Let You Know Who We Are\nLearn About Our Firm.",
+    "description1": "At our firm, we believe in justice, integrity, and unwavering advocacy. Whether you're facing a complex litigation issue, seeking legal advice on corporate matters, or defending your rights, our experienced legal team is here to guide you every step of the way.",
+    "description2": "At our firm, we believe in justice, integrity, and unwavering advocacy. Whether you're facing a complex litigation issue, seeking legal advice on corporate matters, or defending your rights, our experienced legal team is here to guide you every step of the way.",
+    "description3": "At our firm, we believe in justice, integrity, and unwavering advocacy. Whether you're facing a complex litigation issue, seeking legal advice on corporate matters, or defending your rights, our experienced legal team is here to guide you every step of the way.",
+    "image1": "/about/habout2.png",
+    "image2": "/about/habout4.png",
+    "image3": "/about/habout5.png",
+    "badgeText": "LEXORA LAW FIRM • JUSTICE • INTEGRITY • RESULTS •"
+  }
+}

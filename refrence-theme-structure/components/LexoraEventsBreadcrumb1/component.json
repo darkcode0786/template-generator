@@ -1,0 +1,26 @@
+{
+  "key": "LexoraEventsBreadcrumb1",
+  "sectionType": "EventsBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraEventsBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Events",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Events"
+      }
+    ],
+    "bgImage": "/banner/ban1.jpg"
+  }
+}

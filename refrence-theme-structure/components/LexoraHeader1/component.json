@@ -1,0 +1,181 @@
+{
+  "key": "LexoraHeader1",
+  "sectionType": "Header",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraHeader1",
+  "folder": "header",
+  "editorFields": [
+    "image",
+    "navLinks",
+    "contactButton",
+    "consultButton"
+  ],
+  "defaultContent": {
+    "image": "logo/lexora.png",
+    "navLinks": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "About Us",
+        "url": "#",
+        "dropdown": true,
+        "dropdownItems": [
+          {
+            "label": "About Us Overview",
+            "url": "/about"
+          },
+          {
+            "label": "Why Choose Us",
+            "url": "/why-choose-us"
+          },
+          {
+            "label": "Our Approach",
+            "url": "/our-approach"
+          },
+          {
+            "label": "Our Team",
+            "url": "/team"
+          },
+          {
+            "label": "Awards & Recognitions",
+            "url": "/awards"
+          },
+          {
+            "label": "Careers",
+            "url": "/careers"
+          }
+        ]
+      },
+      {
+        "label": "Services",
+        "url": "#",
+        "dropdown": true,
+        "dropdownItems": [
+          {
+            "label": "All Services",
+            "url": "/services"
+          },
+          {
+            "label": "Business Law",
+            "url": "/services/business-law"
+          },
+          {
+            "label": "Family Law",
+            "url": "/services/family-law"
+          },
+          {
+            "label": "Insurance Defense",
+            "url": "/services/insurance-defense"
+          },
+          {
+            "label": "Criminal Law",
+            "url": "/services/criminal-law"
+          },
+          {
+            "label": "Real Estate Law",
+            "url": "/services/real-estate-law"
+          },
+          {
+            "label": "Estate Planning",
+            "url": "/services/estate-planning"
+          }
+        ]
+      },
+      {
+        "label": "Industries",
+        "url": "#",
+        "dropdown": true,
+        "dropdownItems": [
+          {
+            "label": "All Industries",
+            "url": "/industries"
+          },
+          {
+            "label": "Corporate & M&A",
+            "url": "/industries/corporate-ma"
+          },
+          {
+            "label": "Banking & Finance",
+            "url": "/industries/banking-finance"
+          },
+          {
+            "label": "Technology",
+            "url": "/industries/technology"
+          },
+          {
+            "label": "Manufacturing",
+            "url": "/industries/manufacturing"
+          },
+          {
+            "label": "Healthcare",
+            "url": "/industries/healthcare"
+          },
+          {
+            "label": "Retail & E-Commerce",
+            "url": "/industries/retail-ecommerce"
+          },
+          {
+            "label": "Real Estate & Construction",
+            "url": "/industries/real-estate-construction"
+          },
+          {
+            "label": "Energy & Sustainability",
+            "url": "/industries/energy-sustainability"
+          }
+        ]
+      },
+      {
+        "label": "Resources",
+        "url": "#",
+        "dropdown": true,
+        "dropdownItems": [
+          {
+            "label": "Blog",
+            "url": "/blogs"
+          },
+          {
+            "label": "Publications",
+            "url": "/publications"
+          },
+          {
+            "label": "Legal Updates",
+            "url": "/legal-updates"
+          },
+          {
+            "label": "Case Studies",
+            "url": "/case-studies"
+          },
+          {
+            "label": "Events",
+            "url": "/events"
+          },
+          {
+            "label": "Client Testimonials",
+            "url": "/testimonials"
+          },
+          {
+            "label": "News & Media",
+            "url": "/news-media"
+          },
+          {
+            "label": "FAQ",
+            "url": "/faq"
+          },
+          {
+            "label": "Office Locations",
+            "url": "/locations"
+          },
+          {
+            "label": "Book Consultation",
+            "url": "/book-consultation"
+          }
+        ]
+      }
+    ],
+    "contactButton": "Contact Us",
+    "consultButton": "Book Consultation"
+  }
+}

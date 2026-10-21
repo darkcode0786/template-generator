@@ -1,0 +1,26 @@
+{
+  "key": "LexoraContactBreadcrumb1",
+  "sectionType": "ContactBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraContactBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Contact Us",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Contact Us"
+      }
+    ],
+    "bgImage": "banner/ban1.jpg"
+  }
+}

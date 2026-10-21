@@ -1,0 +1,26 @@
+{
+  "key": "LexoraBookConsultationBreadcrumb1",
+  "sectionType": "BookConsultationBreadcrumb",
+  "sectionNumber": 1,
+  "scope": "shared",
+  "name": "LexoraBookConsultationBreadcrumb1",
+  "folder": "breadcrumb",
+  "editorFields": [
+    "title",
+    "paths",
+    "bgImage"
+  ],
+  "defaultContent": {
+    "title": "Book Consultation",
+    "paths": [
+      {
+        "label": "Home",
+        "url": "/"
+      },
+      {
+        "label": "Book Consultation"
+      }
+    ],
+    "bgImage": "/banner/ban1.jpg"
+  }
+}
