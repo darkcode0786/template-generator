@@ -35,6 +35,42 @@ describe("normalizeThemePages", () => {
     expect(theme.pages.find((page) => page.id === "orphan")?.sections).toEqual(["Topbar", "Header", "Breadcrumb", "Footer"]);
     expect(theme.pages.find((page) => page.id === "orphan")?.sectionType).not.toBe("AboutPage");
   });
+
+  it("uses the templateFlow manager page id and section type", () => {
+    const sectionVariants: Record<string, string> = { ...variants, Gallery: "MyGallery1", GalleryGrid: "MyGalleryGrid1", Team: "MyTeam1", ServiceDetail: "MyServiceDetail1", Services: "MyServices1" };
+    const theme = normalizeThemePages(
+      [
+        { id: "home", label: "Home", sectionType: "Home", sections: ["Header", "Gallery", "Services", "Footer"] },
+        { id: "photo-gallery", label: "Gallery", sectionType: "GalleryGrid", sections: ["GalleryGrid"] },
+        { id: "team", label: "Team", sectionType: "Team", sections: ["Team"] },
+        { id: "service", label: "Services", sectionType: "Services", sections: ["Services"] },
+        { id: "services-id-detail", label: "Service", sectionType: "ServiceDetail", sections: ["ServiceDetail"] },
+      ],
+      sectionVariants,
+    );
+    expect(theme.pages.find((page) => page.label === "Gallery")).toMatchObject({
+      id: "gallery",
+      sectionType: "GalleryPage",
+      sections: ["Topbar", "Header", "Breadcrumb", "GalleryPage", "Footer"],
+    });
+    expect(sectionVariants.GalleryPage).toBe("MyGalleryGrid1");
+    expect(theme.pages.find((page) => page.label === "Team")).toMatchObject({ id: "teams", sectionType: "TeamPage" });
+    expect(sectionVariants.TeamPage).toBe("MyTeam1");
+    expect(theme.pages.find((page) => page.label === "Services")).toMatchObject({ id: "services", sectionType: "Services" });
+    expect(sectionVariants.ServicePage).toBeUndefined();
+    expect(theme.pages.find((page) => page.id === "services-id-detail")?.sectionType).toBe("ServiceDetail");
+    expect(theme.homeSectionOrder).toEqual(["Header", "Gallery", "Services", "Footer"]);
+  });
+
+  it("uses ServicePage only when the theme has no Services section", () => {
+    const sectionVariants: Record<string, string> = { Header: "H", Footer: "F", Service: "MyService1" };
+    const theme = normalizeThemePages(
+      [{ id: "service", label: "Services", sectionType: "Service", sections: ["Service"] }],
+      sectionVariants,
+    );
+    expect(theme.pages[0]).toMatchObject({ id: "services", sectionType: "ServicePage", sections: ["Header", "ServicePage", "Footer"] });
+    expect(sectionVariants.ServicePage).toBe("MyService1");
+  });
 });
 
 describe("applyEditorMedia", () => {
