@@ -218,6 +218,7 @@ describe("runGeneration (synthetic Next.js repo)", () => {
     const theme = await readJson(path.join(result.outputDir, "theme.json"));
     expect(theme.key).toMatch(/^computer-repairing-\d{14}$/);
     expect(theme.title).toBe("Computer Repairing");
+    expect(theme.previewDescription).toBe("Computer Repairing template");
     expect(theme.categorySlug).toBe("repairing-and-maintenance");
     expect(theme.type).toBe("Multiple Pages Website");
     expect(theme.previewImage).toBe("assets/preview.webp");
