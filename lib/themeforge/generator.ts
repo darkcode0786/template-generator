@@ -9,6 +9,7 @@ import { isInside, pascalCase, safeJoin, slugify, timestampKey, titleCase } from
 import { scanRepository } from "./scanner";
 import { loadSpec, type ThemeSpec } from "./spec";
 import { buildThemeVariables, formatRootVarsCss, mergeCssVariables } from "./cssvars";
+import { rewriteInternalNavPaths } from "./navPaths";
 import { normalizeThemePages } from "./themePages";
 import { assetTargetMap, transformComponent } from "./transform";
 import { buildTree } from "./tree";
@@ -270,6 +271,7 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
     const key = `${templateSlug}-${timestampKey()}`;
     const themeJson = buildThemeJson({ key, input, categorySlug, plan, spec, variables: themeColors.variables, previewImage });
     await fs.writeFile(path.join(outputDir, "theme.json"), JSON.stringify(themeJson, null, 2) + "\n", "utf8");
+    await rewriteComponentNavPaths(outputDir, themeJson.pages.map((page) => page.id));
     for (const [file, content] of Object.entries(spec.themeJson.addons)) {
       const dest = safeJoin(outputDir, `addons/${file}`);
       await fs.mkdir(path.dirname(dest), { recursive: true });
@@ -392,6 +394,30 @@ async function materializePreview(outputDir: string, sourceRel: string | undefin
     await fs.copyFile(src, safeJoin(outputDir, fallback));
   }
   return fallback;
+}
+
+async function rewriteComponentNavPaths(outputDir: string, pageIds: string[]) {
+  const root = path.join(outputDir, "components");
+  const walk = async (dir: string) => {
+    let entries: { name: string; isDirectory: () => boolean }[];
+    try {
+      entries = await fs.readdir(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        await walk(full);
+        continue;
+      }
+      if (!/\.(tsx|jsx|json)$/.test(entry.name)) continue;
+      const text = await fs.readFile(full, "utf8");
+      const next = rewriteInternalNavPaths(text, pageIds);
+      if (next !== text) await fs.writeFile(full, next, "utf8");
+    }
+  };
+  await walk(root);
 }
 
 function buildThemeJson(args: { key: string; input: GenerationInput; categorySlug: string; plan: MappingPlan; spec: ThemeSpec; variables: Record<string, string>; previewImage?: string }) {
