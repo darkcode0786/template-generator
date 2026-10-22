@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hoistUseClient, rewriteDynamicIcons, rewritePreviewHrefs, stabilizeListKeys } from "@/lib/themeforge/themeIcons";
+import { hoistUseClient, rewriteDynamicIcons, rewriteHeaderNavHrefs, rewritePreviewHrefs, rewriteSvgModules, stabilizeListKeys } from "@/lib/themeforge/themeIcons";
 
 describe("rewriteDynamicIcons", () => {
   it("renders whatever icon the editor dropdown stores", () => {
@@ -22,6 +22,29 @@ const Icon = IconMap[feature.icon] || FaRegUser;
     expect(code).not.toContain("FaGlobe");
     expect(code).toContain('import { WebsiteIcon } from "../../../lib/websiteIcons";');
   });
+
+  it("paints icon-map lookups the editor can change, including svg paths", () => {
+    const code = rewriteDynamicIcons(`const Icon =
+  (LucideIcons as unknown as Record<string, React.ElementType>)[item.icon] ||
+  LucideIcons.Zap;
+const Social = socialIconMap[s.icon] || FaFacebookF;
+const Label = titles[index];
+`);
+    expect(code).toContain('const Icon = (props: { className?: string; size?: number; strokeWidth?: number }) => <WebsiteIcon name={String(item.icon ?? "")} {...props} />;');
+    expect(code).toContain('const Social = (props: { className?: string; size?: number; strokeWidth?: number }) => <WebsiteIcon name={String(s.icon ?? "")} {...props} />;');
+    expect(code).toContain("const Label = titles[index];");
+  });
+});
+
+describe("rewriteSvgModules", () => {
+  it("turns an svg component import into an image the theme folder can serve", () => {
+    const code = rewriteSvgModules(`export const Box = () => <Star className="h-6" />;
+const mark = Star;
+`, [{ local: "Star", media: "/icons/star.svg" }]);
+    expect(code).toContain('src={mediaSrc("/icons/star.svg")}');
+    expect(code).toContain('className="h-6"');
+    expect(code).toContain('const Star = mediaSrc("/icons/star.svg");');
+  });
 });
 
 describe("rewritePreviewHrefs", () => {
@@ -36,6 +59,33 @@ export default function Header() {
     expect(code).toContain('href={toLestowHref("/contact")}');
     expect(code).toContain('import { toLestowHref } from "../../../lib/lexoraPreview";');
     expect(rewritePreviewHrefs(code).match(/toLestowHref\(link\.url\)/g)?.length).toBe(1);
+  });
+
+  it("reads url or href on each header nav item", () => {
+    const code = rewriteHeaderNavHrefs(rewritePreviewHrefs(`export const Header = ({ data }) => (
+  <nav>
+    {data.menu.map((link) => (
+      <a href={link.url}>
+        {link.label}
+        {link.subLinks?.map((drop) => (
+          <a href={drop.href}>{drop.label}</a>
+        ))}
+      </a>
+    ))}
+    {data.menu.map((item) => {
+      return <a href={item.href}>{item.label}</a>;
+    })}
+  </nav>
+));`));
+    expect(code).toContain("const linkHref = link.url || link.href;");
+    expect(code).toContain("href={toLestowHref(linkHref)}");
+    expect(code).toContain("const dropHref = drop.url || drop.href;");
+    expect(code).toContain("href={toLestowHref(dropHref)}");
+    expect(code).toContain("const itemHref = item.url || item.href;");
+    expect(code).toContain("href={toLestowHref(itemHref)}");
+    expect(code).not.toContain("href={toLestowHref(link.url)}");
+    expect(code).not.toContain("href={toLestowHref(drop.href)}");
+    expect(rewriteHeaderNavHrefs(code).match(/const linkHref/g)?.length).toBe(1);
   });
 
   it("keeps use client above the preview import", () => {

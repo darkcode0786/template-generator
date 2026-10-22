@@ -71,6 +71,8 @@ describe("runGeneration (synthetic Next.js repo)", () => {
     const header = await readJson(path.join(result.outputDir, "components", "ComputerRepairingHeader1", "component.json"));
     expect(header.defaultContent).toHaveProperty("topbar", ""); // data?.topbar is absent in the data file -> filled with an empty default
     expect(header.editorFields).toEqual(expect.arrayContaining(["topbar", "logo", "menu"]));
+    expect(header.editorFields.indexOf("logo")).toBeLessThan(header.editorFields.indexOf("menu"));
+    expect(header.editorFields.indexOf("menu")).toBeLessThan(header.editorFields.indexOf("topbar"));
     expect(header.defaultContent.logo).toBe("assets/main-logo/header-logo.webp");
     expect(header.defaultContentSource ?? result.manifest.components.find((c) => c.name === "ComputerRepairingHeader1")?.defaultContentSource).toMatch(/SyntheticHeader1$/);
     expect(result.manifest.validation.checks.find((c) => c.name.includes("host contract"))?.ok).toBe(true);
@@ -129,21 +131,18 @@ describe("runGeneration (synthetic Next.js repo)", () => {
         "assets/team/1.jpg",
         "assets/main-logo/header-logo.webp",
         "assets/service/laptop/01.webp",
-        "assets/icons/icons/star.svg",
-        "styles/fonts/Inter.woff2",
-        "styles/globals.css",
+        "assets/icons/star.svg",
       ]),
     );
-    expect(targets.some((t) => t.endsWith("next.svg"))).toBe(false);
+    expect(targets.some((t) => t.startsWith("styles/") || t.endsWith("next.svg"))).toBe(false);
   });
 
-  it("writes styles/ with the global stylesheet, fonts and a generated variables.css", async () => {
-    const styles = path.join(result.outputDir, "styles");
-    expect(await exists(path.join(styles, "globals.css"))).toBe(true);
-    expect(await exists(path.join(styles, "fonts", "Inter.woff2"))).toBe(true);
-    const vars = await fs.readFile(path.join(styles, "variables.css"), "utf8");
-    expect(vars).toMatch(/--primary-bg: #123456;/);
-    expect(vars).toMatch(/--font-heading: Poppins, system-ui, sans-serif;/);
+  it("keeps global colors in theme.json and does not export a styles folder", async () => {
+    expect(await exists(path.join(result.outputDir, "styles"))).toBe(false);
+    expect(result.manifest.included.some((f) => f.kind === "style" || f.kind === "font" || f.target.startsWith("styles/"))).toBe(false);
+    const theme = JSON.parse(await fs.readFile(path.join(result.outputDir, "theme.json"), "utf8"));
+    expect(theme.variables["--primary-bg"]).toBe("#123456");
+    expect(theme.variables["--color-primary"]).toBe("var(--primary-bg)");
   });
 
   it("injects the reference host boilerplate: CSS-var injector and asset mapper", async () => {
@@ -159,7 +158,7 @@ describe("runGeneration (synthetic Next.js repo)", () => {
     expect(result.manifest.cssVariables["--primary-bg"]).toBe("#123456");
     expect(result.manifest.cssVariables["--primary-text"]).toBe("#ffffff");
     const theme = JSON.parse(await fs.readFile(path.join(result.outputDir, "theme.json"), "utf8"));
-    expect(Object.keys(theme.variables)).toEqual([
+    expect(Object.keys(theme.variables).slice(0, 15)).toEqual([
       "--primary-bg",
       "--primary-text",
       "--secondary-bg",
@@ -177,6 +176,7 @@ describe("runGeneration (synthetic Next.js repo)", () => {
       "--font-button",
     ]);
     expect(theme.variables["--primary-bg"]).toBe("#123456");
+    expect(theme.variables["--color-primary"]).toBe("var(--primary-bg)");
     const banner = await fs.readFile(path.join(result.outputDir, "components", "ComputerRepairingBanner1", "ComputerRepairingBanner1.tsx"), "utf8");
     expect(banner).toContain('className="bg-[var(--color-primary)] text-[var(--color-primary)]"');
     expect(banner).toContain('data-editor-media-overlay="show"');
@@ -192,11 +192,9 @@ describe("runGeneration (synthetic Next.js repo)", () => {
     }
   });
 
-  it("handles duplicate target filenames with the rename policy", async () => {
-    const fonts = result.manifest.included.filter((f) => f.kind === "font");
-    expect(fonts).toHaveLength(2);
-    expect(fonts.map((f) => f.target).sort()).toEqual(["styles/fonts/Inter-2.woff2", "styles/fonts/Inter.woff2"]);
-    expect(result.manifest.warnings.join("\n")).toMatch(/Renamed .*Inter.*policy: rename/);
+  it("does not copy font files into the export", async () => {
+    expect(result.manifest.included.filter((f) => f.kind === "font")).toEqual([]);
+    expect(result.manifest.included.some((f) => f.target.startsWith("styles/"))).toBe(false);
   });
 
   it("never copies secrets, dependencies or archives", async () => {
@@ -259,11 +257,16 @@ describe("runGeneration (synthetic Next.js repo)", () => {
     ).rejects.toThrow(/already exists/);
   });
 
-  it("fails with a clear error under the 'error' conflict policy", async () => {
+  it("does not treat unexported font files as a target conflict", async () => {
     const strict: ThemeSpec = { ...spec, conflicts: { ...spec.conflicts, policy: "error" } };
-    await expect(
-      runGeneration("33333333-3333-3333-3333-333333333333", { ...input, template: "conflict-check" }, { onStage: () => undefined }, { localRepoDir: repo, spec: strict, outputRoot, tempRoot: path.join(work, "tmp") }),
-    ).rejects.toThrow(/Target conflict/);
+    const generated = await runGeneration(
+      "33333333-3333-3333-3333-333333333333",
+      { ...input, template: "conflict-check" },
+      { onStage: () => undefined },
+      { localRepoDir: repo, spec: strict, outputRoot, tempRoot: path.join(work, "tmp") },
+    );
+    expect(generated.manifest.errors).toEqual([]);
+    expect(generated.manifest.included.some((f) => f.kind === "font" || f.target.startsWith("styles/"))).toBe(false);
   });
 });
 

@@ -51,10 +51,17 @@ describe("buildThemeVariables", () => {
       "--color-accent": "#c49250",
       "--color-bg-main": "#ffffff",
       "--color-text": "#333333",
+      "--color-gold": "#b8860b",
       "--font-heading": "Playfair Display, Georgia, serif",
       "--font-body": "Inter, system-ui, sans-serif",
     });
-    expect(Object.keys(built.variables)).toEqual([...THEME_VARIABLE_KEYS]);
+    expect(Object.keys(built.variables).slice(0, THEME_VARIABLE_KEYS.length)).toEqual([...THEME_VARIABLE_KEYS]);
+    expect(built.variables["--color-primary"]).toBe("var(--primary-bg)");
+    expect(built.variables["--color-brand"]).toBe("var(--primary-bg)");
+    expect(built.variables["--color-accent"]).toBe("var(--blue-bg)");
+    expect(built.variables["--color-bg-main"]).toBe("var(--color-white)");
+    expect(built.variables["--color-text"]).toBe("var(--color-heading)");
+    expect(built.variables["--color-gold"]).toBe("#b8860b");
     expect(built.variables["--primary-bg"]).toBe("#c49250");
     expect(built.variables["--primary-text"]).toBe("#ffffff");
     expect(built.variables["--hero-bg"]).toBe("#0a1828");

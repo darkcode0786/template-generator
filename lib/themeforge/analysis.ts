@@ -253,22 +253,28 @@ export function orderByDeclaredRoutes<T extends { id: string; route: string; lab
   return ordered;
 }
 
-/** Fields read from the `data` prop: data.x, data?.x, data["x"], const { a, b } = data */
+const DATA_METHOD = new Set(["map", "length", "filter", "forEach", "slice", "join", "find", "some", "every", "reduce", "keys", "entries"]);
+
+/** Fields read from `data`, in the order they first appear in the component. */
 export function extractDataFields(source: string): string[] {
-  const fields: string[] = [];
-  const push = (f: string) => {
-    if (!fields.includes(f)) fields.push(f);
+  const hits: { name: string; at: number }[] = [];
+  const note = (name: string, at: number) => {
+    if (!name || DATA_METHOD.has(name) || !/^[A-Za-z_$][\w$]*$/.test(name)) return;
+    hits.push({ name, at });
   };
-  for (const m of source.matchAll(/\bdata\??\.([A-Za-z_$][\w$]*)/g)) {
-    if (!["map", "length", "filter", "forEach", "slice", "join", "find", "some", "every", "reduce", "keys", "entries"].includes(m[1])) push(m[1]);
-  }
-  for (const m of source.matchAll(/\bdata\??\.?\[\s*["']([A-Za-z_$][\w$]*)["']\s*\]/g)) push(m[1]);
+  for (const m of source.matchAll(/\bdata\??\.([A-Za-z_$][\w$]*)/g)) note(m[1], m.index ?? 0);
+  for (const m of source.matchAll(/\bdata\??(?:\s*\.\s*)?\[\s*["']([A-Za-z_$][\w$]*)["']\s*\]/g)) note(m[1], m.index ?? 0);
   for (const m of source.matchAll(/(?:const|let|var)\s*\{([^}]*)\}\s*=\s*(?:props\.)?data\b/g)) {
+    let at = (m.index ?? 0) + m[0].indexOf("{") + 1;
     for (const part of m[1].split(",")) {
       const name = part.split(/[:=]/)[0].trim().replace(/^\.\.\./, "");
-      if (name && /^[A-Za-z_$][\w$]*$/.test(name)) push(name);
+      note(name, at);
+      at += part.length + 1;
     }
   }
+  hits.sort((a, b) => a.at - b.at);
+  const fields: string[] = [];
+  for (const hit of hits) if (!fields.includes(hit.name)) fields.push(hit.name);
   return fields;
 }
 

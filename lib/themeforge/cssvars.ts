@@ -299,6 +299,19 @@ export function buildThemeVariables(source: Record<string, string>, componentSou
     varRewrites.push({ from: name, to });
   }
 
+  // The editor paints theme.json variables on the preview root. The 15 panel
+  // keys stay first. Every other token from the repo's global CSS is kept,
+  // and a token that matches a panel colour points at that panel so Theme Color still drives it.
+  const panelKeys = new Set<string>(THEME_VARIABLE_KEYS);
+  for (const [key, value] of Object.entries(source)) {
+    if (panelKeys.has(key)) continue;
+    const rewritten = varRewrites.find((item) => item.from === key);
+    variables[key] = rewritten ? `var(${rewritten.to})` : value;
+  }
+  variables["--color-primary"] = "var(--primary-bg)";
+  variables["--color-brand"] = "var(--primary-bg)";
+  variables["--color-accent"] = "var(--blue-bg)";
+
   return { variables, injected, rewrites, varRewrites };
 }
 

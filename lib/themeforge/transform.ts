@@ -2,7 +2,7 @@ import path from "node:path";
 import { emptyValueFor, extractDataFields, exportedIdentifiers, findDefaultContent, inferFieldShapes, parseImports, resolveImport, seedValueFor, type AliasConfig } from "./analysis";
 import { rewriteColorVars, rewriteThemeHexes, rewriteUtilityColors } from "./cssvars";
 import { applyEditorMedia } from "./editorMedia";
-import { hoistUseClient, rewriteDynamicIcons, rewritePreviewHrefs, stabilizeListKeys } from "./themeIcons";
+import { hoistUseClient, rewriteDynamicIcons, rewriteHeaderNavHrefs, rewritePreviewHrefs, rewriteSvgModules, stabilizeListKeys } from "./themeIcons";
 import { cssVarsInjector } from "./cssvars";
 import { alignEditorDetailFields } from "./editorDetailFields";
 import { inlineTypeImport } from "./inlineTypes";
@@ -257,6 +257,7 @@ export function transformComponent(ctx: TransformContext): TransformResult {
   const imports = parseImports(code);
   const replacements: { start: number; end: number; text: string }[] = [];
   const pendingRenames: { from: string; to: string }[] = [];
+  const svgModules: { local: string; media: string }[] = [];
   for (const imp of imports) {
     const res = resolveImport(imp.specifier, component.source, aliases, fileSet);
     if (res.kind === "package") {
@@ -265,6 +266,15 @@ export function transformComponent(ctx: TransformContext): TransformResult {
         dependencies[pkgName] = packageDeps[pkgName] ?? "unknown";
       }
       continue;
+    }
+    if (res.kind === "local" && res.path && /\.svg$/i.test(res.path.split("?")[0] ?? "")) {
+      const target = ctx.assetTargets.get(res.path) ?? ctx.assetTargets.get(res.path.split("?")[0] ?? "");
+      const local = imp.defaultName || imp.named.find((n) => /^[A-Za-z_$]/.test(n.local))?.local;
+      if (target && local) {
+        svgModules.push({ local, media: mediaSrcArg(target) });
+        replacements.push({ start: imp.start, end: imp.end, text: "" });
+        continue;
+      }
     }
     if (res.kind === "local" && res.path) {
       const sibling = componentBySource.get(res.path);
@@ -315,6 +325,7 @@ export function transformComponent(ctx: TransformContext): TransformResult {
     code = code.slice(0, r.start) + r.text + code.slice(r.end);
   }
   for (const r of pendingRenames) code = renameIdentifier(code, r.from, r.to);
+  if (svgModules.length) code = rewriteSvgModules(code, svgModules);
 
   // --- identifier rename / default export ---------------------------------
   const exp = exportedIdentifiers(code);
@@ -431,6 +442,7 @@ export function transformComponent(ctx: TransformContext): TransformResult {
   if (ctx.colorVarRewrites?.length) code = rewriteColorVars(code, ctx.colorVarRewrites);
   const media = rewriteHardcodedMedia(code, ctx.assetTargets);
   code = rewritePreviewHrefs(rewriteDynamicIcons(applyEditorMedia(media.code, component.sectionType)));
+  if (component.sectionType === "Header") code = rewriteHeaderNavHrefs(code);
   // --- host boilerplate (reference convention) ----------------------------
   const wantsCssVars = t.injectCssVars.enabled && ctx.cssVars && Object.keys(ctx.cssVars).length > 0 && !code.includes(t.injectCssVars.styleId);
   const wantsMapper = t.hostAssetMapper.enabled && !code.includes(t.hostAssetMapper.importName);
@@ -465,10 +477,19 @@ export function transformComponent(ctx: TransformContext): TransformResult {
       }
     }
   }
-  if (media.count && !/import\s*\{[^}]*\bmediaSrc\b/.test(code)) {
+  if ((media.count || /\bmediaSrc\s*\(/.test(code)) && !/import\s*\{[^}]*\bmediaSrc\b/.test(code)) {
     const mediaPath = t.hostAssetMapper.importPath.replace(/[^/]+$/, "lexoraPreview");
     code = insertAfterDirectives(code, `import { mediaSrc } from ${JSON.stringify(mediaPath)};\n`);
   }
+
+  const serial = extractDataFields(code);
+  const rank = new Map(serial.map((name, index) => [name, index]));
+  const leftover = editorFields.filter((field) => !rank.has(field));
+  editorFields.splice(0, editorFields.length, ...serial.filter((field) => editorFields.includes(field)), ...leftover);
+  const orderedContent: Record<string, unknown> = {};
+  for (const field of editorFields) if (field in defaultContent) orderedContent[field] = defaultContent[field];
+  for (const [key, value] of Object.entries(defaultContent)) if (!(key in orderedContent)) orderedContent[key] = value;
+  defaultContent = orderedContent;
 
   if (t.appendEditorFieldsStatic && finalName && editorFields.length && !/\.editorFields\s*=/.test(code)) {
     code = `${code.replace(/\s*$/, "")}\n\n(${finalName} as typeof ${finalName} & { editorFields: readonly string[] }).editorFields = ${JSON.stringify(editorFields)};\n`;

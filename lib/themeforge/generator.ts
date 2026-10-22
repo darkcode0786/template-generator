@@ -8,7 +8,7 @@ import { buildMappingPlan } from "./mapper";
 import { isInside, pascalCase, safeJoin, slugify, timestampKey, titleCase } from "./paths";
 import { scanRepository } from "./scanner";
 import { loadSpec, type ThemeSpec } from "./spec";
-import { buildThemeVariables, formatRootVarsCss, mergeCssVariables } from "./cssvars";
+import { buildThemeVariables, mergeCssVariables } from "./cssvars";
 import { rewriteInternalNavPaths } from "./navPaths";
 import { normalizeThemePages } from "./themePages";
 import { assetTargetMap, transformComponent } from "./transform";
@@ -211,7 +211,8 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
     const imgStats: ThemeManifest["imageOptimization"] = { enabled: spec.assets.optimizeImages.enabled, optimized: 0, copied: 0, resized: 0, originalBytes: 0, finalBytes: 0 };
     let copied = 0;
 
-    for (const pf of plan.files) {
+    const exportedFiles = plan.files.filter((file) => file.kind !== "style" && file.kind !== "font" && !file.target.replace(/\\/g, "/").startsWith("styles/"));
+    for (const pf of exportedFiles) {
       const src = safeJoin(repoDir, pf.source);
       const dest = safeJoin(outputDir, pf.target);
       const st = await fs.lstat(src);
@@ -253,14 +254,6 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
     for (const u of unresolvedImports) {
       warnings.push(`Unresolved import in ${u.component}: "${u.specifier}" (${u.reason}).`);
     }
-    // styles/variables.css: the collected :root variables in one readable place (the same set is inlined in every component).
-    const hasStylesDir = spec.optionalDirectories.includes("styles") || plan.files.some((f) => f.target.startsWith("styles/"));
-    if (hasStylesDir && Object.keys(themeColors.variables).length) {
-      const varsDest = safeJoin(outputDir, "styles/variables.css");
-      await fs.mkdir(path.dirname(varsDest), { recursive: true });
-      await fs.writeFile(varsDest, formatRootVarsCss(themeColors.variables), "utf8");
-      copied += 1;
-    }
     const imgSummary = imgStats.enabled && imgStats.optimized + imgStats.copied > 0 ? `; images ${formatSavings(imgStats.originalBytes, imgStats.finalBytes)}` : "";
     hooks.onStage("copy", "done", `${copied} files written${imgSummary}`);
 
@@ -283,7 +276,7 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
       input: { repoUrl: input.repoUrl, category: input.category, categorySlug, template: input.template, templateSlug },
       source: { cloneUrl: repo.cloneUrl, commit, branch, project: p },
       theme: { key, outputDir, zipFile: zipPath },
-      included: plan.files,
+      included: exportedFiles,
       excluded: [...scan.excluded, ...plan.skipped],
       components: componentDetails,
       pages: plan.pages,

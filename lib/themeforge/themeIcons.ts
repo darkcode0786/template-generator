@@ -67,12 +67,85 @@ function rewriteRenderIconFns(code: string): string {
   return out;
 }
 
-/** `const Icon = IconMap[feature.icon]` stays blank for every name that is not in that map. */
+function statementEnd(code: string, start: number): number {
+  let depth = 0;
+  let quote: string | null = null;
+  for (let i = start; i < code.length; i += 1) {
+    const ch = code[i]!;
+    if (quote) {
+      if (ch === "\\") {
+        i += 1;
+        continue;
+      }
+      if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === "'" || ch === '"' || ch === "`") {
+      quote = ch;
+      continue;
+    }
+    if (ch === "(" || ch === "[" || ch === "{") depth += 1;
+    else if (ch === ")" || ch === "]" || ch === "}") depth = Math.max(0, depth - 1);
+    else if (ch === ";" && depth === 0) return i + 1;
+  }
+  return -1;
+}
+
+/** Index expression whose key is an icon field: `map[item.icon]`, including a cast and a fallback. */
+function iconIndexKey(expr: string): string | null {
+  const match = expr.trim().match(/^(?:\([^[\]]+\)|[A-Za-z_$][\w$.]*)\s*\[\s*([^[\]]+?)\s*\](?:\s*\|\|[\s\S]+)?$/);
+  if (!match) return null;
+  const key = match[1]!.replace(/\s+/g, "");
+  if (!/(?:^|\.)icon(?:Name)?\b/i.test(key) && !/icon/i.test(key)) return null;
+  if (!/^[A-Za-z_$][\w$.?]*$/.test(key)) return null;
+  return key;
+}
+
+/**
+ * `cardIcons[card.icon]`, `socialIconMap[s.icon]`, and
+ * `(LucideIcons as ...)[item.icon]` only know the names that were imported.
+ * The editor dropdown can pick any of them, or an SVG path.
+ */
 function rewriteIconMapLookup(code: string): string {
-  return code.replace(
-    /const\s+([A-Z][\w$]*)\s*=\s*[A-Za-z_$][\w$]*\s*\[\s*([^\]\n]+?)\s*\](?:\s*\|\|\s*[^;\n]+)?;/g,
-    'const $1 = (props: { className?: string }) => <WebsiteIcon name={String($2 ?? "")} {...props} />;',
-  );
+  const re = /const\s+([A-Z][\w$]*)\s*=/g;
+  const edits: { start: number; end: number; text: string }[] = [];
+  for (const match of code.matchAll(re)) {
+    const start = match.index ?? 0;
+    const end = statementEnd(code, start + match[0].length);
+    if (end < 0) continue;
+    const key = iconIndexKey(code.slice(start + match[0].length, end - 1));
+    if (!key) continue;
+    const name = match[1]!;
+    if (!/icon/i.test(name) && !/(?:^|\.)icon(?:Name)?\b/i.test(key)) continue;
+    edits.push({
+      start,
+      end,
+      text: `const ${name} = (props: { className?: string; size?: number; strokeWidth?: number }) => <WebsiteIcon name={String(${key} ?? "")} {...props} />;`,
+    });
+  }
+  let out = code;
+  for (const edit of edits.sort((a, b) => b.start - a.start)) {
+    out = out.slice(0, edit.start) + edit.text + out.slice(edit.end);
+  }
+  return out;
+}
+
+/** `import Star from "./star.svg"` is not a component on the host. Paint the file. */
+export function rewriteSvgModules(code: string, modules: { local: string; media: string }[]): string {
+  let out = code;
+  const leftovers: string[] = [];
+  for (const mod of modules) {
+    if (!/^[A-Za-z_$][\w$]*$/.test(mod.local)) continue;
+    const src = `mediaSrc(${JSON.stringify(mod.media)})`;
+    const name = mod.local;
+    out = out.replace(new RegExp(`<${name}(\\s[^>]*?)?\\s*/>`, "g"), `<img src={${src}} alt=""$1 />`);
+    out = out.replace(new RegExp(`<${name}(\\s[^>]*?)?>\\s*</${name}>`, "g"), `<img src={${src}} alt=""$1 />`);
+    if (new RegExp(`\\b${name}\\b`).test(out)) leftovers.push(`const ${name} = ${src};`);
+  }
+  if (!leftovers.length) return out;
+  const line = `${leftovers.join("\n")}\n`;
+  if (/^['"]use client['"];\s*\n/.test(out)) return out.replace(/^(['"]use client['"];\s*\n)/, `$1${line}`);
+  return line + out;
 }
 
 /** `{item.icon === "star" && <FaStar />}` paints nothing after the dropdown changes the name. */
@@ -115,6 +188,42 @@ export function rewritePreviewHrefs(code: string): string {
   );
   if (!/\btoLestowHref\b/.test(out)) return out;
   return ensureNamedImport(out, "toLestowHref", "../../../lib/lexoraPreview");
+}
+
+function navHrefPattern(name: string): RegExp {
+  return new RegExp(`\\bhref=\\{\\s*(?:toLestowHref\\(\\s*)?${name}\\??\\.(?:url|href)\\s*\\)?\\s*\\}`);
+}
+
+/**
+ * Menu rows are saved as `url`, and some source headers read `href`.
+ * The exported header reads whichever one is present, then maps it to `#page-…`.
+ */
+export function rewriteHeaderNavHrefs(code: string): string {
+  let out = code;
+  for (let pass = 0; pass < 40; pass += 1) {
+    const mapRe = /\.map\s*\(\s*/g;
+    let target: MapCallback | null = null;
+    for (const match of out.matchAll(mapRe)) {
+      const cb = parseMapCallback(out, (match.index ?? 0) + match[0].length);
+      if (!cb) continue;
+      const body = out.slice(cb.bodyStart, cb.bodyEnd);
+      if (body.includes(`const ${cb.name}Href = ${cb.name}.url || ${cb.name}.href`)) continue;
+      if (!navHrefPattern(cb.name).test(body)) continue;
+      if (!target || cb.bodyStart > target.bodyStart) target = cb;
+    }
+    if (!target) break;
+    const name = target.name;
+    const raw = out.slice(target.bodyStart, target.bodyEnd);
+    const replaced = raw.replace(navHrefPattern(name), `href={toLestowHref(${name}Href)}`);
+    const lineStart = out.lastIndexOf("\n", target.bodyStart) + 1;
+    const indent = /^[ \t]*/.exec(out.slice(lineStart, target.bodyStart))?.[0] ?? "";
+    const decl = `const ${name}Href = ${name}.url || ${name}.href;`;
+    let next = replaced;
+    if (out[target.bodyStart] === "{") next = `{${`\n${indent}  ${decl}`}${replaced.slice(1)}`;
+    else next = `{\n${indent}  ${decl}\n${indent}  return ${replaced};\n${indent}}`;
+    out = out.slice(0, target.bodyStart) + next + out.slice(target.bodyEnd);
+  }
+  return out;
 }
 
 /**

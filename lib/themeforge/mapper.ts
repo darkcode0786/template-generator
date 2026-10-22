@@ -151,7 +151,9 @@ export async function buildMappingPlan(ctx: MapperContext): Promise<MappingPlan>
     const ext = path.posix.extname(basename);
     const stem = basename.slice(0, basename.length - ext.length);
     const rawTarget = fillTemplate(rule.target, { relativeDir, basename, stem, ext });
-    const target = rule.kind === "image" || rule.kind === "icon" || rawTarget.startsWith("assets/") ? sanitizeAssetTarget(rawTarget) : rawTarget;
+    let target = rule.kind === "image" || rule.kind === "icon" || rawTarget.startsWith("assets/") ? sanitizeAssetTarget(rawTarget) : rawTarget;
+    // `assets/icons/{relativeDir}` plus a file already in `icons/` becomes assets/icons/icons/star.svg.
+    if (rule.kind === "icon") target = target.replace(/^assets\/icons\/icons\//, "assets/icons/");
     if (!isSafeRelativePath(target)) {
       skipped.push({ path: f.path, reason: `unsafe target path "${target}"` });
       continue;

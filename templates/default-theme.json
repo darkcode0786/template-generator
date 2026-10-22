@@ -4,7 +4,7 @@
   "description": "Target structure derived from refrence-theme-structure/: theme.json + addons/ + assets/<group>/ + components/<Name>/{<Name>.tsx, component.json}.",
 
   "requiredDirectories": ["addons", "assets", "components"],
-  "optionalDirectories": ["styles"],
+  "optionalDirectories": [],
   "requiredFiles": ["theme.json", "addons/floating.json"],
 
   "naming": {
@@ -203,28 +203,12 @@
       "target": "components/{ComponentName}/{ComponentName}{ext}"
     },
     {
-      "id": "fonts",
-      "kind": "font",
-      "description": "Web fonts are flattened into styles/fonts.",
-      "match": ["**/*.{woff,woff2,ttf,otf,eot}"],
-      "target": "styles/fonts/{basename}"
-    },
-    {
-      "id": "styles",
-      "kind": "style",
-      "description": "Global stylesheets (variables, fonts, base styles) are kept in styles/. A generated styles/variables.css holds the collected :root variables.",
-      "match": ["app/globals.css", "src/app/globals.css", "styles/**/*.{css,scss}", "src/styles/**/*.{css,scss}", "app/**/*.css", "src/app/**/*.css"],
-      "ignore": ["**/*.module.{css,scss}"],
-      "stripPrefix": ["app/", "src/app/", "styles/", "src/styles/"],
-      "target": "styles/{relativeDir}/{basename}"
-    },
-    {
       "id": "icons",
       "kind": "icon",
-      "description": "SVG icons keep their sub-folder under assets/icons.",
+      "description": "SVG files keep their folder (public/icons/star.svg -> assets/icons/star.svg).",
       "match": ["public/**/*.svg", "static/**/*.svg", "src/assets/**/*.svg", "assets/**/*.svg"],
       "stripPrefix": ["public/", "static/", "src/assets/", "assets/"],
-      "target": "assets/icons/{relativeDir}/{basename}"
+      "target": "assets/{relativeDir}/{basename}"
     },
     {
       "id": "images",

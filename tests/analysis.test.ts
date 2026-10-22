@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractDeclaredPageOrder, findDefaultContent, inferFieldShapes, orderByDeclaredRoutes, primaryJsxUsageOrder, seedValueFor } from "@/lib/themeforge/analysis";
+import { extractDataFields, extractDeclaredPageOrder, findDefaultContent, inferFieldShapes, orderByDeclaredRoutes, primaryJsxUsageOrder, seedValueFor } from "@/lib/themeforge/analysis";
 
 const data = [
   {
@@ -176,5 +176,15 @@ describe("findDefaultContent", () => {
     const m = findDefaultContent(data, "Header", ["Header"], ["logo", "menu"]);
     expect(m?.source).toBe("components/data/data.json#common.Header");
     expect(findDefaultContent(data, "Menu", ["Menu"], ["label", "url"])?.source).toBe("components/data/data.json#common.Header.menu[0]");
+  });
+});
+
+describe("extractDataFields", () => {
+  it("follows the order fields appear in the component", () => {
+    const source = `export const Header = ({ data }: { data?: any }) => {
+      const { logo, menu } = data ?? {};
+      return <header>{data?.topbar}{logo}{menu?.length}{data["contactButton"]}</header>;
+    };`;
+    expect(extractDataFields(source)).toEqual(["logo", "menu", "topbar", "contactButton"]);
   });
 });
