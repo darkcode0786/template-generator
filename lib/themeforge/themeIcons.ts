@@ -1,5 +1,3 @@
-/** Point dynamic icons at the host `WebsiteIcon`, which paints every editor dropdown value. */
-
 function ensureNamedImport(code: string, name: string, from: string): string {
   if (new RegExp(`import\\s*\\{[^}]*\\b${name}\\b`).test(code)) return code;
   const line = `import { ${name} } from "${from}";\n`;
@@ -9,161 +7,12 @@ function ensureNamedImport(code: string, name: string, from: string): string {
   return line + code;
 }
 
-function paramName(params: string): string {
-  const raw = params.split(",")[0]?.trim() ?? "";
-  const name = raw.replace(/[?:=].*$/, "").replace(/:.*/, "").trim();
-  return /^[A-Za-z_$][\w$]*$/.test(name) ? name : "iconName";
-}
-
-function endOfBlock(code: string, openBrace: number): number {
-  let depth = 0;
-  let quote: string | null = null;
-  for (let i = openBrace; i < code.length; i++) {
-    const ch = code[i];
-    if (quote) {
-      if (ch === "\\") {
-        i += 1;
-        continue;
-      }
-      if (ch === quote) quote = null;
-      continue;
-    }
-    if (ch === '"' || ch === "'" || ch === "`") {
-      quote = ch;
-      continue;
-    }
-    if (ch === "{") depth += 1;
-    else if (ch === "}") {
-      depth -= 1;
-      if (depth === 0) return i + 1;
-    }
-  }
-  return -1;
-}
-
-/** `renderIcon` switches only know the icons that were imported. The dropdown can pick any of them. */
-function rewriteRenderIconFns(code: string): string {
-  const re = /(?:const|let)\s+renderIcon\s*=\s*\(([^)]*)\)\s*=>\s*\{|function\s+renderIcon\s*\(([^)]*)\)\s*\{/g;
-  const pieces: { start: number; end: number; text: string }[] = [];
-  for (const match of code.matchAll(re)) {
-    const start = match.index ?? 0;
-    const brace = start + match[0].length - 1;
-    let end = endOfBlock(code, brace);
-    if (end < 0) continue;
-    if (code[end] === ";") end += 1;
-    const body = code.slice(brace, end);
-    if (body.includes("WebsiteIcon")) continue;
-    const param = paramName(match[1] || match[2] || "iconName");
-    pieces.push({
-      start,
-      end,
-      text: `const renderIcon = (${param}?: string) => <WebsiteIcon name={String(${param} ?? "")} />;`,
-    });
-  }
-  let out = code;
-  for (const piece of pieces.sort((a, b) => b.start - a.start)) {
-    out = out.slice(0, piece.start) + piece.text + out.slice(piece.end);
-  }
-  return out;
-}
-
-function statementEnd(code: string, start: number): number {
-  let depth = 0;
-  let quote: string | null = null;
-  for (let i = start; i < code.length; i += 1) {
-    const ch = code[i]!;
-    if (quote) {
-      if (ch === "\\") {
-        i += 1;
-        continue;
-      }
-      if (ch === quote) quote = null;
-      continue;
-    }
-    if (ch === "'" || ch === '"' || ch === "`") {
-      quote = ch;
-      continue;
-    }
-    if (ch === "(" || ch === "[" || ch === "{") depth += 1;
-    else if (ch === ")" || ch === "]" || ch === "}") depth = Math.max(0, depth - 1);
-    else if (ch === ";" && depth === 0) return i + 1;
-  }
-  return -1;
-}
-
-/** Index expression whose key is an icon field: `map[item.icon]`, including a cast and a fallback. */
-function iconIndexKey(expr: string): string | null {
-  const match = expr.trim().match(/^(?:\([^[\]]+\)|[A-Za-z_$][\w$.]*)\s*\[\s*([^[\]]+?)\s*\](?:\s*\|\|[\s\S]+)?$/);
-  if (!match) return null;
-  const key = match[1]!.replace(/\s+/g, "");
-  if (!/(?:^|\.)icon(?:Name)?\b/i.test(key) && !/icon/i.test(key)) return null;
-  if (!/^[A-Za-z_$][\w$.?]*$/.test(key)) return null;
-  return key;
-}
-
 /**
- * `cardIcons[card.icon]`, `socialIconMap[s.icon]`, and
- * `(LucideIcons as ...)[item.icon]` only know the names that were imported.
- * The editor dropdown can pick any of them, or an SVG path.
+ * The template already draws its icons (`<FaStar />`, `renderIcon` switches, lucide maps).
+ * Replacing those with `WebsiteIcon` drops every glyph that map does not know.
  */
-function rewriteIconMapLookup(code: string): string {
-  const re = /const\s+([A-Z][\w$]*)\s*=/g;
-  const edits: { start: number; end: number; text: string }[] = [];
-  for (const match of code.matchAll(re)) {
-    const start = match.index ?? 0;
-    const end = statementEnd(code, start + match[0].length);
-    if (end < 0) continue;
-    const key = iconIndexKey(code.slice(start + match[0].length, end - 1));
-    if (!key) continue;
-    const name = match[1]!;
-    if (!/icon/i.test(name) && !/(?:^|\.)icon(?:Name)?\b/i.test(key)) continue;
-    edits.push({
-      start,
-      end,
-      text: `const ${name} = (props: { className?: string; size?: number; strokeWidth?: number }) => <WebsiteIcon name={String(${key} ?? "")} {...props} />;`,
-    });
-  }
-  let out = code;
-  for (const edit of edits.sort((a, b) => b.start - a.start)) {
-    out = out.slice(0, edit.start) + edit.text + out.slice(edit.end);
-  }
-  return out;
-}
-
-/** `import Star from "./star.svg"` is not a component on the host. Paint the file. */
-export function rewriteSvgModules(code: string, modules: { local: string; media: string }[]): string {
-  let out = code;
-  const leftovers: string[] = [];
-  for (const mod of modules) {
-    if (!/^[A-Za-z_$][\w$]*$/.test(mod.local)) continue;
-    const src = `mediaSrc(${JSON.stringify(mod.media)})`;
-    const name = mod.local;
-    out = out.replace(new RegExp(`<${name}(\\s[^>]*?)?\\s*/>`, "g"), `<img src={${src}} alt=""$1 />`);
-    out = out.replace(new RegExp(`<${name}(\\s[^>]*?)?>\\s*</${name}>`, "g"), `<img src={${src}} alt=""$1 />`);
-    if (new RegExp(`\\b${name}\\b`).test(out)) leftovers.push(`const ${name} = ${src};`);
-  }
-  if (!leftovers.length) return out;
-  const line = `${leftovers.join("\n")}\n`;
-  if (/^['"]use client['"];\s*\n/.test(out)) return out.replace(/^(['"]use client['"];\s*\n)/, `$1${line}`);
-  return line + out;
-}
-
-/** `{item.icon === "star" && <FaStar />}` paints nothing after the dropdown changes the name. */
-function rewriteIconEquality(code: string): string {
-  const replaced = code.replace(
-    /\{[ \t]*([A-Za-z_$][\w$]*\??\.icon)\s*===\s*['"][^'"]+['"]\s*&&\s*<[A-Z][\w$]*\b[^>\n]*\/>\s*\}/g,
-    '{<WebsiteIcon name={String($1 ?? "")} />}',
-  );
-  return replaced.replace(
-    /(\{<WebsiteIcon name=\{String\(([^)]+) \?\? ""\)\} \/>\}\s*){2,}/g,
-    '{<WebsiteIcon name={String($2 ?? "")} />}\n',
-  );
-}
-
 export function rewriteDynamicIcons(code: string): string {
-  const next = rewriteIconEquality(rewriteIconMapLookup(rewriteRenderIconFns(code)));
-  if (next === code || !next.includes("WebsiteIcon")) return code;
-  return ensureNamedImport(next, "WebsiteIcon", "../../../lib/websiteIcons");
+  return code;
 }
 
 /**
@@ -223,6 +72,50 @@ export function rewriteHeaderNavHrefs(code: string): string {
     else next = `{\n${indent}  ${decl}\n${indent}  return ${replaced};\n${indent}}`;
     out = out.slice(0, target.bodyStart) + next + out.slice(target.bodyEnd);
   }
+  return out;
+}
+
+function ensureImportLine(code: string, line: string, symbol: string): string {
+  if (new RegExp(`import\\s*\\{[^}]*\\b${symbol}\\b`).test(code)) return code;
+  if (/^['"]use client['"];\s*\n/.test(code)) {
+    return code.replace(/^(['"]use client['"];\s*\n)/, `$1${line}`);
+  }
+  return line + code;
+}
+
+function insertPreviewNavHook(code: string): string {
+  if (/\busePreview\s*\(/.test(code)) return code;
+  const patterns = [
+    /export\s+default\s+function\s+[A-Za-z_$][\w$]*\s*\([^)]*\)\s*(?::\s*[^{]+)?\{/,
+    /export\s+function\s+[A-Z][\w$]*\s*\([^)]*\)\s*(?::\s*[^{]+)?\{/,
+    /export\s+const\s+[A-Z][\w$]*\s*=\s*(?:async\s*)?\([^)]*\)\s*(?::\s*[^=]+?)?\s*=>\s*\{/,
+  ];
+  for (const pattern of patterns) {
+    const match = pattern.exec(code);
+    if (!match) continue;
+    const brace = (match.index ?? 0) + match[0].length - 1;
+    if (code[brace] !== "{") continue;
+    return `${code.slice(0, brace + 1)}\n  const previewNav = usePreview();\n${code.slice(brace + 1)}`;
+  }
+  return code;
+}
+
+/**
+ * A hash href does not switch the editor page. The click has to call
+ * `setCurrentPage`, which is what the host headers do.
+ */
+export function bindPreviewNavClicks(code: string): string {
+  let changed = false;
+  const next = code.replace(/<a\b([^>]*?\bhref=\{toLestowHref\([^)]*\)\}[^>]*)>/g, (full, attrs: string) => {
+    if (/\bonClick\s*=/.test(attrs)) return full;
+    changed = true;
+    return `<a${attrs} onClick={(event) => { event.preventDefault(); const href = event.currentTarget.getAttribute("href") || ""; const slug = href.replace(/^#page-/i, ""); handlePreviewMenuNavigate(href, slug, previewNav.setCurrentPage); }}>`;
+  });
+  if (!changed) return code;
+  let out = insertPreviewNavHook(next);
+  if (!/\busePreview\s*\(/.test(out)) return code;
+  out = ensureImportLine(out, 'import { usePreview } from "../../context/PreviewContext";\n', "usePreview");
+  out = ensureImportLine(out, 'import { handlePreviewMenuNavigate } from "../../../lib/sectionScroll";\n', "handlePreviewMenuNavigate");
   return out;
 }
 

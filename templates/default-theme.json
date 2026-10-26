@@ -205,10 +205,10 @@
     {
       "id": "icons",
       "kind": "icon",
-      "description": "SVG files keep their folder (public/icons/star.svg -> assets/icons/star.svg).",
+      "description": "SVG icons keep their sub-folder under assets/icons.",
       "match": ["public/**/*.svg", "static/**/*.svg", "src/assets/**/*.svg", "assets/**/*.svg"],
       "stripPrefix": ["public/", "static/", "src/assets/", "assets/"],
-      "target": "assets/{relativeDir}/{basename}"
+      "target": "assets/icons/{relativeDir}/{basename}"
     },
     {
       "id": "images",

@@ -5,7 +5,6 @@ ThemeForge is a **local-only** tool for Windows. You give it a public HTTPS Git 
 ```
 <template>/
   theme.json                         key, title, type, categorySlug, previewImage, homeSectionOrder, sectionVariants, pages
-  theme-manifest.json                what was included/excluded, mappings, unresolved imports, warnings, validation
   addons/floating.json
   assets/<group>/<file>              images keep their source sub-folder (public/team/1.jpg -> assets/team/1.jpg)
   assets/icons/…                     svg icons

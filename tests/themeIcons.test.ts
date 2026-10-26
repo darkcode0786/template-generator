@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { hoistUseClient, rewriteDynamicIcons, rewriteHeaderNavHrefs, rewritePreviewHrefs, rewriteSvgModules, stabilizeListKeys } from "@/lib/themeforge/themeIcons";
+import { bindPreviewNavClicks, hoistUseClient, rewriteDynamicIcons, rewriteHeaderNavHrefs, rewritePreviewHrefs, stabilizeListKeys } from "@/lib/themeforge/themeIcons";
 
 describe("rewriteDynamicIcons", () => {
-  it("renders whatever icon the editor dropdown stores", () => {
-    const code = rewriteDynamicIcons(`"use client";
+  it("keeps the icons the template already draws", () => {
+    const source = `"use client";
 const renderIcon = (iconName?: string) => {
   switch (iconName) {
     case "FaStar": return <FaStar />;
@@ -15,35 +15,12 @@ const Icon = IconMap[feature.icon] || FaRegUser;
   {feat.icon === "star" && <FaStar />}
   {feat.icon === "globe" && <FaGlobe />}
 </div>
-`);
-    expect(code).toContain('const renderIcon = (iconName?: string) => <WebsiteIcon name={String(iconName ?? "")} />;');
-    expect(code).toContain('WebsiteIcon name={String(feature.icon ?? "")}');
-    expect(code).toContain('WebsiteIcon name={String(feat.icon ?? "")}');
-    expect(code).not.toContain("FaGlobe");
-    expect(code).toContain('import { WebsiteIcon } from "../../../lib/websiteIcons";');
-  });
-
-  it("paints icon-map lookups the editor can change, including svg paths", () => {
-    const code = rewriteDynamicIcons(`const Icon =
-  (LucideIcons as unknown as Record<string, React.ElementType>)[item.icon] ||
-  LucideIcons.Zap;
-const Social = socialIconMap[s.icon] || FaFacebookF;
-const Label = titles[index];
-`);
-    expect(code).toContain('const Icon = (props: { className?: string; size?: number; strokeWidth?: number }) => <WebsiteIcon name={String(item.icon ?? "")} {...props} />;');
-    expect(code).toContain('const Social = (props: { className?: string; size?: number; strokeWidth?: number }) => <WebsiteIcon name={String(s.icon ?? "")} {...props} />;');
-    expect(code).toContain("const Label = titles[index];");
-  });
-});
-
-describe("rewriteSvgModules", () => {
-  it("turns an svg component import into an image the theme folder can serve", () => {
-    const code = rewriteSvgModules(`export const Box = () => <Star className="h-6" />;
-const mark = Star;
-`, [{ local: "Star", media: "/icons/star.svg" }]);
-    expect(code).toContain('src={mediaSrc("/icons/star.svg")}');
-    expect(code).toContain('className="h-6"');
-    expect(code).toContain('const Star = mediaSrc("/icons/star.svg");');
+`;
+    const code = rewriteDynamicIcons(source);
+    expect(code).toBe(source);
+    expect(code).toContain("<FaStar />");
+    expect(code).toContain("<FaGlobe />");
+    expect(code).not.toContain("WebsiteIcon");
   });
 });
 
@@ -98,6 +75,24 @@ export default function Footer() {
 `);
     expect(hoistUseClient(code).startsWith("'use client';\nimport { toLestowHref }")).toBe(true);
     expect(hoistUseClient(code).indexOf("'use client'")).toBeLessThan(hoistUseClient(code).indexOf("import"));
+  });
+
+  it("switches the editor page when a header link is clicked", () => {
+    const code = bindPreviewNavClicks(rewriteHeaderNavHrefs(rewritePreviewHrefs(`export const Header = ({ data }: { data?: any }) => {
+  return (
+    <nav>
+      {data.menu.map((link) => (
+        <a href={link.url}>{link.label}</a>
+      ))}
+    </nav>
+  );
+};`)));
+    expect(code).toContain("const previewNav = usePreview();");
+    expect(code).toContain('import { usePreview } from "../../context/PreviewContext";');
+    expect(code).toContain('import { handlePreviewMenuNavigate } from "../../../lib/sectionScroll";');
+    expect(code).toContain("event.preventDefault();");
+    expect(code).toContain("previewNav.setCurrentPage");
+    expect(code).toContain("href={toLestowHref(linkHref)}");
   });
 });
 

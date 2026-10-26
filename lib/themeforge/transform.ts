@@ -2,7 +2,7 @@ import path from "node:path";
 import { emptyValueFor, extractDataFields, exportedIdentifiers, findDefaultContent, inferFieldShapes, parseImports, resolveImport, seedValueFor, type AliasConfig } from "./analysis";
 import { rewriteColorVars, rewriteThemeHexes, rewriteUtilityColors } from "./cssvars";
 import { applyEditorMedia } from "./editorMedia";
-import { hoistUseClient, rewriteDynamicIcons, rewriteHeaderNavHrefs, rewritePreviewHrefs, rewriteSvgModules, stabilizeListKeys } from "./themeIcons";
+import { bindPreviewNavClicks, hoistUseClient, rewriteHeaderNavHrefs, rewritePreviewHrefs, stabilizeListKeys } from "./themeIcons";
 import { cssVarsInjector } from "./cssvars";
 import { alignEditorDetailFields } from "./editorDetailFields";
 import { inlineTypeImport } from "./inlineTypes";
@@ -194,6 +194,13 @@ export function rewriteAssetStrings<T>(value: T, assetTargets: Map<string, strin
 
 const MEDIA_EXT = /\.(webp|png|jpe?g|gif|svg|mp4|webm|avif)(\?[^"'`]*)?$/i;
 
+const HEADER_NAV_FIELDS = new Set(["menu", "navLinks", "navLinksLeft", "navLinksRight", "navItems", "menuItems", "navigation", "links"]);
+
+/** Header nav lists stay exactly as the repo saved them. An empty list stays empty. */
+export function keepsRepoHeaderLinks(sectionType: string, field: string): boolean {
+  return sectionType === "Header" && HEADER_NAV_FIELDS.has(field);
+}
+
 /** `assets/hero/banner.webp` → `/hero/banner.webp`, the argument `mediaSrc` expects. */
 export function mediaSrcArg(themePath: string): string {
   const cleaned = themePath.replace(/\\/g, "/").replace(/^\.\//, "").replace(/^\/+/, "");
@@ -245,6 +252,53 @@ export function rewriteHardcodedMedia(code: string, assetTargets: Map<string, st
   return { code, count };
 }
 
+function resolveSvgTarget(spec: string, sourceFile: string, assetTargets: Map<string, string>): string | null {
+  const fromDir = path.posix.dirname(sourceFile.replace(/\\/g, "/"));
+  const rel = path.posix.normalize(path.posix.join(fromDir, spec.replace(/\\/g, "/")));
+  if (assetTargets.has(rel)) return assetTargets.get(rel) ?? null;
+  const base = path.posix.basename(spec);
+  const hits = [...assetTargets.entries()].filter(([src]) => {
+    const norm = src.replace(/\\/g, "/");
+    return norm === base || norm.endsWith(`/${base}`);
+  });
+  return hits.length === 1 ? hits[0][1] : null;
+}
+
+/**
+ * `import Star from "./star.svg"` breaks once the file moves to `assets/icons`.
+ * Paint that same file through `mediaSrc` so the template icon still shows.
+ */
+export function rewriteSvgModuleImports(code: string, sourceFile: string, assetTargets: Map<string, string>): { code: string; count: number } {
+  const imports = parseImports(code).filter((imp) => imp.defaultName && /\.svg(?:[?#].*)?$/i.test(imp.specifier));
+  if (!imports.length) return { code, count: 0 };
+  let out = code;
+  let count = 0;
+  for (const imp of [...imports].sort((a, b) => b.start - a.start)) {
+    const target = resolveSvgTarget(imp.specifier, sourceFile, assetTargets);
+    const name = imp.defaultName;
+    if (!target || !name) continue;
+    const media = mediaSrcArg(target);
+    const src = `src={mediaSrc(${JSON.stringify(media)})}`;
+    const withoutImport = out.slice(0, imp.start) + out.slice(imp.end);
+    let used = 0;
+    const tag = new RegExp(`<${name}(\\s[^>]*?)?(?:/>|>\\s*</${name}>)`, "g");
+    let next = withoutImport.replace(tag, (_match, attrs = "") => {
+      used += 1;
+      return `<img${attrs} ${src} alt="" />`;
+    });
+    const ident = new RegExp(`(?<![\\w$])${name}(?![\\w$])`, "g");
+    if (ident.test(next)) {
+      used += 1;
+      ident.lastIndex = 0;
+      next = next.replace(ident, `mediaSrc(${JSON.stringify(media)})`);
+    }
+    if (!used) continue;
+    out = next;
+    count += used;
+  }
+  return { code: out, count };
+}
+
 export function transformComponent(ctx: TransformContext): TransformResult {
   const { spec, component, aliases, fileSet, componentBySource, packageDeps } = ctx;
   const t = spec.transformations;
@@ -257,7 +311,6 @@ export function transformComponent(ctx: TransformContext): TransformResult {
   const imports = parseImports(code);
   const replacements: { start: number; end: number; text: string }[] = [];
   const pendingRenames: { from: string; to: string }[] = [];
-  const svgModules: { local: string; media: string }[] = [];
   for (const imp of imports) {
     const res = resolveImport(imp.specifier, component.source, aliases, fileSet);
     if (res.kind === "package") {
@@ -266,15 +319,6 @@ export function transformComponent(ctx: TransformContext): TransformResult {
         dependencies[pkgName] = packageDeps[pkgName] ?? "unknown";
       }
       continue;
-    }
-    if (res.kind === "local" && res.path && /\.svg$/i.test(res.path.split("?")[0] ?? "")) {
-      const target = ctx.assetTargets.get(res.path) ?? ctx.assetTargets.get(res.path.split("?")[0] ?? "");
-      const local = imp.defaultName || imp.named.find((n) => /^[A-Za-z_$]/.test(n.local))?.local;
-      if (target && local) {
-        svgModules.push({ local, media: mediaSrcArg(target) });
-        replacements.push({ start: imp.start, end: imp.end, text: "" });
-        continue;
-      }
     }
     if (res.kind === "local" && res.path) {
       const sibling = componentBySource.get(res.path);
@@ -325,7 +369,6 @@ export function transformComponent(ctx: TransformContext): TransformResult {
     code = code.slice(0, r.start) + r.text + code.slice(r.end);
   }
   for (const r of pendingRenames) code = renameIdentifier(code, r.from, r.to);
-  if (svgModules.length) code = rewriteSvgModules(code, svgModules);
 
   // --- identifier rename / default export ---------------------------------
   const exp = exportedIdentifiers(code);
@@ -383,6 +426,13 @@ export function transformComponent(ctx: TransformContext): TransformResult {
     const reshaped: string[] = [];
     for (const f of editorFields) {
       const shape = shapes[f];
+      if (keepsRepoHeaderLinks(component.sectionType, f) && shape.kind === "array") {
+        if (Array.isArray(defaultContent[f])) continue;
+        const missing = !(f in defaultContent);
+        defaultContent[f] = [];
+        if (missing) filled.push(f);
+        continue;
+      }
       if (!(f in defaultContent)) {
         defaultContent[f] = t.seedFieldShapes ? seed(f) : emptyValueFor(shape.kind);
         filled.push(f);
@@ -441,8 +491,10 @@ export function transformComponent(ctx: TransformContext): TransformResult {
   if (ctx.colorRewrites?.length) code = rewriteThemeHexes(code, ctx.colorRewrites);
   if (ctx.colorVarRewrites?.length) code = rewriteColorVars(code, ctx.colorVarRewrites);
   const media = rewriteHardcodedMedia(code, ctx.assetTargets);
-  code = rewritePreviewHrefs(rewriteDynamicIcons(applyEditorMedia(media.code, component.sectionType)));
+  const svgIcons = rewriteSvgModuleImports(media.code, component.source, ctx.assetTargets);
+  code = rewritePreviewHrefs(applyEditorMedia(svgIcons.code, component.sectionType));
   if (component.sectionType === "Header") code = rewriteHeaderNavHrefs(code);
+  if (component.sectionType === "Header" || component.sectionType === "Footer") code = bindPreviewNavClicks(code);
   // --- host boilerplate (reference convention) ----------------------------
   const wantsCssVars = t.injectCssVars.enabled && ctx.cssVars && Object.keys(ctx.cssVars).length > 0 && !code.includes(t.injectCssVars.styleId);
   const wantsMapper = t.hostAssetMapper.enabled && !code.includes(t.hostAssetMapper.importName);
@@ -477,7 +529,7 @@ export function transformComponent(ctx: TransformContext): TransformResult {
       }
     }
   }
-  if ((media.count || /\bmediaSrc\s*\(/.test(code)) && !/import\s*\{[^}]*\bmediaSrc\b/.test(code)) {
+  if ((media.count || svgIcons.count) && !/import\s*\{[^}]*\bmediaSrc\b/.test(code)) {
     const mediaPath = t.hostAssetMapper.importPath.replace(/[^/]+$/, "lexoraPreview");
     code = insertAfterDirectives(code, `import { mediaSrc } from ${JSON.stringify(mediaPath)};\n`);
   }

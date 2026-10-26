@@ -26,7 +26,7 @@ export const STAGES = [
   { id: "detect", label: "Detect framework" },
   { id: "map", label: "Map source to target" },
   { id: "copy", label: "Copy and transform files" },
-  { id: "manifest", label: "Write theme.json and manifest" },
+  { id: "manifest", label: "Write theme.json" },
   { id: "validate-output", label: "Validate generated theme" },
   { id: "zip", label: "Create ZIP archive" },
   { id: "cleanup", label: "Clean up temporary files" },
@@ -292,14 +292,11 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
 
     // 9. validate output -----------------------------------------------------
     hooks.onStage("validate-output", "running");
-    // write a provisional manifest first so validation sees the final file set
-    await fs.writeFile(path.join(outputDir, "theme-manifest.json"), JSON.stringify(manifest, null, 2) + "\n", "utf8");
     const validation: ValidationReport = await validateOutput(outputDir, spec);
     manifest.validation = validation;
     for (const i of validation.issues) {
       if (i.level === "error") errors.push(i.message);
     }
-    await fs.writeFile(path.join(outputDir, "theme-manifest.json"), JSON.stringify(manifest, null, 2) + "\n", "utf8");
     hooks.onStage("validate-output", validation.ok ? "done" : "failed", `${validation.checks.filter((c) => c.ok).length}/${validation.checks.length} checks passed`);
     if (!validation.ok) {
       throw new Error(`Generated theme failed validation: ${errors.join(" | ")}`);

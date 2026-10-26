@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mediaSrcArg, rewriteAssetStrings, rewriteHardcodedMedia } from "@/lib/themeforge/transform";
+import { keepsRepoHeaderLinks, mediaSrcArg, rewriteAssetStrings, rewriteHardcodedMedia, rewriteSvgModuleImports } from "@/lib/themeforge/transform";
 
 const targets = new Map<string, string>([
   ["public/hero/banner.webp", "assets/hero/banner.webp"],
@@ -51,5 +51,29 @@ describe("rewriteHardcodedMedia", () => {
     expect(code).toContain("src={data.image1}");
     expect(code).toContain('href="/contact"');
     expect(mediaSrcArg("assets/hero/banner.webp")).toBe("/hero/banner.webp");
+  });
+});
+
+describe("rewriteSvgModuleImports", () => {
+  it("renders an imported svg from the copied icon file", () => {
+    const icons = new Map([["public/icons/star.svg", "assets/icons/icons/star.svg"]]);
+    const { code, count } = rewriteSvgModuleImports(
+      `import Star from "../public/icons/star.svg";\nexport const Row = () => <Star className="h-4 w-4" />;`,
+      "components/Row.tsx",
+      icons,
+    );
+    expect(count).toBe(1);
+    expect(code).not.toContain("import Star");
+    expect(code).toContain('src={mediaSrc("/icons/icons/star.svg")}');
+    expect(code).toContain('className="h-4 w-4"');
+  });
+});
+
+describe("keepsRepoHeaderLinks", () => {
+  it("does not invent header links", () => {
+    expect(keepsRepoHeaderLinks("Header", "navLinksRight")).toBe(true);
+    expect(keepsRepoHeaderLinks("Header", "menu")).toBe(true);
+    expect(keepsRepoHeaderLinks("Footer", "menu")).toBe(false);
+    expect(keepsRepoHeaderLinks("Header", "features")).toBe(false);
   });
 });

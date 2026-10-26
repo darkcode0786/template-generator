@@ -196,7 +196,7 @@ export async function validateOutput(outputDir: string, spec: ThemeSpec): Promis
   }
 
   // Sanity: outputs should only live in known top-level folders/files
-  const allowedTop = new Set([...spec.requiredDirectories, ...spec.optionalDirectories, "theme.json", "theme-manifest.json"]);
+  const allowedTop = new Set([...spec.requiredDirectories, ...spec.optionalDirectories, "theme.json"]);
   const strayTop = entries.filter((e) => !e.rel.includes("/") && !allowedTop.has(e.rel)).map((e) => e.rel);
   checks.push({ name: "no unexpected top-level entries", ok: strayTop.length === 0, detail: strayTop.join(", ") || undefined });
   for (const s of strayTop) warn("STRAY_TOP", `Unexpected top-level entry: ${s}`, s);

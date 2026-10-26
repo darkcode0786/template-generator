@@ -185,7 +185,7 @@ export function Dashboard() {
                   <li>Files are scanned and classified; secrets, dependencies, build output and archives are excluded.</li>
                   <li>
                     The selected theme specification maps components to <span className="font-mono">components/&lt;Name&gt;/</span>, images to{" "}
-                    <span className="font-mono">assets/&lt;group&gt;/</span>, and writes <span className="font-mono">theme.json</span> plus a manifest.
+                    <span className="font-mono">assets/&lt;group&gt;/</span>, and writes <span className="font-mono">theme.json</span>.
                   </li>
                   <li>The result is validated, zipped, and the temporary clone is deleted.</li>
                 </ol>

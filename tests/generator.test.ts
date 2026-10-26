@@ -43,7 +43,7 @@ describe("runGeneration (synthetic Next.js repo)", () => {
   });
 
   it("creates the required structure from the reference theme", async () => {
-    for (const rel of ["theme.json", "theme-manifest.json", "addons/floating.json", "assets", "components"]) {
+    for (const rel of ["theme.json", "addons/floating.json", "assets", "components"]) {
       expect(await exists(path.join(result.outputDir, rel)), rel).toBe(true);
     }
     expect(await readJson(path.join(result.outputDir, "addons", "floating.json"))).toEqual({ floatingItems: [] });
@@ -131,7 +131,7 @@ describe("runGeneration (synthetic Next.js repo)", () => {
         "assets/team/1.jpg",
         "assets/main-logo/header-logo.webp",
         "assets/service/laptop/01.webp",
-        "assets/icons/star.svg",
+        "assets/icons/icons/star.svg",
       ]),
     );
     expect(targets.some((t) => t.startsWith("styles/") || t.endsWith("next.svg"))).toBe(false);
@@ -207,9 +207,7 @@ describe("runGeneration (synthetic Next.js repo)", () => {
       }
     }
     await walk(result.outputDir);
-    expect(all.some((p) => /\.env|id_rsa|keys\.ts|node_modules|\.zip$|\.next/.test(p))).toBe(false);
-    const manifestText = await fs.readFile(path.join(result.outputDir, "theme-manifest.json"), "utf8");
-    expect(manifestText).not.toContain("should-never-be-copied");
+    expect(all.some((p) => /\.env|id_rsa|keys\.ts|node_modules|\.zip$|\.next|theme-manifest\.json/.test(p))).toBe(false);
   });
 
   it("builds theme.json with pages, section order and variants", async () => {
