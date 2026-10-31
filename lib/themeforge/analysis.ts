@@ -255,6 +255,19 @@ export function orderByDeclaredRoutes<T extends { id: string; route: string; lab
 
 const DATA_METHOD = new Set(["map", "length", "filter", "forEach", "slice", "join", "find", "some", "every", "reduce", "keys", "entries"]);
 
+/** `data` plus a rename in the props, such as `{ data: hero = site.hero }`. A PascalCase `data: Type` annotation is not a rename. */
+function dataReceivers(source: string): string[] {
+  const names = ["data"];
+  for (const match of source.matchAll(/\bdata\s*:\s*([A-Za-z_$][\w$]*)\b/g)) {
+    const name = match[1];
+    if (!name || name === "data" || names.includes(name)) continue;
+    const after = source.slice((match.index ?? 0) + match[0].length);
+    if (/^[A-Z]/.test(name) && !/^\s*=/.test(after)) continue;
+    names.push(name);
+  }
+  return names;
+}
+
 /** Fields read from `data`, in the order they first appear in the component. */
 export function extractDataFields(source: string): string[] {
   const hits: { name: string; at: number }[] = [];
@@ -262,14 +275,16 @@ export function extractDataFields(source: string): string[] {
     if (!name || DATA_METHOD.has(name) || !/^[A-Za-z_$][\w$]*$/.test(name)) return;
     hits.push({ name, at });
   };
-  for (const m of source.matchAll(/\bdata\??\.([A-Za-z_$][\w$]*)/g)) note(m[1], m.index ?? 0);
-  for (const m of source.matchAll(/\bdata\??(?:\s*\.\s*)?\[\s*["']([A-Za-z_$][\w$]*)["']\s*\]/g)) note(m[1], m.index ?? 0);
-  for (const m of source.matchAll(/(?:const|let|var)\s*\{([^}]*)\}\s*=\s*(?:props\.)?data\b/g)) {
-    let at = (m.index ?? 0) + m[0].indexOf("{") + 1;
-    for (const part of m[1].split(",")) {
-      const name = part.split(/[:=]/)[0].trim().replace(/^\.\.\./, "");
-      note(name, at);
-      at += part.length + 1;
+  for (const receiver of dataReceivers(source)) {
+    for (const m of source.matchAll(new RegExp(`\\b${receiver}\\??\\.([A-Za-z_$][\\w$]*)`, "g"))) note(m[1], m.index ?? 0);
+    for (const m of source.matchAll(new RegExp(`\\b${receiver}\\??(?:\\s*\\.\\s*)?\\[\\s*["']([A-Za-z_$][\\w$]*)["']\\s*\\]`, "g"))) note(m[1], m.index ?? 0);
+    for (const m of source.matchAll(new RegExp(`(?:const|let|var)\\s*\\{([^}]*)\\}\\s*=\\s*(?:props\\.)?${receiver}\\b`, "g"))) {
+      let at = (m.index ?? 0) + m[0].indexOf("{") + 1;
+      for (const part of m[1].split(",")) {
+        const name = part.split(/[:=]/)[0].trim().replace(/^\.\.\./, "");
+        note(name, at);
+        at += part.length + 1;
+      }
     }
   }
   hits.sort((a, b) => a.at - b.at);

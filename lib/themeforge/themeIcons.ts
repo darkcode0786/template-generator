@@ -104,12 +104,19 @@ function insertPreviewNavHook(code: string): string {
  * A hash href does not switch the editor page. The click has to call
  * `setCurrentPage`, which is what the host headers do.
  */
-export function bindPreviewNavClicks(code: string): string {
+export function bindPreviewNavClicks(code: string, landing = false): string {
   let changed = false;
-  const next = code.replace(/<a\b([^>]*?\bhref=\{toLestowHref\([^)]*\)\}[^>]*)>/g, (full, attrs: string) => {
+  const click = landing
+    ? ` onClick={(event) => { const href = event.currentTarget.getAttribute("href") || ""; if (/^(mailto:|tel:|https?:)/i.test(href)) return; event.preventDefault(); event.stopPropagation(); handlePreviewMenuNavigate(href, href.replace(/^#/, "") || "Home", previewNav?.setCurrentPage); }} data-editor-no-inline="true"`
+    : ` onClick={(event) => { event.preventDefault(); const href = event.currentTarget.getAttribute("href") || ""; const slug = href.replace(/^#page-/i, ""); handlePreviewMenuNavigate(href, slug, previewNav.setCurrentPage); }}`;
+  const pattern = landing
+    ? /<a\b([^>]*?\bhref=(?:\{toLestowHref\([^)]*\)\}|"#[^"]*"|'#[^']*'|\{["']#[^"']*["']\})[^>]*)>/g
+    : /<a\b([^>]*?\bhref=\{toLestowHref\([^)]*\)\}[^>]*)>/g;
+  const next = code.replace(pattern, (full, attrs: string) => {
     if (/\bonClick\s*=/.test(attrs)) return full;
+    if (landing && /\bhref=["'](?:mailto:|tel:|https?:)/i.test(attrs)) return full;
     changed = true;
-    return `<a${attrs} onClick={(event) => { event.preventDefault(); const href = event.currentTarget.getAttribute("href") || ""; const slug = href.replace(/^#page-/i, ""); handlePreviewMenuNavigate(href, slug, previewNav.setCurrentPage); }}>`;
+    return `<a${attrs}${click}>`;
   });
   if (!changed) return code;
   let out = insertPreviewNavHook(next);

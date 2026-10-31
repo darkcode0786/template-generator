@@ -56,7 +56,10 @@ describe("runGeneration (synthetic Next.js repo)", () => {
     expect(cj).toMatchObject({ key: "ComputerRepairingBanner1", name: "ComputerRepairingBanner1", sectionType: "Banner", sectionNumber: 1, scope: "shared", folder: "banner" });
     expect(cj.editorFields).toEqual(expect.arrayContaining(["imageMain", "title", "subtitle"]));
     // default content was found in data/templates.json and asset paths rewritten to assets-relative
-    expect(cj.defaultContent).toMatchObject({ title: "Hello", imageMain: "assets/banner/banner.webp" });
+    expect(cj.defaultContent).toMatchObject({ title: "Hello", imageMain: "assets/banner/banner.webp", previousLabel: "Prev", buttonText: "View Details", quoteIcon: "quote" });
+    expect(cj.editorFields).not.toContain("previousLabel");
+    expect(cj.editorFields).not.toContain("buttonText");
+    expect(cj.editorFields).not.toContain("quoteIcon");
   });
 
   it("satisfies the host contract: editorFields ⊆ defaultContent keys, both non-empty", async () => {
@@ -71,8 +74,8 @@ describe("runGeneration (synthetic Next.js repo)", () => {
     const header = await readJson(path.join(result.outputDir, "components", "ComputerRepairingHeader1", "component.json"));
     expect(header.defaultContent).toHaveProperty("topbar", ""); // data?.topbar is absent in the data file -> filled with an empty default
     expect(header.editorFields).toEqual(expect.arrayContaining(["topbar", "logo", "menu"]));
+    expect(header.editorFields.indexOf("topbar")).toBeLessThan(header.editorFields.indexOf("logo"));
     expect(header.editorFields.indexOf("logo")).toBeLessThan(header.editorFields.indexOf("menu"));
-    expect(header.editorFields.indexOf("menu")).toBeLessThan(header.editorFields.indexOf("topbar"));
     expect(header.defaultContent.logo).toBe("assets/main-logo/header-logo.webp");
     expect(header.defaultContentSource ?? result.manifest.components.find((c) => c.name === "ComputerRepairingHeader1")?.defaultContentSource).toMatch(/SyntheticHeader1$/);
     expect(result.manifest.validation.checks.find((c) => c.name.includes("host contract"))?.ok).toBe(true);

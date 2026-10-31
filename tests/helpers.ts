@@ -148,6 +148,8 @@ export const HeroSection = ({ data }: { data?: any }) => {
       <div style={{ backgroundImage: "url(/service/laptop/01.webp)" }} />
       <span>{data.badge?.label} {data.badge?.value}</span>
       <h1>{data.title}</h1><p>{data.subtitle}</p>
+      <button type="button">{data.previousLabel}{data.buttonText}</button>
+      <span>{data.quoteIcon}</span>
       {data.cards?.map((card: any) => <div key={card.id}>{card.title}<p>{card.description}</p></div>)}
       {links.map((l: any) => <a key={l.url} href={l.url}>{l.label}</a>)}
     </section>
@@ -173,6 +175,9 @@ export const ServicesSection = ({ data }: { data?: any }) => <section>{data?.ser
                     imageMain: "/banner/banner.webp",
                     title: "Hello",
                     subtitle: "World",
+                    previousLabel: "Prev",
+                    buttonText: "View Details",
+                    quoteIcon: "quote",
                     badge: {},
                     cards: [],
                     linksLeft: [{ id: "l1", label: "Home", url: "/" }],

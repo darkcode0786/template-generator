@@ -268,8 +268,46 @@ async function analyzePages(ctx: MapperContext, componentBySource: Map<string, C
       unresolvedComponents: unresolved,
     });
   }
+  await applyRootLayoutChrome(ctx, componentBySource, pages);
   const declared = await findDeclaredPageOrder(ctx, pages);
   return { pages: orderByDeclaredRoutes(pages, declared?.order ?? null), orderSource: declared?.source };
+}
+
+/** Header and footer rendered by `app/layout.tsx` belong on every page, around `{children}`. */
+async function applyRootLayoutChrome(ctx: MapperContext, componentBySource: Map<string, ComponentPlan>, pages: PagePlan[]): Promise<void> {
+  const layout = ctx.scan.files.find((file) => /^(src\/)?app\/layout\.(tsx|jsx|js|ts)$/.test(file.path));
+  if (!layout || !pages.length) return;
+  const source = await fs.readFile(path.join(ctx.repoDir, layout.path), "utf8").catch(() => "");
+  if (!source) return;
+  const fileSet = new Set(ctx.scan.files.map((file) => file.path));
+  const hasSrc = ctx.scan.files.some((file) => file.path.startsWith("src/"));
+  const tsconfig = (await readJsonSafe(path.join(ctx.repoDir, "tsconfig.json"))) ?? (await readJsonSafe(path.join(ctx.repoDir, "jsconfig.json")));
+  const aliases = aliasesFromTsconfig(tsconfig, hasSrc);
+  const localToComponent = new Map<string, ComponentPlan>();
+  for (const imp of parseImports(source)) {
+    const resolved = resolveImport(imp.specifier, layout.path, aliases, fileSet);
+    if (resolved.kind !== "local" || !resolved.path) continue;
+    const component = componentBySource.get(resolved.path);
+    if (!component) continue;
+    for (const local of [imp.defaultName, ...imp.named.map((item) => item.local)].filter((name): name is string => Boolean(name))) {
+      localToComponent.set(local, component);
+    }
+  }
+  if (!localToComponent.size) return;
+  const childAt = source.search(/\{\s*children\s*\}/);
+  const before: string[] = [];
+  const after: string[] = [];
+  for (const match of source.matchAll(/<([A-Z][\w$.]*)(?=[\s/>])/g)) {
+    const component = localToComponent.get(match[1]);
+    if (!component) continue;
+    const bucket = childAt >= 0 && (match.index ?? 0) > childAt ? after : before;
+    if (!bucket.includes(component.sectionType)) bucket.push(component.sectionType);
+  }
+  if (!before.length && !after.length) return;
+  for (const page of pages) {
+    const sections = page.sections.filter((section) => !before.includes(section) && !after.includes(section));
+    page.sections = [...before, ...sections, ...after];
+  }
 }
 
 const ORDER_SOURCE_CATEGORIES = new Set(["component", "page", "layout", "script"]);

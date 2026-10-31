@@ -38,7 +38,7 @@ function srcExpr(tag: string): string | null {
 }
 
 /** Click-to-replace overlay, plus the theme veil on banner / footer / breadcrumb / stats photos. */
-export function applyEditorMedia(code: string, sectionType: string): string {
+export function applyEditorMedia(code: string, sectionType: string, landing = false): string {
   const overlay = OVERLAY_BY_SECTION[sectionType];
   if (overlay) {
     code = code.replace(/var\(\s*--(?:color-)?overlay\s*\)/g, `var(${overlay})`);
@@ -54,6 +54,12 @@ export function applyEditorMedia(code: string, sectionType: string): string {
     if (/\bdata-editor-media\b/.test(tag)) continue;
     const src = srcExpr(tag);
     if (!src) continue;
+    const fullBleed = landing && /\babsolute\b/.test(tag) && (/\binset-0\b/.test(tag) || /\bobject-cover\b/.test(tag));
+    if (fullBleed) {
+      const chip = `${tag}<span className="absolute bottom-3 right-3 z-20 h-8 w-8" data-editor-media data-editor-media-type="image" data-editor-media-src={${src}} data-editor-media-overlay="show"></span>`;
+      pieces.push({ start, end, text: chip });
+      continue;
+    }
     const role = /logo/i.test(tag) ? ` data-editor-media-role="logo"` : "";
     const attrs = ` data-editor-media data-editor-media-type="image" data-editor-media-src={${src}}${role} data-editor-media-overlay="show"`;
     const text = tag.replace(/\s*\/?>$/, (close) => `${attrs}${close.startsWith("/") || /\/\s*>$/.test(tag) ? " />" : ">"}`);

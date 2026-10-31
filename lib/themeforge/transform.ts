@@ -5,10 +5,37 @@ import { applyEditorMedia } from "./editorMedia";
 import { bindPreviewNavClicks, hoistUseClient, rewriteHeaderNavHrefs, rewritePreviewHrefs, stabilizeListKeys } from "./themeIcons";
 import { cssVarsInjector } from "./cssvars";
 import { alignEditorDetailFields } from "./editorDetailFields";
+import { mappedCollectionFields, orderEditorFields, pruneUnreadContent } from "./editorContent";
+import { ensureSectionAnchor, guardEmptyImage, inlineReveal, landingFontBoot, landingHiddenFields, renderIndexNumbers, rewriteLandingDynamicHrefs, rewriteLandingLinks, rewriteLandingLiteralHrefs, scopeCardHover, stripStoredNumbers } from "./landingPage";
 import { inlineTypeImport } from "./inlineTypes";
 import { applyFieldAliases } from "./fieldAliases";
 import type { ThemeSpec } from "./spec";
 import type { ComponentPlan, PlannedFile, UnresolvedImport } from "./types";
+
+/** Pager, quote, and slide chrome. Rendered from defaultContent, never an editor input. */
+const DECORATIVE_EDITOR_FIELDS = new Set([
+  "previousLabel",
+  "previousIcon",
+  "nextLabel",
+  "nextIcon",
+  "previousPageLabel",
+  "nextPageLabel",
+  "paginationLabel",
+  "pageLabel",
+  "slideLabel",
+  "slideNavigationLabel",
+  "quoteIcon",
+  "pagination",
+]);
+
+/** Shared control on a carousel (Our Products “View Details”), not a section’s own call to action. */
+const CAROUSEL_BUTTON_FIELDS = new Set(["buttonText", "buttonLabel", "buttonIcon", "productLabel"]);
+
+export function isDecorativeEditorField(field: string, fields: readonly string[]): boolean {
+  if (DECORATIVE_EDITOR_FIELDS.has(field)) return true;
+  const hasPager = fields.some((name) => DECORATIVE_EDITOR_FIELDS.has(name));
+  return hasPager && CAROUSEL_BUTTON_FIELDS.has(field);
+}
 
 export interface TransformContext {
   spec: ThemeSpec;
@@ -29,6 +56,10 @@ export interface TransformContext {
   colorRewrites?: { hex: string; variable: string }[];
   /** Source `var(--color-gold)` names replaced with those aliases. */
   colorVarRewrites?: { from: string; to: string }[];
+  /** One scrolling page. Header links are section hashes, and Gallery/Team are not managers. */
+  landing?: boolean;
+  landingAnchors?: string[];
+  landingFont?: string;
 }
 
 /**
@@ -127,6 +158,15 @@ export interface TransformResult {
   dependencies: Record<string, string>;
   warnings: string[];
   fieldRenames: { from: string; to: string; occurrences: number }[];
+}
+
+/** A helper file with no `data` prop, such as an icon module, is pasted into the section that imports it. */
+function inlineLocalUtility(source: string): string | null {
+  if (!source.trim() || source.length > 20_000) return null;
+  if (extractDataFields(source).length > 0) return null;
+  if (!/export\s+(?:const|function|class|default)/.test(source)) return null;
+  if (/from\s+["'](?:@\/|\.\.?\/)/.test(source)) return null;
+  return `${source.trim()}\n`;
 }
 
 function escapeRe(s: string): string {
@@ -322,6 +362,14 @@ export function transformComponent(ctx: TransformContext): TransformResult {
     }
     if (res.kind === "local" && res.path) {
       const sibling = componentBySource.get(res.path);
+      if (!sibling && /\.(tsx|jsx)$/.test(res.path) && ctx.sources?.get(res.path)) {
+        const utility = inlineLocalUtility(ctx.sources.get(res.path) ?? "");
+        if (utility) {
+          replacements.push({ start: imp.start, end: imp.end, text: utility });
+          warnings.push(`${component.name}: inlined ${res.path}.`);
+          continue;
+        }
+      }
       if (sibling && t.rewriteSiblingImports) {
         const newSpec = `../${sibling.name}/${sibling.name}`;
         let text = imp.raw.replace(/(["'])([^"']+)\1\s*;?\s*$/, `$1${newSpec}$1;`);
@@ -482,9 +530,14 @@ export function transformComponent(ctx: TransformContext): TransformResult {
       warnings.push(`${component.name}: aligned popup detail keys: ${detail.renamed.map((x) => `${x.from}→${x.to}`).join(", ")}.`);
     }
   }
-  // Internal keys stay in defaultContent (the component may read them) but are not editable.
-  if (t.excludeEditorFields.length) {
-    for (let i = editorFields.length - 1; i >= 0; i--) if (t.excludeEditorFields.includes(editorFields[i])) editorFields.splice(i, 1);
+  // Internal keys and pager/quote/button chrome stay in defaultContent (the component still
+  // renders them) but are not editable. Decide chrome against the full list first: dropping
+  // previousLabel before buttonText would hide the fact this section is a carousel.
+  const decorative = new Set(editorFields.filter((field) => isDecorativeEditorField(field, editorFields)));
+  if (t.excludeEditorFields.length || decorative.size) {
+    for (let i = editorFields.length - 1; i >= 0; i--) {
+      if (t.excludeEditorFields.includes(editorFields[i]) || decorative.has(editorFields[i])) editorFields.splice(i, 1);
+    }
   }
   // Host theme root owns color. Fixed hex, `bg-primary`, and unknown variables do not follow Theme Color.
   code = rewriteUtilityColors(code);
@@ -492,9 +545,21 @@ export function transformComponent(ctx: TransformContext): TransformResult {
   if (ctx.colorVarRewrites?.length) code = rewriteColorVars(code, ctx.colorVarRewrites);
   const media = rewriteHardcodedMedia(code, ctx.assetTargets);
   const svgIcons = rewriteSvgModuleImports(media.code, component.source, ctx.assetTargets);
-  code = rewritePreviewHrefs(applyEditorMedia(svgIcons.code, component.sectionType));
+  code = rewritePreviewHrefs(applyEditorMedia(svgIcons.code, component.sectionType, Boolean(ctx.landing)));
   if (component.sectionType === "Header") code = rewriteHeaderNavHrefs(code);
-  if (component.sectionType === "Header" || component.sectionType === "Footer") code = bindPreviewNavClicks(code);
+  if (ctx.landing) {
+    const anchors = new Set(ctx.landingAnchors ?? []);
+    code = rewriteLandingDynamicHrefs(rewriteLandingLiteralHrefs(code, anchors));
+    code = ensureSectionAnchor(code, component.sectionType);
+    code = scopeCardHover(inlineReveal(guardEmptyImage(code)));
+    code = renderIndexNumbers(code, component.sectionType);
+    defaultContent = rewriteLandingLinks(stripStoredNumbers(defaultContent, component.sectionType), anchors) as Record<string, unknown>;
+  }
+  if (component.sectionType === "Header" || component.sectionType === "Footer") code = bindPreviewNavClicks(code, Boolean(ctx.landing));
+  if (ctx.landing && component.sectionType === "Header" && ctx.landingFont && finalName) {
+    const fontBody = findComponentBody(code, finalName);
+    if (fontBody) code = `${code.slice(0, fontBody.bodyStart)}\n${landingFontBoot(ctx.landingFont)}\n${code.slice(fontBody.bodyStart)}`;
+  }
   // --- host boilerplate (reference convention) ----------------------------
   const wantsCssVars = t.injectCssVars.enabled && ctx.cssVars && Object.keys(ctx.cssVars).length > 0 && !code.includes(t.injectCssVars.styleId);
   const wantsMapper = t.hostAssetMapper.enabled && !code.includes(t.hostAssetMapper.importName);
@@ -536,15 +601,28 @@ export function transformComponent(ctx: TransformContext): TransformResult {
 
   const serial = extractDataFields(code);
   const rank = new Map(serial.map((name, index) => [name, index]));
-  const leftover = editorFields.filter((field) => !rank.has(field));
-  editorFields.splice(0, editorFields.length, ...serial.filter((field) => editorFields.includes(field)), ...leftover);
+  editorFields.splice(0, editorFields.length, ...serial.filter((field) => editorFields.includes(field) && rank.has(field)));
+  if (ctx.landing) {
+    const hidden = landingHiddenFields(editorFields);
+    if (hidden.size) {
+      for (let i = editorFields.length - 1; i >= 0; i--) if (hidden.has(editorFields[i])) editorFields.splice(i, 1);
+    }
+  }
+  const pruned = pruneUnreadContent(defaultContent, code);
+  defaultContent = pruned.content;
+  if (pruned.removed.length) warnings.push(`${component.name}: removed unread content ${pruned.removed.join(", ")}.`);
+  editorFields.splice(0, editorFields.length, ...orderEditorFields(editorFields, defaultContent));
   const orderedContent: Record<string, unknown> = {};
   for (const field of editorFields) if (field in defaultContent) orderedContent[field] = defaultContent[field];
   for (const [key, value] of Object.entries(defaultContent)) if (!(key in orderedContent)) orderedContent[key] = value;
   defaultContent = orderedContent;
+  const manageableFields = mappedCollectionFields(code).filter((field) => editorFields.includes(field));
 
   if (t.appendEditorFieldsStatic && finalName && editorFields.length && !/\.editorFields\s*=/.test(code)) {
     code = `${code.replace(/\s*$/, "")}\n\n(${finalName} as typeof ${finalName} & { editorFields: readonly string[] }).editorFields = ${JSON.stringify(editorFields)};\n`;
+  }
+  if (t.appendEditorFieldsStatic && finalName && manageableFields.length && !/\.manageableFields\s*=/.test(code)) {
+    code = `${code.replace(/\s*$/, "")}\n\n(${finalName} as typeof ${finalName} & { manageableFields: readonly string[] }).manageableFields = ${JSON.stringify(manageableFields)};\n`;
   }
   code = hoistUseClient(stabilizeListKeys(code));
 
@@ -556,6 +634,7 @@ export function transformComponent(ctx: TransformContext): TransformResult {
     name: component.name,
     folder: component.folder,
     editorFields,
+    manageableFields,
     defaultContent,
   };
 

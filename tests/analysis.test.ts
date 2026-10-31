@@ -187,4 +187,11 @@ describe("extractDataFields", () => {
     };`;
     expect(extractDataFields(source)).toEqual(["logo", "menu", "topbar", "contactButton"]);
   });
+
+  it("reads fields from a renamed data prop", () => {
+    const source = `export default function HeroSection({ data: hero = site.hero }: { data?: any }) {
+      return <section><p>{hero.label}</p><h1>{hero.titleLines.map((line) => line.text)}</h1><a href={hero.button.href}>{hero.button.label}</a></section>;
+    }`;
+    expect(extractDataFields(source)).toEqual(["label", "titleLines", "button"]);
+  });
 });

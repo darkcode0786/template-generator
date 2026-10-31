@@ -11,6 +11,7 @@ import { loadSpec, type ThemeSpec } from "./spec";
 import { buildThemeVariables, mergeCssVariables } from "./cssvars";
 import { rewriteInternalNavPaths } from "./navPaths";
 import { normalizeThemePages } from "./themePages";
+import { applyLandingPlan, isLandingSite, landingAnchorFor, pinLandingColors } from "./landingPage";
 import { assetTargetMap, transformComponent } from "./transform";
 import { buildTree } from "./tree";
 import type { ComponentPlan, MappingPlan, ScanResult, ThemeManifest, TreeNode, UnresolvedImport, ValidationReport } from "./types";
@@ -173,6 +174,10 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
     const plan = await buildMappingPlan({ repoDir, templatePascal, spec, scan });
     warnings.push(...plan.warnings);
     hooks.onStage("map", "done", `${plan.files.length} files, ${plan.components.length} components, ${plan.pages.length} pages`);
+    const landing = applyLandingPlan(plan, templateSlug, Boolean(spec.landingPage));
+    const landingAnchors = landing
+      ? [...new Set(plan.pages.find((page) => page.id === "home")?.sections.map((type) => landingAnchorFor(type)).filter((id): id is string => Boolean(id)))]
+      : [];
 
     // 7. copy ----------------------------------------------------------------
     hooks.onStage("copy", "running");
@@ -224,7 +229,7 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
       if (pf.action === "transform" && pf.kind === "component") {
         const component = componentBySource.get(pf.source) as ComponentPlan;
         const source = await fs.readFile(src, "utf8");
-        const result = transformComponent({ spec, component, source, aliases, fileSet, componentBySource, assetTargets, dataFiles, packageDeps: p.dependencies, cssVars, colorRewrites: themeColors.rewrites, colorVarRewrites: themeColors.varRewrites, sources });
+        const result = transformComponent({ spec, component, source, aliases, fileSet, componentBySource, assetTargets, dataFiles, packageDeps: p.dependencies, cssVars, colorRewrites: themeColors.rewrites, colorVarRewrites: themeColors.varRewrites, sources, landing, landingAnchors, landingFont: themeColors.variables["--font-body"] });
         await fs.writeFile(dest, result.code, "utf8");
         await fs.writeFile(safeJoin(outputDir, `${component.targetDir}/component.json`), JSON.stringify(result.componentJson, null, 2) + "\n", "utf8");
         unresolvedImports.push(...result.unresolvedImports);
@@ -423,6 +428,14 @@ function buildThemeJson(args: { key: string; input: GenerationInput; categorySlu
   );
   const homeSectionOrder = normalized.homeSectionOrder;
   const pages = normalized.pages;
+  let themeVariables = variables;
+  if (spec.landingPage || isLandingSite(plan.pages)) {
+    const keep = new Set(homeSectionOrder);
+    for (const key of Object.keys(sectionVariants)) {
+      if (!keep.has(key)) delete sectionVariants[key];
+    }
+    themeVariables = pinLandingColors(variables);
+  }
   return {
     key,
     title: templateName,
@@ -433,7 +446,7 @@ function buildThemeJson(args: { key: string; input: GenerationInput; categorySlu
     previewDescription: `${templateName} template`,
     homeSectionOrder,
     sectionVariants,
-    variables,
+    variables: themeVariables,
     pages,
   };
 }

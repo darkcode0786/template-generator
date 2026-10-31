@@ -27,6 +27,8 @@ export const themeSpecSchema = z.object({
   name: z.string().min(1),
   version: z.number().int().positive().default(1),
   description: z.string().optional(),
+  /** One scrolling page: section hashes, no manager pages, Gallery and Team renamed. */
+  landingPage: z.boolean().default(false),
 
   requiredDirectories: z.array(z.string().min(1)),
   optionalDirectories: z.array(z.string()).default([]),
