@@ -213,6 +213,14 @@ export function buildThemeVariables(source: Record<string, string>, componentSou
     if (!color || color.s < 0.12) continue;
     counts.set(color.hex, (counts.get(color.hex) ?? 0) + 1);
   }
+  // Tailwind @theme names (`bg-maroon`, `text-gold`) count as uses of that colour.
+  for (const [key, value] of Object.entries(source)) {
+    const name = /^--color-([\w-]+)$/.exec(key)?.[1];
+    const color = name ? parseColor(value) : null;
+    if (!name || !color || color.s < 0.12) continue;
+    const uses = componentSource.match(new RegExp(`-${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![\\w-])`, "g"))?.length ?? 0;
+    if (uses) counts.set(color.hex, (counts.get(color.hex) ?? 0) + uses);
+  }
   const ranked = [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([hex]) => hex);
   const mid = ranked.filter(isBrand);
   const dark = ranked.filter((hex) => isDark(hex) && (parseColor(hex)?.s ?? 0) >= 0.12);
@@ -230,8 +238,8 @@ export function buildThemeVariables(source: Record<string, string>, componentSou
   const explicitHero = lookupColor(source, ["--hero-bg", "--color-navy", "--color-dark", "--color-primary-dark"]);
   const hero = explicitHero || (namedMain && namedMain !== primary && isDark(namedMain) ? namedMain : null) || dark.find((hex) => hex !== primary) || FALLBACK_INK;
 
-  const paper = lookupColor(source, ["--secondary-bg", "--color-bg-main", "--color-background", "--background", "--color-bg", "--color-bg-light"]) || FALLBACK_PAPER;
-  const ink = lookupColor(source, ["--secondary-text", "--color-text", "--color-foreground", "--foreground", "--color-heading"]) || (hero !== primary ? hero : FALLBACK_INK);
+  const paper = lookupColor(source, ["--secondary-bg", "--color-bg-main", "--color-background", "--background", "--color-bg", "--color-bg-light", "--color-page", "--color-surface"]) || FALLBACK_PAPER;
+  const ink = lookupColor(source, ["--secondary-text", "--color-text", "--color-foreground", "--foreground", "--color-heading", "--color-ink"]) || (hero !== primary ? hero : FALLBACK_INK);
   const headerBg = lookupColor(source, ["--header-bg"]) || FALLBACK_PAPER;
   const headerText = lookupColor(source, ["--header-text"]) || (isDark(hero) ? hero : ink);
   const primaryText = lookupColor(source, ["--primary-text"]) || contrastingText(primary);
@@ -305,7 +313,8 @@ export function buildThemeVariables(source: Record<string, string>, componentSou
   const panelKeys = new Set<string>(THEME_VARIABLE_KEYS);
   for (const [key, value] of Object.entries(source)) {
     if (panelKeys.has(key)) continue;
-    const rewritten = varRewrites.find((item) => item.from === key);
+    // Hero also aliases `--color-heading` in code, but a named hero token keeps its own shade here.
+    const rewritten = varRewrites.find((item) => item.from === key && (item.to !== "--color-heading" || parseColor(value)?.hex === parseColor(ink)?.hex));
     variables[key] = rewritten ? `var(${rewritten.to})` : value;
   }
   variables["--color-primary"] = "var(--primary-bg)";

@@ -13,6 +13,7 @@ import { rewriteInternalNavPaths } from "./navPaths";
 import { normalizeThemePages } from "./themePages";
 import { applyLandingPlan, isLandingSite, landingAnchorFor, pinLandingColors } from "./landingPage";
 import { assetTargetMap, transformComponent } from "./transform";
+import { collectFontFaces, linkTemplateFonts, resolveFontFaces, templateFontFamilies } from "./hostChrome";
 import { buildTree } from "./tree";
 import type { ComponentPlan, MappingPlan, ScanResult, ThemeManifest, TreeNode, UnresolvedImport, ValidationReport } from "./types";
 import { validateOutput } from "./validator";
@@ -199,12 +200,14 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
       sources.set(f.path, await fs.readFile(path.join(repoDir, f.path), "utf8").catch(() => ""));
     }
     const dataFiles = await readDataFiles(repoDir, scan, spec);
-    const sourceVars = await collectCssVars(repoDir, scan);
+    const sourceVars = resolveFontFaces(await collectCssVars(repoDir, scan), collectFontFaces(sources.values()));
     let colorCorpus = "";
     for (const component of plan.components) {
       colorCorpus += await fs.readFile(path.join(repoDir, component.source), "utf8").catch(() => "");
     }
-    const themeColors = buildThemeVariables(sourceVars, colorCorpus);
+    const builtColors = buildThemeVariables(sourceVars, colorCorpus);
+    const themeFonts = templateFontFamilies(builtColors.variables);
+    const themeColors = { ...builtColors, variables: linkTemplateFonts(builtColors.variables) };
     const cssVars = themeColors.injected;
     if (spec.transformations.injectCssVars.enabled && Object.keys(sourceVars).length === 0 && themeColors.rewrites.length === 0) {
       warnings.push("No brand colours found in the repository; Theme Color variables use the standard defaults.");
@@ -229,7 +232,7 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
       if (pf.action === "transform" && pf.kind === "component") {
         const component = componentBySource.get(pf.source) as ComponentPlan;
         const source = await fs.readFile(src, "utf8");
-        const result = transformComponent({ spec, component, source, aliases, fileSet, componentBySource, assetTargets, dataFiles, packageDeps: p.dependencies, cssVars, colorRewrites: themeColors.rewrites, colorVarRewrites: themeColors.varRewrites, sources, landing, landingAnchors, landingFont: themeColors.variables["--font-body"] });
+        const result = transformComponent({ spec, component, source, aliases, fileSet, componentBySource, assetTargets, dataFiles, packageDeps: p.dependencies, cssVars, colorRewrites: themeColors.rewrites, colorVarRewrites: themeColors.varRewrites, sources, landing, landingAnchors, landingFont: themeColors.variables["--font-body"], themeVariables: themeColors.variables, themeFonts });
         await fs.writeFile(dest, result.code, "utf8");
         await fs.writeFile(safeJoin(outputDir, `${component.targetDir}/component.json`), JSON.stringify(result.componentJson, null, 2) + "\n", "utf8");
         unresolvedImports.push(...result.unresolvedImports);
@@ -267,7 +270,7 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
     // 8. theme.json + addons + manifest ---------------------------------------
     hooks.onStage("manifest", "running");
     const key = `${templateSlug}-${timestampKey()}`;
-    const themeJson = buildThemeJson({ key, input, categorySlug, plan, spec, variables: themeColors.variables, previewImage });
+    const themeJson = buildThemeJson({ key, input, categorySlug, plan, spec, variables: themeColors.variables, sourceVars, previewImage });
     await fs.writeFile(path.join(outputDir, "theme.json"), JSON.stringify(themeJson, null, 2) + "\n", "utf8");
     await rewriteComponentNavPaths(outputDir, themeJson.pages.map((page) => page.id));
     for (const [file, content] of Object.entries(spec.themeJson.addons)) {
@@ -415,8 +418,8 @@ async function rewriteComponentNavPaths(outputDir: string, pageIds: string[]) {
   await walk(root);
 }
 
-function buildThemeJson(args: { key: string; input: GenerationInput; categorySlug: string; plan: MappingPlan; spec: ThemeSpec; variables: Record<string, string>; previewImage?: string }) {
-  const { key, input, categorySlug, plan, spec, variables, previewImage } = args;
+function buildThemeJson(args: { key: string; input: GenerationInput; categorySlug: string; plan: MappingPlan; spec: ThemeSpec; variables: Record<string, string>; sourceVars?: Record<string, string>; previewImage?: string }) {
+  const { key, input, categorySlug, plan, spec, variables, sourceVars, previewImage } = args;
   const templateName = titleCase(input.template);
   const sectionVariants: Record<string, string> = {};
   for (const c of plan.components) {
@@ -435,6 +438,10 @@ function buildThemeJson(args: { key: string; input: GenerationInput; categorySlu
       if (!keep.has(key)) delete sectionVariants[key];
     }
     themeVariables = pinLandingColors(variables);
+    for (const [name, value] of Object.entries(themeVariables)) {
+      const own = sourceVars?.[name];
+      if (value === "var(--color-heading)" && own && own.toLowerCase() !== String(themeVariables["--color-heading"]).toLowerCase()) themeVariables[name] = own;
+    }
   }
   return {
     key,

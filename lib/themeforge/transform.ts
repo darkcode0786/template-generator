@@ -6,8 +6,9 @@ import { bindPreviewNavClicks, hoistUseClient, rewriteHeaderNavHrefs, rewritePre
 import { cssVarsInjector } from "./cssvars";
 import { alignEditorDetailFields } from "./editorDetailFields";
 import { mappedCollectionFields, orderEditorFields, pruneUnreadContent } from "./editorContent";
-import { ensureSectionAnchor, guardEmptyImage, inlineReveal, landingFontBoot, landingHiddenFields, renderIndexNumbers, rewriteLandingDynamicHrefs, rewriteLandingLinks, rewriteLandingLiteralHrefs, scopeCardHover, stripStoredNumbers } from "./landingPage";
+import { ensureSectionAnchor, guardEmptyImage, inlineReveal, landingHiddenFields, renderIndexNumbers, rewriteLandingDynamicHrefs, rewriteLandingLinks, rewriteLandingLiteralHrefs, scopeCardHover, stripStoredNumbers } from "./landingPage";
 import { inlineTypeImport } from "./inlineTypes";
+import { applyFooterSettings, applyHeaderSettings, applyPagerVisibility, normalizeSocialContent, rewriteThemeUtilities, themeFontBoot, wrapSectionIcons, wrapSocialIcons } from "./hostChrome";
 import { applyFieldAliases } from "./fieldAliases";
 import type { ThemeSpec } from "./spec";
 import type { ComponentPlan, PlannedFile, UnresolvedImport } from "./types";
@@ -60,6 +61,10 @@ export interface TransformContext {
   landing?: boolean;
   landingAnchors?: string[];
   landingFont?: string;
+  /** theme.json variables; template `text-maroon` / `font-serif` utilities point at them. */
+  themeVariables?: Record<string, string>;
+  /** Google font families the template loads. */
+  themeFonts?: string[];
 }
 
 /**
@@ -177,6 +182,15 @@ function escapeRe(s: string): string {
 function renameIdentifier(code: string, from: string, to: string): string {
   if (from === to) return code;
   return code.replace(new RegExp(`(?<![\\w$.])${escapeRe(from)}(?![\\w$])`, "g"), to);
+}
+
+/** `{ data: footer = site.footer }` becomes `{ data }` so host field aliases see `data.socials`. */
+function normalizeDataReceiver(code: string): string {
+  const m = /([{,]\s*)data\s*:\s*([a-z_$][\w$]*)(\s*=\s*[A-Za-z_$][\w$.?]*)?(?=\s*[,}])/.exec(code);
+  if (!m) return code;
+  const next = code.slice(0, m.index) + m[1] + "data" + code.slice(m.index + m[0].length);
+  if ((next.match(/(?<![\w$./@'"`-])data(?![\w$/'"`=-])(?!\s*\??\s*:)/g) ?? []).length !== 1) return code;
+  return next.replace(new RegExp(`(?<![\\w$./<'"\`-])${escapeRe(m[2]!)}(?=\\??\\.[A-Za-z_$]|\\[|\\s*(?:[)},;]|\\?\\?|&&|\\|\\|))`, "g"), "data");
 }
 
 function assetLookupKey(value: string): string {
@@ -432,6 +446,7 @@ export function transformComponent(ctx: TransformContext): TransformResult {
   if (!originalName) warnings.push(`${component.source}: could not determine the exported component identifier; file copied without rename.`);
 
   // --- editor fields / default content ------------------------------------
+  code = normalizeDataReceiver(code);
   const detectedFields = t.extractEditorFields ? extractDataFields(code) : [];
   const editorFields = [...detectedFields];
   let defaultContent: Record<string, unknown> = {};
@@ -543,6 +558,7 @@ export function transformComponent(ctx: TransformContext): TransformResult {
   code = rewriteUtilityColors(code);
   if (ctx.colorRewrites?.length) code = rewriteThemeHexes(code, ctx.colorRewrites);
   if (ctx.colorVarRewrites?.length) code = rewriteColorVars(code, ctx.colorVarRewrites);
+  if (ctx.themeVariables) code = rewriteThemeUtilities(code, ctx.themeVariables);
   const media = rewriteHardcodedMedia(code, ctx.assetTargets);
   const svgIcons = rewriteSvgModuleImports(media.code, component.source, ctx.assetTargets);
   code = rewritePreviewHrefs(applyEditorMedia(svgIcons.code, component.sectionType, Boolean(ctx.landing)));
@@ -551,14 +567,24 @@ export function transformComponent(ctx: TransformContext): TransformResult {
     const anchors = new Set(ctx.landingAnchors ?? []);
     code = rewriteLandingDynamicHrefs(rewriteLandingLiteralHrefs(code, anchors));
     code = ensureSectionAnchor(code, component.sectionType);
-    code = scopeCardHover(inlineReveal(guardEmptyImage(code)));
+    code = inlineReveal(guardEmptyImage(code));
     code = renderIndexNumbers(code, component.sectionType);
     defaultContent = rewriteLandingLinks(stripStoredNumbers(defaultContent, component.sectionType), anchors) as Record<string, unknown>;
   }
+  // The host preview wraps every section in a `group`; card hovers must scope to their own card.
+  code = scopeCardHover(code);
   if (component.sectionType === "Header" || component.sectionType === "Footer") code = bindPreviewNavClicks(code, Boolean(ctx.landing));
-  if (ctx.landing && component.sectionType === "Header" && ctx.landingFont && finalName) {
+  if (component.sectionType === "Header") code = applyHeaderSettings(code);
+  if (component.sectionType === "Footer") code = applyFooterSettings(code);
+  if (Array.isArray(defaultContent.socialLinks)) {
+    defaultContent = normalizeSocialContent(defaultContent);
+    code = wrapSocialIcons(code);
+  }
+  code = wrapSectionIcons(code, defaultContent, component.sectionType);
+  code = applyPagerVisibility(code);
+  if (component.sectionType === "Header" && finalName && (ctx.themeVariables || ctx.landingFont)) {
     const fontBody = findComponentBody(code, finalName);
-    if (fontBody) code = `${code.slice(0, fontBody.bodyStart)}\n${landingFontBoot(ctx.landingFont)}\n${code.slice(fontBody.bodyStart)}`;
+    if (fontBody) code = `${code.slice(0, fontBody.bodyStart)}\n${themeFontBoot(ctx.themeFonts ?? [])}\n${code.slice(fontBody.bodyStart)}`;
   }
   // --- host boilerplate (reference convention) ----------------------------
   const wantsCssVars = t.injectCssVars.enabled && ctx.cssVars && Object.keys(ctx.cssVars).length > 0 && !code.includes(t.injectCssVars.styleId);
@@ -610,6 +636,7 @@ export function transformComponent(ctx: TransformContext): TransformResult {
   }
   const pruned = pruneUnreadContent(defaultContent, code);
   defaultContent = pruned.content;
+  if (component.sectionType === "Header" && code.includes("tfHeaderRef") && !("headerType" in defaultContent)) defaultContent.headerType = "sticky";
   if (pruned.removed.length) warnings.push(`${component.name}: removed unread content ${pruned.removed.join(", ")}.`);
   editorFields.splice(0, editorFields.length, ...orderEditorFields(editorFields, defaultContent));
   const orderedContent: Record<string, unknown> = {};

@@ -293,8 +293,8 @@ function expressionEnd(code: string, start: number): number {
  * `key={item.id}` is then undefined for every row. Fall back to the map index.
  */
 export function stabilizeListKeys(code: string): string {
-  const keyRe = /\bkey=\{\s*([A-Za-z_$][\w$]*)\??\.id\s*\}/g;
-  const owners = new Map<number, { cb: MapCallback; keys: number[] }>();
+  const keyRe = /\bkey=\{\s*([A-Za-z_$][\w$]*)((?:\??\.[A-Za-z_$][\w$]*)*)\s*\}/g;
+  const owners = new Map<number, { cb: MapCallback; keys: { at: number; length: number; expr: string }[] }>();
   for (const match of code.matchAll(keyRe)) {
     const keyAt = match.index ?? 0;
     const name = match[1]!;
@@ -309,7 +309,7 @@ export function stabilizeListKeys(code: string): string {
     }
     if (!owner) continue;
     const group = owners.get(owner.parenStart) ?? { cb: owner, keys: [] };
-    group.keys.push(keyAt);
+    group.keys.push({ at: keyAt, length: match[0].length, expr: `${name}${match[2] ?? ""}` });
     owners.set(owner.parenStart, group);
   }
 
@@ -327,10 +327,8 @@ export function stabilizeListKeys(code: string): string {
         edits.push({ start: cb.paramsClose, end: cb.paramsClose, text: `, ${indexName}` });
       }
     }
-    for (const keyAt of keys) {
-      const slice = code.slice(keyAt);
-      const end = slice.indexOf("}") + 1;
-      edits.push({ start: keyAt, end: keyAt + end, text: `key={${cb.name}.id ?? ${indexName}}` });
+    for (const key of keys) {
+      edits.push({ start: key.at, end: key.at + key.length, text: `key={\`\${String(${key.expr} ?? "")}-\${${indexName}}\`}` });
     }
   }
 

@@ -1,0 +1,296 @@
+---
+description: Theme Upload = pack Lestow ZIP then upload (no GitHub/Vercel UI)
+alwaysApply: true
+---
+
+# Theme Upload pack rule (locked)
+
+Admin **Theme Upload** (`/admin/theme-upload`) accepts **only a packed Lestow ZIP**. Do not restore GitHub repo URL / Vercel live URL import fields on that page.
+
+## Required flow (every theme)
+
+1. Download or clone the source theme from GitHub (Next.js repo).
+2. **Pack** (convert) into Lestow package shape — never upload the raw repo ZIP.
+3. Upload that packed ZIP on Theme Upload + select category.
+
+## Package shape (required)
+
+```text
+theme-key/
+  theme.json
+  assets/                 # from repo public/ (+ preview.webp)
+  components/
+    ComponentKey/
+      ComponentKey.tsx    # Lestow default-export + asset mapper
+      component.json      # editorFields + defaultContent
+  addons/floating.json    # optional
+```
+
+- `theme.json`: `key`, `title`, `categorySlug`, `sectionVariants`, `pages` / `homeSectionOrder`, `previewImage`, **`variables`**
+- Content + editor fields from source `data/templates.json` → each `component.json`
+- Images: rewrite/upload via Theme Upload → S3 (relative `/banner/…` alone breaks preview)
+
+## Do not
+
+- Upload raw GitHub download (`app/`, `package.json`, no `theme.json`)
+- Tell users to paste GitHub/Vercel URLs on Theme Upload UI
+- Force Restaurant* / wrong category key for non-restaurant themes
+
+## Packers
+
+Native pack: backend `theme-github-native.pack.ts` (per family). New category needs its own component map + pack path before a valid ZIP exists.
+
+Theme Upload id prefixes (keep in sync with `isThemeUploadTemplateId`): `restaurant-food-`, `wedding-`, `law-firm-`.
+
+---
+
+# Full bug log + pack rails (Lexora / law-firm-1, 2026-10-16)
+
+Every item below bit production editor. New ZIP packs must prevent them at source; editor rails are backup only.
+
+## A) Dual breadcrumb on About (and other inners)
+
+**Symptom:** White `Home / About Us` + dark hero `Home → About Us` (two crumbs).
+
+**Cause:** Classic `ensureMissingPageBreadcrumbs` injects `Breadcrumb-1` while pack already has `AboutBreadcrumb` / `LexoraAboutBreadcrumb1`.
+
+**Pack / editor rules:**
+
+- Theme stack lists theme crumb (`AboutBreadcrumb`, `TeamBreadcrumb`, …) — never rely on generic Breadcrumb alone if design has a hero crumb.
+- Strip/skip generic `Breadcrumb` / `Breadcrumb-*` when page stack or siblings already have `*Breadcrumb`.
+- `pageBodyHasOwnBreadcrumb` / theme-upload branch must treat named crumbs as “has crumb”.
+
+## B) Extra “About Story” (classic AboutPage)
+
+**Symptom:** Generic “We build thoughtful websites…” block on About.
+
+**Cause:** `addAboutPageSection` → `AboutPage-1` because Lexora uses `AboutFirm` etc., not id `AboutPage`.
+
+**Rules:**
+
+- Theme Upload open path: do **not** run `addAboutPageSection` / ServicePage / GalleryPage / ContactPage / EventPage injectors.
+- `alignThemeUploadTemplatePages`: drop classic `*Page` / `AboutPage-*` bodies not listed in `pages[].sections`.
+- Skip `ensureMissingAboutPageCompanions` for Theme Upload.
+
+## C) Extra “Practical next steps” / CustomPageDetail
+
+**Symptom:** Long filler “Next steps for Our Team…” above theme team hero; toolbar “Our Team details”.
+
+**Cause:** `ensureCustomPageScaffold` / `createCustomPageDetailSection` from label “Our Team” → slug `our-team`, no manager body match.
+
+**Rules:**
+
+- Never scaffold CustomPage on a slug that matches a `theme.json` page (id / label / team↔teams↔our-team).
+- Strip `CustomSection` / `CustomPage` / `CustomPageDetail-*` from Theme Upload pages when not in stack.
+- `addCustomPageSectionsForLinks`: resolve page from **href `#page-*`**, not only `createPageSlug(label)`.
+
+## D) Ghost page `our-team` vs real `team` / `teams`
+
+**Symptom:** `?page=teams` works; `?page=our-team` auto-appears empty/wrong.
+
+**Cause:** Label “Our Team” → slug `our-team`; `normalizePageSlug` did not alias; `recoverCustomPageLinksFromSections` created `#page-our-team`; PreviewContext wrote URL from label when href miss.
+
+**Rules:**
+
+- Canonical page id = `theme.json` `pages[].id` (e.g. `team`).
+- Aliases in `normalizePageSlug` / `editorPageSlugsMatch`: `our-team` ↔ `team` ↔ `teams` (and similar for other labels).
+- Theme Upload menu: `createPageSlug(page.id)` → `#page-team`; do **not** `canonicalizeTeamPageLink` → `#page-teams` for packs that use `team`.
+- `isTeamPageLink` must match “Our Team” / `our-team` / `#page-team`.
+- Preview URL: prefer `#page-*` from menu href over `normalizePageSlug(label)`.
+- Reserved slugs for recover-custom: include `team`, `teams`, `our-team`.
+
+## E) Two “Home” in Multi Pages switcher
+
+**Symptom:** Home listed twice.
+
+**Cause:** `theme.json` includes `id: home` in `pages[]` and switcher also prepends Home.
+
+**Rules:**
+
+- `editorPageSwitcherLinks` / `buildTemplateMultiPageMenu`: prepend Home once; filter `id === "home"` from theme page list when building order.
+- Do not emit second `#page-home`.
+
+## F) Stacked Topbars / Headers on inner pages (“chrome spam”)
+
+**Symptom:** Dozens of topbars/headers on About.
+
+**Cause:** Theme Upload clones Topbar/Header/Footer onto every page; editor showed all PAGE_SHELL types for the page.
+
+**Rules:**
+
+- Per editor page: show **one** Topbar + **one** Header + page body + **one** Footer (page-scoped chrome for that slug, or home chrome — not every page’s copy).
+- `isPageShellVisibleOnEditorPage` / visibility must pick the matching page’s shell only.
+
+## G) Admin / scope / Our Team page open
+
+**Symptom:** Wrong admin page scope; Our Team did not open (`our-team` ≠ `team`).
+
+**Rules:**
+
+- Admin page select / scope uses same slug aliases as editor.
+- Compose preview aliases (`lexoraPreview`, compose `PAGE_ALIASES`): `/our-team` → `#page-team`, `/team` → `#page-team`.
+
+## H) Logo — no pencil on Header/Footer
+
+**Symptom:** Hover logo → no edit pencil.
+
+**Cause:** Text/crest logo only; no `data-editor-media*`; field was `image` not `logoImage`; `replaceHintedMediaValue` required existing string `logoImage`.
+
+**Rules:**
+
+- Always media target: `data-editor-media`, `type=image`, `role=logo`, `src`, `overlay=show`.
+- Read `logoImage || image`; write both on upload.
+- Allow setting `logoImage` when previously undefined; sync `image`.
+- Placeholder transparent SVG src OK so hover works before first upload.
+- `editorFields`: include `logoImage`, `image`, logo text fields.
+
+## I) Header two CTAs disappeared (Contact Us / Book Consultation)
+
+**Symptom:** Preview Vercel has two pills; editor header had none.
+
+**Cause:** `component.json` stores **strings** `"Contact Us"` / `"Book Consultation"`; code checked `contactButton?.label` (object only).
+
+**Rules:**
+
+- Resolve CTA as string **or** `{ label, url|href }` with fallbacks `/contact`, `/book-consultation`.
+- Always render both CTAs (design defaults if missing).
+- Style match source (pill + arrow circle); hrefs via `toLestowHref`.
+- Do not hide CTAs behind `hidden xl:flex` only — keep `sm:flex` / always-visible consult like source.
+
+## J) Theme Color — accents / icons not updating
+
+**Symptom:** Headings change; icons, READ MORE, process alt cards, badges stay gold/grey/hardcoded.
+
+**Cause:** Hardcoded `#c49250`, `#c09665`, `#b58d56`, `#051024`; accents mapped to `--secondary-bg` while user only changes Primary; sticky `theme-upload-css-vars` inject.
+
+**Rules:**
+
+- Pack rewrite all brand hex:
+  - Accent/CTA/icon/gold family → `var(--primary-bg,#c49250)` (and gold variants `#c09665`, `#b58d56`, `#e0b467`, `#a87b3f`)
+  - Dark navy/ink/footer/topbar → `var(--hero-bg,#051024)` (also `#0a1828`, `#0b1a36`, `#001736`)
+- **Never** bind both accent and navy to the same CSS variable.
+- Strip `theme-upload-css-vars` / fixed `:root{--color-primary…}` injects from packed TSX.
+- Soft gold washes → `color-mix(in srgb, var(--primary-bg) …%, white)`.
+
+## K) Theme Fonts — headings still look sans
+
+**Symptom:** Playfair selected; footer “PRACTICE AREAS” / UI look Inter.
+
+**Rules:**
+
+- Ship `--font-heading`, `--font-body`, `--font-button` in `theme.json` variables.
+- Rely on `[data-site-theme-root] h1–h6 { font-family: var(--font-heading) }` — use real heading tags for section titles where design allows.
+- Do not hardcode `font-family: Inter` on headings in packed CSS/TSX.
+
+## L) Theme Color Reset default → wrong palette (Ocean teal)
+
+**Symptom:** Reset made buttons teal `#00cadd` instead of preview gold ([law-firm-1 preview](https://lestow.com/preview/Law%20Firm/theme/law-firm-1)).
+
+**Cause:** `getTemplateVariables` fell through to `templates[0]` (Realestate Ocean) when law-firm vars empty; `applyLawFirmVariableFallbacks(template.id)` used wrong id; DB `variables: {}`.
+
+**Rules:**
+
+- Pack **must** include full `variables` (see §1 below).
+- On upload, persist variables to DB (never leave empty).
+- `getTemplateVariables(requestedId)`: resolve vars from **found** template only — never borrow `templates[0]` colors.
+- Law-firm (and future families): fallback defaults keyed by **requested** `templateId` (`law-firm-*`), matching compose preview.
+- Reset default label/action: replace COLOR_FIELDS from that template’s defaults (gold/navy for Lexora), not session baseline / Ocean.
+
+## M) Create-with-AI isolation (do not mix)
+
+- Theme Upload / Redesign / template Create stay separate from `create-ai/*`.
+- Do not bolt Create-AI hamburger / fake chrome onto Theme Upload Lexora.
+
+## N) Assets / preview
+
+- All media in pack → Theme Upload S3 rewrite; no bare `/banner/...` in defaultContent for live preview.
+- `previewImage` + home preview must load after upload.
+- `mapThemeUploadAssetsInData` / family asset helper on every component that uses images.
+- **New themes (2026-10-23+):** do not import `lib/restaurantFoodAssets`. Give each theme its own mapper, e.g. `lib/weddingPlannerAssets.ts`, `lib/inkvibeAssets.ts`, and import that from every component in the pack. `restaurantFoodAssets.ts` stays only for themes already shipped on it. Do not add new families into that file.
+
+## O) Admin category / scope
+
+- Upload with correct `categorySlug` (Law Firm ≠ Restaurant).
+- Admin template page scope lists pack `pages[]` ids; selecting About/Team uses aliases above.
+- Do not force Restaurant* variants on law-firm packs.
+
+---
+
+# Pack-time requirements (checklist for every new ZIP)
+
+## 1) `theme.json`
+
+- [ ] `key`, `title`, `categorySlug`, `sectionVariants`, `homeSectionOrder`, `pages[]`, `previewImage`
+- [ ] Every page: `id`, `label`, `sectionType`, full `sections[]` (Topbar→Header→…→Footer)
+- [ ] Page ids stable & unique (`about`, `team`, `services`…) — not only pretty labels
+- [ ] **`variables` complete** (primary/secondary/header/hero/fonts/link tokens) = preview brand
+- [ ] If `pages` includes `home`, switcher code must not double-count Home (editor already dedupes; pack may omit home from pages or keep id `home` once)
+
+## 2) Components TSX
+
+- [ ] Default export + `editorFields` on component
+- [ ] Own asset mapper file (`lib/<theme>Assets.ts`), not `restaurantFoodAssets`
+- [ ] Brand colors → CSS vars (accent vs ink split)
+- [ ] No `theme-upload-css-vars` fixed inject
+- [ ] Header/Footer: logo media attrs + logoImage/image; CTAs string|object
+- [ ] Links via `toLestowHref` / `#page-<id>`
+- [ ] Nav urls align with `pages[].id`
+
+## 3) `component.json`
+
+- [ ] `editorFields` match painted fields
+- [ ] `defaultContent` uses S3-safe paths after upload rewrite
+- [ ] CTA fields match what TSX reads (string or object — document which)
+
+## 4) Editor rails that must stay (do not regress)
+
+| Area | Guard |
+|------|--------|
+| Theme Upload align | `alignThemeUploadTemplatePages` — full stack, strip foreign Breadcrumb/*Page/Custom scaffold |
+| Breadcrumbs | `ensureMissingPageBreadcrumbs` skip + strip when theme crumb exists |
+| Init injectors | Skip `addAboutPageSection` chain for Theme Upload ids |
+| Custom scaffold | Skip if theme page exists; strip CustomPageDetail junk |
+| Slugs | `normalizePageSlug` + `editorPageSlugsMatch` aliases |
+| Switcher | Single Home; theme page order |
+| Chrome visibility | One shell Topbar/Header/Footer per view |
+| Theme vars | `getTemplateVariables` / family defaults; Reset default = pack palette |
+| Logo media | `replaceHintedMediaValue` allows new `logoImage` + sync `image` |
+| Registry | First-party Header/Footer overrides win over generated copies when patched |
+
+## 5) Smoke test after upload (mandatory)
+
+Editor: `/editor?templateId=<key>&category=<Category>&businessName=test`
+
+1. Home: 1 Topbar, 1 Header, logo pencil, **both** CTAs, accents follow Theme Color Primary  
+2. Reset default = compose/preview brand (not Ocean teal / not random Violet leftover)  
+3. Theme Fonts: heading font on `h1–h6`  
+4. About: one theme breadcrumb; no About Story  
+5. Team (“Our Team”): one page only; no `our-team` ghost; no Practical next steps  
+6. Multi Pages: one Home row; all pack pages open with correct `?page=`  
+7. No stacked headers on any inner page  
+8. Preview compose URL matches editor chrome/colors  
+
+## 6) Code touchpoints (family add / packer)
+
+- `apps/backend/src/theme-upload/theme-github-native.pack.ts` — map + hex→var rewrite + variables emit  
+- `apps/backend/.../theme-upload.service.ts` — persist `variables` on create  
+- Frontend: `isThemeUploadTemplateId`, `alignThemeUploadTemplatePages`, breadcrumb/custom strip, `getTemplateVariables`, `EditorThemePanels` Reset default  
+- `lib/editorPageSlug.ts` — label aliases  
+- `sectionRegistry` — first-party overrides  
+- Compose: `lexoraPreview` / page aliases for path ↔ `#page-*`  
+
+---
+
+# Lexora reference tokens (law-firm-1)
+
+| Token | Value | Use |
+|-------|--------|-----|
+| `--primary-bg` | `#c49250` | Gold accents, CTAs, icons |
+| `--hero-bg` | `#051024` | Navy ink, dark bands, footer |
+| `--header-bg` | `#ffffff` | Main header bar |
+| `--header-text` | `#051024` | Header text |
+| `--secondary-bg` | `#ffffff` | Page surface |
+| `--font-heading` | Playfair Display… | Titles |
+| `--font-body` / `--font-button` | Inter… | Body / buttons |
+
+Preview truth: `https://lestow.com/preview/Law%20Firm/theme/law-firm-1`

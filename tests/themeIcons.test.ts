@@ -104,9 +104,9 @@ describe("stabilizeListKeys", () => {
     {items.map((item, i) => <b key={item.id}>{item.title}</b>)}
     {rows.map(row => (<i key={row.id} />))}`);
     expect(code).toContain("data.menu?.map((link, index) =>");
-    expect(code).toContain("key={link.id ?? index}");
-    expect(code).toContain("key={item.id ?? i}");
+    expect(code).toContain('key={`${String(link.id ?? "")}-${index}`}');
+    expect(code).toContain('key={`${String(item.id ?? "")}-${i}`}');
     expect(code).toContain("rows.map((row, index) =>");
-    expect(code).toContain("key={row.id ?? index}");
+    expect(code).toContain('key={`${String(row.id ?? "")}-${index}`}');
   });
 });
