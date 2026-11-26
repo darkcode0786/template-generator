@@ -4,8 +4,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 /**
- * Zip `sourceDir` into `zipPath`. The archive contains a single top-level
- * folder named after the source directory so unzipping is tidy.
+ * Zip `sourceDir` into `zipPath` with the theme files at the archive root
+ * (`theme.json`, `components/…`, `assets/…`, `lib/…`). No wrapper folder.
  */
 export async function zipDirectory(sourceDir: string, zipPath: string): Promise<{ bytes: number }> {
   await fs.mkdir(path.dirname(zipPath), { recursive: true });
@@ -20,7 +20,7 @@ export async function zipDirectory(sourceDir: string, zipPath: string): Promise<
       if ((w as NodeJS.ErrnoException).code !== "ENOENT") reject(w);
     });
     archive.pipe(output);
-    archive.directory(sourceDir, path.basename(sourceDir));
+    archive.directory(sourceDir, false);
     void archive.finalize();
   });
   const st = await fs.stat(zipPath);

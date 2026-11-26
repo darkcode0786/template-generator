@@ -1,5 +1,5 @@
 import path from "node:path";
-import { emptyValueFor, extractDataFields, exportedIdentifiers, findDefaultContent, inferFieldShapes, parseImports, resolveImport, seedValueFor, type AliasConfig } from "./analysis";
+import { emptyValueFor, extractDataFields, exportedIdentifiers, findDefaultContent, inferFieldShapes, jsonSectionBinding, parseImports, resolveImport, seedValueFor, type AliasConfig } from "./analysis";
 import { rewriteColorVars, rewriteThemeHexes, rewriteUtilityColors } from "./cssvars";
 import { applyEditorMedia } from "./editorMedia";
 import { bindPreviewNavClicks, hoistUseClient, rewriteHeaderNavHrefs, rewritePreviewHrefs, stabilizeListKeys } from "./themeIcons";
@@ -182,6 +182,39 @@ function escapeRe(s: string): string {
 function renameIdentifier(code: string, from: string, to: string): string {
   if (from === to) return code;
   return code.replace(new RegExp(`(?<![\\w$.])${escapeRe(from)}(?![\\w$])`, "g"), to);
+}
+
+/** `const heroData = site.sections.Hero...` becomes the host `data` prop. */
+export function adoptJsonContent(code: string, functionName: string, baseName: string): string {
+  const binding = jsonSectionBinding(code, baseName);
+  if (!binding || binding.local === "data") return code;
+  const decl = new RegExp(`(?:const|let|var)\\s+${escapeRe(binding.local)}\\s*=\\s*${escapeRe(binding.importName)}(?:\\s*\\.\\s*[A-Za-z_$][\\w$]*)+\\s*;?\\s*`);
+  code = code.replace(decl, "");
+  code = renameIdentifier(code, binding.local, "data");
+  const importLine = new RegExp(`import\\s+${escapeRe(binding.importName)}\\s+from\\s+["'][^"']+\\.json["']\\s*;?\\s*\\n?`);
+  const withoutImport = code.replace(importLine, "");
+  if (!new RegExp(`\\b${escapeRe(binding.importName)}\\b`).test(withoutImport)) code = withoutImport;
+  return ensureDataParam(code, functionName);
+}
+
+function ensureDataParam(code: string, name: string): string {
+  const re = new RegExp(`(?:function\\s+${escapeRe(name)}\\s*|(?:const|let|var)\\s+${escapeRe(name)}\\b[^=]*=\\s*(?:async\\s*)?)\\(`, "g");
+  const match = re.exec(code);
+  if (!match) return code;
+  const open = match.index + match[0].length - 1;
+  let depth = 0;
+  let close = -1;
+  for (let i = open; i < code.length; i++) {
+    if (code[i] === "(") depth++;
+    else if (code[i] === ")" && --depth === 0) {
+      close = i;
+      break;
+    }
+  }
+  if (close < 0) return code;
+  const params = code.slice(open + 1, close);
+  if (/\bdata\b/.test(params) || params.trim()) return code;
+  return `${code.slice(0, open + 1)}{ data = {} }: { data?: Record<string, any> }${code.slice(close)}`;
 }
 
 /** `{ data: footer = site.footer }` becomes `{ data }` so host field aliases see `data.socials`. */
@@ -446,6 +479,7 @@ export function transformComponent(ctx: TransformContext): TransformResult {
   if (!originalName) warnings.push(`${component.source}: could not determine the exported component identifier; file copied without rename.`);
 
   // --- editor fields / default content ------------------------------------
+  if (finalName) code = adoptJsonContent(code, finalName, component.baseName);
   code = normalizeDataReceiver(code);
   const detectedFields = t.extractEditorFields ? extractDataFields(code) : [];
   const editorFields = [...detectedFields];
@@ -621,7 +655,7 @@ export function transformComponent(ctx: TransformContext): TransformResult {
     }
   }
   if ((media.count || svgIcons.count) && !/import\s*\{[^}]*\bmediaSrc\b/.test(code)) {
-    const mediaPath = t.hostAssetMapper.importPath.replace(/[^/]+$/, "lexoraPreview");
+    const mediaPath = "../../../lib/lexoraPreview";
     code = insertAfterDirectives(code, `import { mediaSrc } from ${JSON.stringify(mediaPath)};\n`);
   }
 

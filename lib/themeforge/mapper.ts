@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { aliasesFromTsconfig, exportedIdentifiers, extractDataFields, extractDeclaredPageOrder, orderByDeclaredRoutes, parseImports, primaryJsxUsageOrder, resolveImport, type AliasConfig, type DeclaredRoute } from "./analysis";
+import { aliasesFromTsconfig, exportedIdentifiers, extractDataFields, extractDeclaredPageOrder, mappedSectionOrder, orderByDeclaredRoutes, parseImports, primaryJsxUsageOrder, readsJsonSection, resolveImport, type AliasConfig, type DeclaredRoute } from "./analysis";
 import { matchesAny } from "./glob";
 import { isSafeRelativePath, pascalCase, sanitizeAssetTarget, titleCase } from "./paths";
 import type { MappingRule, ThemeSpec } from "./spec";
@@ -96,7 +96,7 @@ export async function buildMappingPlan(ctx: MapperContext): Promise<MappingPlan>
       skipped.push({ path: f.path, reason: "no exported React component found" });
       continue;
     }
-    if (spec.transformations.skipComponentsWithoutEditorFields && extractDataFields(source).length === 0) {
+    if (spec.transformations.skipComponentsWithoutEditorFields && extractDataFields(source).length === 0 && !readsJsonSection(source)) {
       skipped.push({ path: f.path, reason: "reads no `data` prop (utility component, not an editable section)" });
       warnings.push(`Skipped ${f.path}: it reads no \`data\` prop, so it cannot be an editable theme section.`);
       continue;
@@ -252,7 +252,10 @@ async function analyzePages(ctx: MapperContext, componentBySource: Map<string, C
     for (const m of source.matchAll(/<([A-Z][\w$.]*)(?=[\s/>])/g)) allTags.add(m[1]);
     const unresolved = [...allTags].filter((t) => !localToComponent.has(t) && !["Fragment", "React.Fragment", "Link", "Image", "Suspense", "Script", "Head"].includes(t));
 
-    const order = primaryJsxUsageOrder(source, localNames);
+    const direct = primaryJsxUsageOrder(source, localNames);
+    const mapped = mappedSectionOrder(source, localNames).filter((name) => !direct.includes(name));
+    const footerAt = direct.findIndex((name, index) => index === direct.length - 1 && /footer/i.test(name));
+    const order = mapped.length && footerAt >= 0 ? [...direct.slice(0, footerAt), ...mapped, ...direct.slice(footerAt)] : [...direct, ...mapped];
     const sections: string[] = [];
     for (const local of order) {
       const comp = localToComponent.get(local)!;

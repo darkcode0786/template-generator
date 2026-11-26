@@ -12,6 +12,7 @@ import { buildThemeVariables, mergeCssVariables } from "./cssvars";
 import { rewriteInternalNavPaths } from "./navPaths";
 import { normalizeThemePages } from "./themePages";
 import { applyLandingPlan, isLandingSite, landingAnchorFor, pinLandingColors } from "./landingPage";
+import { themeAssetModuleName, themeAssetModuleSource } from "./themeAssets";
 import { assetTargetMap, transformComponent } from "./transform";
 import { collectFontFaces, linkTemplateFonts, resolveFontFaces, templateFontFamilies } from "./hostChrome";
 import { buildTree } from "./tree";
@@ -159,6 +160,10 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
     // 3/4. scan + detect ---------------------------------------------------
     hooks.onStage("spec", "running");
     const spec = opts.spec ?? (await loadSpec(input.specId));
+    const assetModule = themeAssetModuleName(templateSlug);
+    if (spec.transformations.hostAssetMapper.enabled) {
+      spec.transformations.hostAssetMapper.importPath = `../../../lib/${assetModule}`;
+    }
     hooks.onStage("spec", "done", `${spec.name} v${spec.version}`);
 
     hooks.onStage("scan", "running");
@@ -277,6 +282,10 @@ export async function runGeneration(jobId: string, input: GenerationInput, hooks
       const dest = safeJoin(outputDir, `addons/${file}`);
       await fs.mkdir(path.dirname(dest), { recursive: true });
       await fs.writeFile(dest, JSON.stringify(content, null, 2) + "\n", "utf8");
+    }
+    if (spec.transformations.hostAssetMapper.enabled) {
+      await fs.mkdir(path.join(outputDir, "lib"), { recursive: true });
+      await fs.writeFile(path.join(outputDir, "lib", `${assetModule}.ts`), themeAssetModuleSource(templateSlug, key, assetModule), "utf8");
     }
     const zipPath = path.join(path.dirname(outputDir), `${path.basename(outputDir)}.zip`);
     const manifest: ThemeManifest = {

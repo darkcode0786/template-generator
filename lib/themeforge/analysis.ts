@@ -137,6 +137,20 @@ function statementReturnSites(source: string): { index: number; depth: number }[
  * wins a tie. That keeps a not-found branch from placing Footer before the
  * breadcrumb that the successful return actually renders.
  */
+/**
+ * Sections chosen at runtime (`Hero: <Hero data={...} />` inside a lookup, then
+ * `components.map`). The page return only shows Header and Footer.
+ */
+export function mappedSectionOrder(source: string, identifiers: Iterable<string>): string[] {
+  const names = new Set(identifiers);
+  const order: string[] = [];
+  for (const match of source.matchAll(/([A-Z][\w$]*)\s*:\s*[\s\S]{0,240}?<([A-Z][\w$]*)\b/g)) {
+    const tag = names.has(match[2]) ? match[2] : names.has(match[1]) ? match[1] : "";
+    if (tag && !order.includes(tag)) order.push(tag);
+  }
+  return order;
+}
+
 export function primaryJsxUsageOrder(source: string, identifiers: Iterable<string>): string[] {
   const sites = statementReturnSites(source);
   if (!sites.length) return jsxUsageOrder(source, identifiers);
@@ -266,6 +280,31 @@ function dataReceivers(source: string): string[] {
     names.push(name);
   }
   return names;
+}
+
+/** `import site from "../data/site.json"` plus `const hero = site.sections.Hero.variants.Hero1`. */
+export function jsonSectionBinding(source: string, prefer = ""): { local: string; importName: string } | null {
+  const imports = [...source.matchAll(/import\s+([A-Za-z_$][\w$]*)\s+from\s+["'][^"']+\.json["']/g)].map((match) => match[1]);
+  const bindings: { local: string; importName: string; segments: string[] }[] = [];
+  for (const importName of imports) {
+    const re = new RegExp(`(?:const|let|var)\\s+([A-Za-z_$][\\w$]*)\\s*=\\s*${importName}((?:\\s*\\.\\s*[A-Za-z_$][\\w$]*)+)`, "g");
+    for (const match of source.matchAll(re)) {
+      bindings.push({
+        local: match[1],
+        importName,
+        segments: match[2].split(".").map((part) => part.trim()).filter(Boolean),
+      });
+    }
+  }
+  if (!bindings.length) return null;
+  const want = prefer.toLowerCase();
+  bindings.sort((a, b) => Number(want && b.segments.join(".").toLowerCase().includes(want)) - Number(want && a.segments.join(".").toLowerCase().includes(want)));
+  return { local: bindings[0].local, importName: bindings[0].importName };
+}
+
+/** Section content loaded from a JSON import instead of the host `data` prop. */
+export function readsJsonSection(source: string): boolean {
+  return jsonSectionBinding(source) !== null;
 }
 
 /** Fields read from `data`, in the order they first appear in the component. */

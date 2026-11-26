@@ -75,7 +75,7 @@ describe("landing page template", () => {
       { id: "nl-gallery", label: "Gallery", url: "#gallery" },
       { id: "nl-testimonials", label: "Testimonials", url: "#testimonials" },
     ];
-    const content = rewriteLandingLinks({ menu: [...sourceMenu, { label: "Contact", url: "/contact" }], logo: "/logo.webp" }, anchors) as { menu: { id?: string; url: string }[] };
+    const content = rewriteLandingLinks({ menu: [...sourceMenu, { label: "Contact", url: "/contact" }], logo: "/logo.webp" }, anchors) as { menu: { id?: string; url: string }[]; logo: string };
     expect(content.menu).toHaveLength(sourceMenu.length + 1);
     expect(content.menu.slice(0, sourceMenu.length).map((item) => item.url)).toEqual(sourceMenu.map((item) => item.url));
     expect(content.menu.at(-1)?.url).toBe("#contact");

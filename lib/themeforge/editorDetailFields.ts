@@ -66,6 +66,34 @@ interface ItemKeyMap {
   skipCardItems?: boolean;
 }
 
+const TESTIMONIAL_ITEM_KEYS: Record<string, string> = {
+  quote: "message",
+  text: "message",
+  content: "message",
+  review: "message",
+  comment: "message",
+  feedback: "message",
+  description: "message",
+  role: "designation",
+  position: "designation",
+  company: "designation",
+  job: "designation",
+  jobTitle: "designation",
+  occupation: "designation",
+  author: "name",
+  client: "name",
+  clientName: "name",
+  reviewer: "name",
+  userName: "name",
+  stars: "rating",
+  star: "rating",
+  photo: "image",
+  avatar: "image",
+  img: "image",
+  picture: "image",
+  thumbnail: "image",
+};
+
 const ITEM_KEY_MAPS: ItemKeyMap[] = [
   {
     collections: ["steps", "features", "whyChooseUsItems"],
@@ -82,20 +110,12 @@ const ITEM_KEY_MAPS: ItemKeyMap[] = [
   },
   {
     collections: ["testimonials", "testimonialItems"],
-    map: {
-      quote: "message",
-      text: "message",
-      content: "message",
-      review: "message",
-      description: "message",
-      role: "designation",
-      position: "designation",
-      photo: "image",
-      avatar: "image",
-      img: "image",
-      picture: "image",
-      thumbnail: "image",
-    },
+    map: TESTIMONIAL_ITEM_KEYS,
+  },
+  {
+    sectionTypes: ["Testimonial", "TestimonialPage", "TestimonialsPage", "TestimonialsGrid"],
+    collections: ["items", "reviews", "feedbacks", "feedback"],
+    map: TESTIMONIAL_ITEM_KEYS,
   },
   {
     collections: ["formFields"],
@@ -203,10 +223,44 @@ function matchParen(code: string, open: number): number {
   return -1;
 }
 
+function matchBrace(code: string, open: number): number {
+  let depth = 0;
+  let quote: string | null = null;
+  for (let i = open; i < code.length; i++) {
+    const ch = code[i];
+    if (quote) {
+      if (ch === "\\") i++;
+      else if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === "'" || ch === '"' || ch === "`") {
+      quote = ch;
+      continue;
+    }
+    if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+}
+
+/** Locals copied from the collection (`const topRow = data.items.slice(...)`). */
+function collectionAliases(code: string, collection: string): Set<string> {
+  const names = new Set<string>();
+  const re = /(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*([^;\n]{0,180})/g;
+  const source = new RegExp(`\\b(?:data\\??\\.${collection}|${collection})\\b`);
+  for (const match of code.matchAll(re)) {
+    if (source.test(match[2])) names.add(match[1]);
+  }
+  return names;
+}
+
 /** `.map` / `.forEach` / `.flatMap` calls, with the callback parameter name. */
 function mapCalls(code: string): MapCall[] {
   const out: MapCall[] = [];
-  const re = /([A-Za-z_$][\w$]*(?:\s*\?\.\s*[A-Za-z_$][\w$]*|\s*\.\s*[A-Za-z_$][\w$]*)*)\s*\??\.\s*(?:map|forEach|flatMap)\s*\(/g;
+  const re = /([A-Za-z_$][\w$]*(?:\s*\?\.\s*[A-Za-z_$][\w$]*|\s*\.\s*[A-Za-z_$][\w$]*)*|\[[^\]\n]{0,200}\])\s*\??\.\s*(?:map|forEach|flatMap)\s*\(/g;
   for (const m of code.matchAll(re)) {
     const open = (m.index ?? 0) + m[0].length - 1;
     const close = matchParen(code, open);
@@ -249,9 +303,46 @@ function mapCalls(code: string): MapCall[] {
   return out;
 }
 
-function receiverMatches(receiver: string, collection: string): boolean {
+function receiverMatches(receiver: string, collection: string, aliases: Set<string> = new Set()): boolean {
   const norm = receiver.replace(/\?/g, "");
-  return norm === collection || norm === `data.${collection}` || norm.endsWith(`.${collection}`);
+  if (norm === collection || norm === `data.${collection}` || norm.endsWith(`.${collection}`)) return true;
+  for (const name of aliases) {
+    if (new RegExp(`\\b${name}\\b`).test(norm)) return true;
+  }
+  return false;
+}
+
+/** `const renderCard = (item) => ...` / `function renderCard(item) { ... }`. */
+function functionSpans(code: string, name: string): { param: string; bodyStart: number; bodyEnd: number }[] {
+  const out: { param: string; bodyStart: number; bodyEnd: number }[] = [];
+  const re = new RegExp(`(?:function\\s+${name}\\s*|\\b(?:const|let|var)\\s+${name}\\s*=\\s*(?:async\\s*)?)\\(`, "g");
+  for (const match of code.matchAll(re)) {
+    const open = (match.index ?? 0) + match[0].length - 1;
+    const close = matchParen(code, open);
+    if (close < 0) continue;
+    const params = code.slice(open + 1, close).trim();
+    const param = params.startsWith("{") ? "" : (params.split(",")[0]?.trim().split(/[:?=]/)[0]?.trim() ?? "");
+    if (!param || !/^[A-Za-z_$][\w$]*$/.test(param)) continue;
+    let i = close + 1;
+    while (i < code.length && /\s/.test(code[i])) i++;
+    if (code.startsWith("=>", i)) {
+      i += 2;
+      while (i < code.length && /\s/.test(code[i])) i++;
+    }
+    if (code[i] === "{") {
+      const end = matchBrace(code, i);
+      if (end > i) out.push({ param, bodyStart: i + 1, bodyEnd: end });
+    } else if (code[i] === "(") {
+      const end = matchParen(code, i);
+      if (end > i) out.push({ param, bodyStart: i + 1, bodyEnd: end });
+    } else {
+      const start = i;
+      let end = i;
+      while (end < code.length && code[end] !== ";" && code[end] !== "\n") end++;
+      if (end > start) out.push({ param, bodyStart: start, bodyEnd: end });
+    }
+  }
+  return out;
 }
 
 function rewriteMember(body: string, param: string, from: string, to: string): { body: string; count: number } {
@@ -282,7 +373,8 @@ function rewriteParamShorthand(params: string, from: string, to: string): { para
 }
 
 function patchMapMembers(code: string, collection: string, keyMap: Record<string, string>, special?: (param: string, body: string) => { body: string; count: number }): { code: string; count: number } {
-  const calls = mapCalls(code).filter((call) => receiverMatches(call.receiver, collection));
+  const aliases = collectionAliases(code, collection);
+  const calls = mapCalls(code).filter((call) => receiverMatches(call.receiver, collection, aliases));
   if (!calls.length) return { code, count: 0 };
   let count = 0;
   const pieces: { start: number; end: number; text: string }[] = [];
@@ -332,6 +424,28 @@ function patchMapMembers(code: string, collection: string, keyMap: Record<string
     }
     if (params !== code.slice(call.paramsStart, call.paramsEnd)) {
       pieces.push({ start: call.paramsStart, end: call.paramsEnd, text: params });
+    }
+  }
+  // `rows.map((item) => renderCard(item))` paints item.role inside renderCard, not in the callback.
+  const helpers = new Set<string>();
+  for (const call of calls) {
+    if (!call.param) continue;
+    const body = code.slice(call.bodyStart, call.bodyEnd);
+    const re = new RegExp(`\\b([A-Za-z_$][\\w$]*)\\s*\\(\\s*${call.param}\\b`, "g");
+    for (const match of body.matchAll(re)) helpers.add(match[1]);
+  }
+  for (const name of helpers) {
+    for (const span of functionSpans(code, name)) {
+      if (pieces.some((piece) => span.bodyStart < piece.end && piece.start < span.bodyEnd)) continue;
+      let body = code.slice(span.bodyStart, span.bodyEnd);
+      for (const [from, to] of Object.entries(keyMap).sort((a, b) => b[0].length - a[0].length)) {
+        const r = rewriteMember(body, span.param, from, to);
+        body = r.body;
+        count += r.count;
+      }
+      if (body !== code.slice(span.bodyStart, span.bodyEnd)) {
+        pieces.push({ start: span.bodyStart, end: span.bodyEnd, text: body });
+      }
     }
   }
   for (const piece of pieces.sort((a, b) => b.start - a.start)) {

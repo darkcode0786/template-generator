@@ -151,12 +151,16 @@ describe("runGeneration (synthetic Next.js repo)", () => {
   it("injects the reference host boilerplate: CSS-var injector and asset mapper", async () => {
     const header = await fs.readFile(path.join(result.outputDir, "components", "ComputerRepairingHeader1", "ComputerRepairingHeader1.tsx"), "utf8");
     // no directive in this file -> import is the very first line
-    expect(header).toMatch(/^import \{ mapThemeUploadAssetsInData \} from "\.\.\/\.\.\/\.\.\/lib\/restaurantFoodAssets";\n/);
+    expect(header).toMatch(/^import \{ mapThemeUploadAssetsInData \} from "\.\.\/\.\.\/\.\.\/lib\/computerRepairingAssets";\n/);
     // with a directive, the import must come after it (directives have to stay first)
     const topbar = await fs.readFile(path.join(result.outputDir, "components", "ComputerRepairingTopbar1", "ComputerRepairingTopbar1.tsx"), "utf8");
-    expect(topbar).toMatch(/^'use client';\s*\nimport \{ mapThemeUploadAssetsInData \} from "\.\.\/\.\.\/\.\.\/lib\/restaurantFoodAssets";\n/);
+    expect(topbar).toMatch(/^'use client';\s*\nimport \{ mapThemeUploadAssetsInData \} from "\.\.\/\.\.\/\.\.\/lib\/computerRepairingAssets";\n/);
     // first statements of the component body
     expect(header).toMatch(/data = mapThemeUploadAssetsInData\(data\);/);
+    const mapper = await fs.readFile(path.join(result.outputDir, "lib", "computerRepairingAssets.ts"), "utf8");
+    const themeJson = JSON.parse(await fs.readFile(path.join(result.outputDir, "theme.json"), "utf8"));
+    expect(mapper).toContain("mapThemeUploadAssetsInData");
+    expect(mapper).toContain(themeJson.key);
     expect(header).not.toContain("theme-upload-css-vars");
     expect(result.manifest.cssVariables["--primary-bg"]).toBe("#123456");
     expect(result.manifest.cssVariables["--primary-text"]).toBe("#ffffff");
@@ -190,7 +194,7 @@ describe("runGeneration (synthetic Next.js repo)", () => {
     expect(banner).toContain("url(${data.imageMain})");
     for (const d of await fs.readdir(path.join(result.outputDir, "components"))) {
       const code = await fs.readFile(path.join(result.outputDir, "components", d, `${d}.tsx`), "utf8");
-      expect(code, d).toContain('import { mapThemeUploadAssetsInData } from "../../../lib/restaurantFoodAssets";');
+      expect(code, d).toContain('import { mapThemeUploadAssetsInData } from "../../../lib/computerRepairingAssets";');
       expect(code, d).not.toContain("theme-upload-css-vars");
     }
   });

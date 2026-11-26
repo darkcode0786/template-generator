@@ -118,8 +118,8 @@ export const themeSpecSchema = z.object({
       })
       .default({}),
     /**
-     * Reference components pass `data` through a host helper that rewrites `assets/`-relative
-     * paths in defaultContent to the uploaded URLs. The module lives in the host, not the theme.
+     * Each pack ships `lib/<theme>Assets.ts`. Components pass `data` through it so image
+     * paths resolve to the uploaded theme folder, not `restaurantFoodAssets`.
      */
     hostAssetMapper: z
       .object({

@@ -4,7 +4,7 @@
   "description": "Target structure derived from refrence-theme-structure/: theme.json + addons/ + assets/<group>/ + components/<Name>/{<Name>.tsx, component.json}.",
 
   "requiredDirectories": ["addons", "assets", "components"],
-  "optionalDirectories": [],
+  "optionalDirectories": ["lib"],
   "requiredFiles": ["theme.json", "addons/floating.json"],
 
   "naming": {
@@ -187,7 +187,7 @@
   },
 
   "sources": {
-    "componentDirs": ["components", "src/components", "app/components"],
+    "componentDirs": ["components", "component", "src/components", "src/component", "app/components"],
     "pageDirs": ["app", "src/app", "pages", "src/pages"],
     "dataDirs": ["data", "src/data", "content", "lib/data"],
     "uiPrimitiveDirs": ["components/ui", "src/components/ui"]
@@ -198,8 +198,8 @@
       "id": "components",
       "kind": "component",
       "description": "React section components become components/<Name>/<Name>.tsx with a generated component.json.",
-      "match": ["components/**/*.{tsx,jsx}", "src/components/**/*.{tsx,jsx}", "app/components/**/*.{tsx,jsx}"],
-      "ignore": ["**/*.test.*", "**/*.spec.*", "**/*.stories.*", "components/ui/**", "src/components/ui/**"],
+      "match": ["components/**/*.{tsx,jsx}", "component/**/*.{tsx,jsx}", "src/components/**/*.{tsx,jsx}", "src/component/**/*.{tsx,jsx}", "app/components/**/*.{tsx,jsx}"],
+      "ignore": ["**/*.test.*", "**/*.spec.*", "**/*.stories.*", "components/ui/**", "component/ui/**", "src/components/ui/**", "src/component/ui/**"],
       "target": "components/{ComponentName}/{ComponentName}{ext}"
     },
     {
@@ -346,7 +346,10 @@
         "Stats": { "items": "stats", "stat": "stats" },
         "FAQ": { "items": "faqItems" },
         "FAQPage": { "items": "faqItems" },
-        "Testimonial": { "items": "testimonials" },
+        "Testimonial": { "items": "testimonials", "reviews": "testimonials", "feedbacks": "testimonials" },
+        "TestimonialPage": { "items": "testimonials", "reviews": "testimonials", "feedbacks": "testimonials" },
+        "TestimonialsPage": { "items": "testimonials", "reviews": "testimonials", "feedbacks": "testimonials" },
+        "TestimonialsGrid": { "items": "testimonials", "reviews": "testimonials", "feedbacks": "testimonials" },
         "Awards": { "awards": "awardItems" },
         "Process": { "items": "steps", "process": "steps", "processSteps": "steps" },
         "Features": { "items": "features" },
@@ -358,7 +361,7 @@
     "injectCssVars": { "enabled": false, "styleId": "theme-upload-css-vars" },
     "hostAssetMapper": {
       "enabled": true,
-      "importPath": "../../../lib/restaurantFoodAssets",
+      "importPath": "../../../lib/themeAssets",
       "importName": "mapThemeUploadAssetsInData"
     }
   },

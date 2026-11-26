@@ -130,7 +130,7 @@ describe("alignEditorDetailFields", () => {
       ["faqItems"],
       "FAQ",
     );
-    expect(cards.content.faqItems[0]).toMatchObject({ title: "Law", image: "/a.jpg" });
+    expect((cards.content.faqItems as { title: string; image: string }[])[0]).toMatchObject({ title: "Law", image: "/a.jpg" });
     expect(cards.code).toContain("item.title");
   });
 
@@ -176,6 +176,23 @@ describe("alignEditorDetailFields", () => {
     expect(r.code).toContain("item.message");
     expect(r.code).toContain("item.designation");
     expect(r.code).toContain("data.imageMain");
+
+    const split = alignEditorDetailFields(
+      `export const T = ({ data }: { data?: any }) => {
+        const renderCard = (item: any) => <p>{item.role} {item.text} {item.author}</p>;
+        const topRow = data.testimonials.slice(0, 2);
+        return <div>{[...topRow, ...topRow].map((item) => renderCard(item))}</div>;
+      };`,
+      { testimonials: [{ text: "Great", role: "Client", author: "Ada" }] },
+      ["testimonials"],
+      "Testimonial",
+    );
+    expect(split.content.testimonials).toEqual([{ message: "Great", designation: "Client", name: "Ada" }]);
+    expect(split.code).toContain("item.designation");
+    expect(split.code).toContain("item.message");
+    expect(split.code).toContain("item.name");
+    expect(split.code).not.toContain("item.role");
+    expect(split.code).not.toContain("item.text");
     expect(r.code).toContain("data.logoText");
   });
 });

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { extractDataFields, extractDeclaredPageOrder, findDefaultContent, inferFieldShapes, orderByDeclaredRoutes, primaryJsxUsageOrder, seedValueFor } from "@/lib/themeforge/analysis";
+import { extractDataFields, extractDeclaredPageOrder, findDefaultContent, inferFieldShapes, mappedSectionOrder, orderByDeclaredRoutes, primaryJsxUsageOrder, readsJsonSection, seedValueFor } from "@/lib/themeforge/analysis";
+import { adoptJsonContent } from "@/lib/themeforge/transform";
 
 const data = [
   {
@@ -117,6 +118,18 @@ export default function Page() {
 }`;
     expect(primaryJsxUsageOrder(source, ["Header", "Footer"])).toEqual(["Header", "Footer"]);
   });
+
+  it("reads sections that a page picks from a lookup map", () => {
+    const source = `export default function Home() {
+      const sectionMap = {
+        Hero: sections.hero ? <Hero data={sections.hero} /> : null,
+        About: sections.about ? <About data={sections.about} /> : null,
+        Faq: sections.faq ? <Faq data={sections.faq} /> : null,
+      };
+      return <div><Header data={common.Header} />{pageData.components.map((block) => sectionMap[block.component])}<Footer data={common.Footer} /></div>;
+    }`;
+    expect(mappedSectionOrder(source, ["Header", "Hero", "About", "Faq", "Footer"])).toEqual(["Hero", "About", "Faq"]);
+  });
 });
 
 describe("page order from the repository", () => {
@@ -193,5 +206,26 @@ describe("extractDataFields", () => {
       return <section><p>{hero.label}</p><h1>{hero.titleLines.map((line) => line.text)}</h1><a href={hero.button.href}>{hero.button.label}</a></section>;
     }`;
     expect(extractDataFields(source)).toEqual(["label", "titleLines", "button"]);
+  });
+});
+
+describe("json section content", () => {
+  const source = `import websiteData from "../data/websiteData.json";
+export default function Hero() {
+  const heroData = websiteData.categories.TalentBridge.sections.Hero.variants.TBHero1;
+  return <h1>{heroData.titleLine1}</h1>;
+}`;
+
+  it("keeps a section that reads a JSON file instead of data", () => {
+    expect(readsJsonSection(source)).toBe(true);
+    expect(extractDataFields(source)).toEqual([]);
+  });
+
+  it("rewrites that JSON binding into the data prop", () => {
+    const code = adoptJsonContent(source, "Hero", "Hero");
+    expect(code).not.toContain("websiteData");
+    expect(code).toContain("function Hero({ data = {} }");
+    expect(code).toContain("data.titleLine1");
+    expect(extractDataFields(code)).toEqual(["titleLine1"]);
   });
 });
